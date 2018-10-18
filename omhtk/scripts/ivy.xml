@@ -1,0 +1,33 @@
+<!--===================================================================================
+ ant and ivy scripts for project <generics> version 0.0.1 (Thu Oct 18 11:30:57 CEST 2018)
+ author: Jacques Gignoux <jacques.gignoux@upmc.fr>
+
+ CAUTION: this file is generated - DO NOT EDIT!
+ If you need to change this file, edit ../version/Setup.java appropriately and run it.
+ This will re-generate this file and manage version numbers properly. 
+===================================================================================-->
+<ivy-module version="2.0"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd">
+
+	<info	organisation="fr.ens.biologie"
+			module="generics"
+			revision="0.0.1"
+			status="integration">
+		<license name="gpl3" url="https://www.gnu.org/licenses/gpl-3.0.txt"/>
+		<description>This module contains generic, all-purpose, basic utilities for almost any java project.</description>
+	</info>
+
+	<configurations>
+		<conf name="java library"/>
+	</configurations>
+
+	<publications>
+		<artifact type="jar" ext="jar">
+			<conf name="java library"/>
+		</artifact>
+	</publications>
+
+	<dependencies/>
+
+</ivy-module>
