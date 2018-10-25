@@ -41,12 +41,49 @@ package fr.ens.biologie.generic;
 public interface DataContainer extends Cloneable {
 
 	/** creates a new instance of this container with the same content */
-	public DataContainer clone();
+//	public DataContainer clone();
 	
 	/** sets the content of this container to zero, whatever this means for the content type */
 	public DataContainer clear();
 	
 	/** fills this container with a single value */
-	public DataContainer fillWith(Object value);
-		
+	public default DataContainer fillWith(Object value) {
+		// do nothing
+		return this;
+	}
+	/** default methods for primitive types */
+	public default DataContainer fillWith(int value) {
+		// do nothing
+		return this;
+	}	
+	public default DataContainer fillWith(long value) {
+		// do nothing
+		return this;
+	}
+	public default DataContainer fillWith(short value) {
+		// do nothing
+		return this;
+	}
+	public default DataContainer fillWith(byte value) {
+		// do nothing
+		return this;
+	}
+	public default DataContainer fillWith(boolean value) {
+		// do nothing
+		return this;
+	}
+	public default DataContainer fillWith(double value) {
+		// do nothing
+		return this;
+	}
+	public default DataContainer fillWith(float value) {
+		// do nothing
+		return this;
+	}
+	public default DataContainer fillWith(char value) {
+		// do nothing
+		return this;
+	}
+
+
 }

@@ -66,4 +66,14 @@ public interface Textable {
 	public default String toDetailedString() {
 		return toString();
 	}
+	
+	/**
+	 * Produces a String that can be saved to a text file and later re-loaded
+	 * @return
+	 */
+	public default String toSaveableString() {
+		return toString();
+	}
+	
+	
 }

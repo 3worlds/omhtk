@@ -30,9 +30,9 @@
 package fr.ens.biologie.generic;
 
 /**
- * This interface for objects that can be write protected/enabled
+ * This interface for objects that can be write protected/enabled.
  * 
- * similar to Sealable except the seal is reversible
+ * similar to {@linkplain Sealable} except the seal is reversible
  * 
  *  @author J. Gignoux - 13 févr. 2017
  *
