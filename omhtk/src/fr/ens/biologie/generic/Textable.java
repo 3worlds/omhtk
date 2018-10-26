@@ -66,6 +66,9 @@ public interface Textable {
 	/** block delimiters (come in pairs) */
 	public static char[][] BLOCK_DELIMITERS = 
 		{{'{','}'},{'[',']'},{'(',')'},{'<','>'}};
+	/** indexes to the above */
+	public static int BLOCK_OPEN = 0;
+	public static int BLOCK_CLOSE = 1;
 	public static char[] BRACES = 				BLOCK_DELIMITERS[0];
 	public static char[] SQUARE_BRACKETS = 		BLOCK_DELIMITERS[1];
 	public static char[] BRACKETS = 			BLOCK_DELIMITERS[2];
