@@ -113,12 +113,23 @@ public interface Textable {
 	}
 	
 	/**
-	 * <p>Produces a String that can be saved to a text file and later re-loaded.</p>
+	 * <p>Produces a String that can be saved to a text file (or any other text-based object) and later re-loaded.</p>
 	 * <p>This method (and all its variants) must return a {@code String} that allows to
 	 * reconstruct the object from it using a {@code valueOf(...)} method.</p>
-	 * <p>NOTE: the return String should NOT start and end with a block delimiter.
-	 * This should only be done by the container of this object (which will know if block
-	 * delimiters or separators should be used).</p>
+	 * <p>The general idea is that some external class (a grammar, tokeniser or other thing
+	 * aware of why the transformation to text is done) will call this method or its 
+	 * variants with two types of arguments, <em>block delimiters</em> and <em>item separators</em>.
+	 * This way the exact set of tokens to use for a particular application is not
+	 * hard-coded at this low level but is delegated to a class which contains the overall semantics.
+	 * Here, we only deal with the semantics of saving/loading a particular object to/from
+	 * text form.</p>
+	 * <p>Block delimiters come in pairs (an opening and a closing character) while item separators
+	 * are made of a single char. Item separators should be used to separate items of identical
+	 * nature (e.g. cells of a table of objects of the same type). Block delimiters should
+	 * be used to group things of various types together in a meaningful way.
+	 * The detailed semantics of block delimiters and item separators may vary with implementations
+	 * The important thing to bear in mind when writing such methods is that the generated
+	 * String must enable one to reconstruct the object from it.</p>
 	 * 
 	 * @param blockDelimiters an array of pairs of block delimiters 
 	 * (the second dimension of the array must be 2, with item 0 being the opening 
