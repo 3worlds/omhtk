@@ -207,7 +207,7 @@ public class Uid implements Serializable, Comparable<Uid> {
 	}
 
 	public String toShortString() {
-		return Long.toString(time);
+		return toString();
 	}
 
 	public String toLongString() {
