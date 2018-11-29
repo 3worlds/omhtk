@@ -173,7 +173,7 @@ public class VersionManager {
 	"\t\t<ivy:retrieve pattern=\"${ivy.retrieve.pattern}\" conf=\"${ivy.configurations}\"/>\n" +
 	"\t</target>\n\n" +
 	"\t<target name=\"makeJar\" description=\"pack as a jar library\" depends=\"makeArtifactDir,resolve\">\n" +
-	"\t\t<jar destfile=\"${jarlib}/${project}.jar\" basedir=\"bin\"/>\n" +
+	"\t\t<jar destfile=\"${jarlib}/${project}.jar\" basedir=\"bin\" excludes=\"**/VersionManager.*,**/LicenseManager.*,**/current-version.txt\"/>\n" +
 	"\t</target>\n\n" +
 	"\t<target name=\"publishJar\" description=\"make jar library available to others\" depends=\"makeJar\">\n" +
 	"\t\t<ivy:publish resolver=\"local\" overwrite=\"true\"  forcedeliver=\"true\">\n" +

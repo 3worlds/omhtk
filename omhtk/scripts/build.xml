@@ -32,7 +32,7 @@
 	</target>
 
 	<target name="makeJar" description="pack as a jar library" depends="makeArtifactDir,resolve">
-		<jar destfile="${jarlib}/${project}.jar" basedir="bin"/>
+		<jar destfile="${jarlib}/${project}.jar" basedir="bin" excludes="**/VersionManager.*,**/LicenseManager.*,**/current-version.txt"/>
 	</target>
 
 	<target name="publishJar" description="make jar library available to others" depends="makeJar">
