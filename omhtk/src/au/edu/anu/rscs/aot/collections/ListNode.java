@@ -1,6 +1,12 @@
 package au.edu.anu.rscs.aot.collections;
 
-
+/**
+ * A container for items in a List (formerly AotList).
+ * 
+ * @author Shayne Flint - long ago
+ *
+ * @param <T>
+ */
 public class ListNode<T> {
 	
 	protected T item;

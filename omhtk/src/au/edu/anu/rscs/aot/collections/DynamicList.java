@@ -3,51 +3,63 @@ package au.edu.anu.rscs.aot.collections;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Deque;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.NoSuchElementException;
-import org.graphstream.graph.Edge;
-import org.graphstream.graph.Node;
-import org.graphstream.graph.implementations.MultiGraph;
+import java.util.Queue;
 
-import au.edu.anu.rscs.aot.queries.Query;
-import au.edu.anu.rscs.aot.util.Resource;
-import au.edu.anu.rscs.aot.util.Uid;
+import fr.ens.biologie.generic.Sizeable;
 
-public class AotList<T> extends AotIterable<T> implements AotCollection<T>  {
+/**
+ * <p>Implementation of List<T> with a <em>self-correcting</em> iterator which allows removing of
+ * items while in a for loop on the list. It is implemented as a linked list with a clever iterator
+ * that skips removed items while looping. Use this class when dealing with highly dynamic lists
+ * (where there are many insertions and deletions in the list).</p>
+ * <p>This was formerly known as AotList. Code modified from au.edu.anu.rscs.aot.collections.AotList<T> by Shayne Flint.
+ * Removed Query, and dependency from AotCollection and AotIterable.</p>
+ * <p>Given the new facilities provided in java 8 lists, this class may be obsolete. For example, 
+ * to remove items from a list can be done with instructions such as {@code list.sublist(from,to).clear()}.</p>
+ * 
+ * @author Shayne Flint - loooong ago.
+ * @author Jacques Gignoux - 30 Nov. 2018
+ *
+ * @param <T>
+ */
+// TODO: finish testing - only partly done.
+public class DynamicList<T> implements List<T>, Deque<T>, Queue<T>, Sizeable {
 
 	protected ListNode<T> head = null;
 	protected ListNode<T> tail = null;
 	protected int         size = 0;
 
-	public AotList() {
+	// Constructors
+	
+	public DynamicList() {
 	}
 
 	@SafeVarargs
-	public AotList(T... items)  {
+	public DynamicList(T... items)  {
 		super();
 		for (T item : items)
-			add(item);
+			add(item);		
 	}
 
-	public AotList(Iterable<T> collection)  {
-		super(collection);
-		for (T item : collection)
+	public DynamicList(Iterable<T> iterable)  {
+		super();
+		for (T item : iterable)
 			add(item);
 	}
 	
-	public AotList(Iterable<T> collection, Query query)  {
-		super(collection,query);
-		for (T item : collection)
-			add(item);
-	}
-
+	// Sizeable
+	
 	@Override
 	public int size() {
 		return size;
 	}
 
+	// List
 
 	@Override
 	public boolean isEmpty() {
@@ -62,7 +74,6 @@ public class AotList<T> extends AotIterable<T> implements AotCollection<T>  {
 		return false;
 	}
 
-
 	private boolean isRemovedItem(ListNode<T> node) {
 		if (node == null)
 			return false;
@@ -70,17 +81,20 @@ public class AotList<T> extends AotIterable<T> implements AotCollection<T>  {
 			return node.isRemoved();
 	}
 
-
+	/**
+	 * An iterator which skips removed items.
+	 * 
+	 * @author Shayne Flint - long ago
+	 *
+	 */
 	private class CorrectingIterator implements Iterator<T> {
 
 		protected ListNode<T> current = head;
 		protected boolean  correcting;
 		protected ListNode<T> lastReturned = null;
-		protected Query    query        = null;
 
-		public CorrectingIterator(boolean correcting, Query query) {
+		public CorrectingIterator(boolean correcting) {
 			this.correcting = correcting;
-			this.query = query;
 		}
 
 		protected void correctIterator() {
@@ -91,12 +105,6 @@ public class AotList<T> extends AotIterable<T> implements AotCollection<T>  {
 				if (isRemovedItem(current))
 					throw new IllegalStateException("Non-correcting iterator is pointing to a removed item");
 			}	
-
-			// move to next node matching query
-			//
-			if (query != null) 
-				while (current != null && !query.satisfied(current.item))
-					current = current.next;
 		}
 
 		@Override
@@ -127,27 +135,32 @@ public class AotList<T> extends AotIterable<T> implements AotCollection<T>  {
 			return "[CorrectingIterator correcting=" + correcting + ", current=" + current + "]";
 		}
 
-	}
-
+	} // private class CorrectingIterator
 
 	@Override
 	public Iterator<T> iterator() {
-		return new CorrectingIterator(true, null);
+		return new CorrectingIterator(true);
 	}
 
-
-	public Iterator<T> correctingIterator(boolean correcting, Query query) {
-		return new CorrectingIterator(correcting, query);
-	}
-
+	/**
+	 * Returns an iterator on this list
+	 * 
+	 * @param correcting if true, the iterator is correcting
+	 * @return an iterator, optionally correcting
+	 */
 	public Iterator<T> correctingIterator(boolean correcting) {
-		return new CorrectingIterator(correcting, null);
+		return new CorrectingIterator(correcting);
 	}
 
+	/**
+	 * Returns a correcting iterator on this list. 
+	 * <p>Note: the default iterator() method returns a correcting iterator.</p>
+	 * 
+	 * @return a correcting iterator
+	 */
 	public Iterator<T> correctingIterator() {
-		return new CorrectingIterator(true, null);
+		return new CorrectingIterator(true);
 	}
-
 
 	@Override
 	public Object[] toArray() {
@@ -412,10 +425,16 @@ public class AotList<T> extends AotIterable<T> implements AotCollection<T>  {
 
 	}
 
+	/**
+	 * A correcting list iterator, ie an iterator that can traverse the list up or down
+	 * 
+	 * @author Shayne Flint - long ago
+	 *
+	 */
 	private class CorrectingListIterator extends CorrectingIterator implements ListIterator<T> {
 
-		public CorrectingListIterator(boolean correcting, int index, Query query) {
-			super(correcting, query);
+		public CorrectingListIterator(boolean correcting, int index) {
+			super(correcting);
 			if (size()==0)
 				current = null;
 			else
@@ -492,34 +511,29 @@ public class AotList<T> extends AotIterable<T> implements AotCollection<T>  {
 			return "[CorrectingListIterator correcting=" + correcting + ", current=" + current + "]";
 		}
 
-
-	}
+	} // private class CorrectingListIterator
 
 	@Override
 	public ListIterator<T> listIterator() {
-		return new CorrectingListIterator(true, 0, null);
+		return new CorrectingListIterator(true, 0);
 	}
 
 	@Override
 	public ListIterator<T> listIterator(int index) {
-		return new CorrectingListIterator(true, index, null);
+		return new CorrectingListIterator(true, index);
 	}
 
 	public ListIterator<T> checkedListIterator(boolean correcting) {
-		return new CorrectingListIterator(correcting, 0, null);
-	}
-
-	public ListIterator<T> correctingListIterator(int index, boolean correcting, Query query) {
-		return new CorrectingListIterator(correcting, index, query);
+		return new CorrectingListIterator(correcting, 0);
 	}
 
 	public ListIterator<T> correctingListIterator(int index, boolean correcting) {
-		return new CorrectingListIterator(correcting, index, null);
+		return new CorrectingListIterator(correcting, index);
 	}
 
 	@Override
 	public List<T> subList(int fromIndex, int toIndex) {
-		AotList<T> result = new AotList<T>();
+		DynamicList<T> result = new DynamicList<T>();
 		ListNode<T> node = nodeAt(fromIndex);
 		for (int i=fromIndex; i<=toIndex; i++) {
 			result.add(node.item);
@@ -527,7 +541,6 @@ public class AotList<T> extends AotIterable<T> implements AotCollection<T>  {
 		}
 		return result;
 	}
-
 
 	public void show(String message) {
 		System.out.println(message);
@@ -764,14 +777,15 @@ public class AotList<T> extends AotIterable<T> implements AotCollection<T>  {
 		public String toString() {
 			return "[CorrectingDescendingIterator correcting=" + correcting + ", current=" + current + "]";
 		}
-	}
+		
+	} // private class CorrectingDescendingIterator
 
 
 	// Additional helper methods
 	//
 
-	public AotList<T> difference(AotList<T> list) {
-		AotList<T> result = new AotList<T>();
+	public DynamicList<T> difference(DynamicList<T> list) {
+		DynamicList<T> result = new DynamicList<T>();
 		for (T item : list)
 			if (!this.contains(item))
 				result.add(item);
@@ -781,8 +795,8 @@ public class AotList<T> extends AotIterable<T> implements AotCollection<T>  {
 		return result;
 	}
 
-	public AotList<T> intersection(AotList<T> list) {
-		AotList<T> result = new AotList<T>();
+	public DynamicList<T> intersection(DynamicList<T> list) {
+		DynamicList<T> result = new DynamicList<T>();
 		for (T item : list)
 			if (this.contains(item))
 				result.add(item);
@@ -790,7 +804,7 @@ public class AotList<T> extends AotIterable<T> implements AotCollection<T>  {
 	}
 
 	/**
-	 * Renamed from sort to sortList to avpid conflict with JDK 1.8 List.sort()
+	 * Renamed from sort to sortList to avoid conflict with JDK 1.8 List.sort()
 	 * 
 	 * @param comparator
 	 */
@@ -822,7 +836,7 @@ public class AotList<T> extends AotIterable<T> implements AotCollection<T>  {
 			return add(item);
 	}
 
-	public boolean addAllUnique(AotList<T> list) {
+	public boolean addAllUnique(DynamicList<T> list) {
 		boolean result = true;
 		for (T item : list) {
 			if (!addUnique(item))
@@ -831,202 +845,27 @@ public class AotList<T> extends AotIterable<T> implements AotCollection<T>  {
 		return result;
 	}
 
-	@Override
-	public void pack() {	
-	}
-
 	// Copying and Cloning AotLists
 	//
-
-	/**
-	 * Creates a normal array comprising elements which refer to the data items in this AotList.  Includes
-	 * items that satisfy the specified query
-	 * 
-	 * @param query
-	 * @return
-	 */
-	@SuppressWarnings("unchecked")
-	public T[] makeArray(Query query) {
-		Object[] result;
-		if (query == null) {
-			result = new Object[size()];
-			int i=0;
-			for (T t : this) {
-				result[i] = t;
-				i++;
-			}
-		} else {
-			Iterator<T> iter = this.correctingIterator(true, query);
-			result = new Object[size()];
-			// TODO: finish implementing this
-		}
-		return (T[])result;
-	}
 
 	/**
 	 * Creates a normal array comprising elements which refer to the data items in this AotList
 	 * 
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	public T[] makeArray() {
-		return makeArray(null);
+		Object[] result;
+		result = new Object[size()];
+		int i=0;
+		for (T t : this) {
+			result[i] = t;
+			i++;
+		}
+		return (T[])result;
 	}
 
-	//	/**
-	//	 * Creates a new AotList which refers to the data items in this list.  Includes
-	//	 * items that satisfy the specified query
-	//	 * 
-	//	 * @param query
-	//	 * @return
-	//	 */
-	//	public AotList<T> toAotList(Query query) {
-	//		AotList<T> result = new AotList<T>();
-	//		if (query == null) {
-	//			result = new Object[size()];
-	//			int i=0;
-	//			for (T t : this) {
-	//				result[i] = t;
-	//				i++;
-	//			}
-	//		} else {
-	//			Iterator<T> iter = this.correctingIterator(true, query);
-	//			result = new Object[size()];
-	//			
-	//		}
-	//		return (T[])result;
-	//		
-	//	}
-	//	
-	//	/**
-	//	 * Creates a new AotList whoch refers to the data items in this list
-	//	 * 
-	//	 * @return
-	//	 */
-	//	public AotList<T> toAotList() {
-	//		return toAotList(null);
-	//	}
-	//	
-	//	/**
-	//	 * Creates a new AotArray in which elements refer to the data items in this list. Includes
-	//	 * items that satisfy the specified query
-	//	 * 
-	//	 * @param query
-	//	 * @return
-	//	 */
-	//	public AotArray<T> toAotArray(Query query) {
-	//		
-	//	}
-	//	
-	//	/**
-	//	 * Creates a new AotArray in which elements refer to the data items in this list.
-	//	 * 
-	//	 * @return
-	//	 */
-	//	public AotArray<T> toAotArray() {
-	//		return toAotArray(null);
-	//	}
-	//	
-	//	/**
-	//	 * Creates a new AotRefArray in which elements refer to the nodes in this list. Only includes
-	//	 * nodes referring to data which satisfied the specified query. See the 
-	//	 * AotRefArray class for an explanation of why this is useful 
-	//	 * 
-	//	 * @param query
-	//	 * @return
-	//	 */
-	//	public AotRefArray<T> toAotRefArray(Query query) {
-	//		
-	//	}
-	//	
-	//	/**
-	//	 * Creates a new AotRefList in which elements refer to the nodes in this list. See the 
-	//	 * AotRefList class for an explanation of why this is useful 
-	//	 * 
-	//	 * @return
-	//	 */
-	//	public AotRefArray<T> toAotRefArray() {
-	//		return toAotRefArray(null);
-	//	}
-	//	
-	//	/**
-	//	 * Creates a new AotRefList in which elements refer to the nodes in this list. Only includes
-	//	 * nodes referring to data which satisfied the specified query. See the 
-	//	 * AotRefList class for an explanation of why this is useful 
-	//	 * 
-	//	 * @param query
-	//	 * @return
-	//	 */
-	//	public AotRefList<T> toAotRefList(Query query) {
-	//		
-	//	}
-	//	
-	//	/**
-	//	 * Creates a new AotRefList in which elements refer to the nodes in this list. See the 
-	//	 * AotRefList class for an explanation of why this is useful 
-	//	 * 
-	//	 * @return
-	//	 */
-	//	public AotRefList<T> toAotRefArray() {
-	//		return toAotRefList(null);
-	//	}
-	//	
-	//	
-	//	/**
-	//	 * Makes a copy of this AotList. List items are cloned. Includes items that satisfy the specified query.
-	//	 * 
-	//	 * @param query
-	//	 * @return
-	//	 */
-	//	public AotList<T> cloneAotList(Query query) {
-	//		
-	//	}
-	//
-	//	/**
-	//	 * Makes a copy of this AotList. List items are cloned.
-	//	 * 
-	//	 * @return
-	//	 */
-	//	public AotList<T> cloneAotList() {
-	//		cloneAotList(null);
-	//	}
-	//
-	//	/**
-	//	 * Makes a new AotArray which contains clones of elements in this AotList. Includes items 
-	//	 * that satisfy the specified query
-	//	 * 
-	//	 * @param query
-	//	 * @return
-	//	 */
-	//	public AotArray<T> cloneAotArray(Query query) {
-	//		
-	//	}
-	//
-	//	/**
-	//	 * Makes a new AotArray which contains clones of elements in this AotList.
-	//	 * 
-	//	 * @return
-	//	 */
-	//	public AotArray<T> cloneAotArray() {
-	//		return cloneAotArray(null);
-	//	}
-	//
-	//	/** Makes a standard array containing clones of elements in this AotList. Includes items 
-	//	 * that satisfy the specified query
-	//	 * 
-	//	 * @param query
-	//	 * @return
-	//	 */
-	//	public Object[] cloneArray(Query query) {
-	//		
-	//	}
-	//
-	//	/** Makes a standard array containing clones of elements in this AotList.
-	//	 * 
-	//	 * @return
-	//	 */
-	//	public Object[] cloneArray() {
-	//		return cloneArray(null);
-	//	}
+
 
 	// IO
 	//
@@ -1043,74 +882,6 @@ public class AotList<T> extends AotIterable<T> implements AotCollection<T>  {
 			idx++;
 		}
 		return result + "]";
-	}
-
-	// Visualisation
-	//
-
-	@SuppressWarnings("unchecked")
-	public void visualise(Iterator<T>... iterators) {
-		System.setProperty("org.graphstream.ui.renderer", "org.graphstream.ui.j2dviewer.J2DGraphRenderer");
-		MultiGraph graphStream = new MultiGraph(this.toString());
-
-		graphStream.setAttribute("ui.stylesheet", "url('file://" + Resource.getFile("aotList.css", this.getClass()) + "')");
-		graphStream.addAttribute("ui.quality");
-		graphStream.addAttribute("ui.antialias");
-
-		ListNode<T> listNode = head;
-		while (listNode != null) {
-			Node node = graphStream.addNode(listNode.toString());
-			node.setAttribute("ui.label",  listNode.item.toString());
-			node.setAttribute("ui.class",  "list");
-			listNode = listNode.next;
-		}
-
-		listNode = head;
-		while (listNode != null) {
-			if (listNode.prev != null) {
-				Edge edge = graphStream.addEdge(new Uid().toString(), listNode.toString(), listNode.prev.toString(), true);
-				edge.setAttribute("ui.label",  "p");
-			}
-			if (listNode.next != null) {
-				Edge edge = graphStream.addEdge(new Uid().toString(), listNode.toString(), listNode.next.toString(), true);
-				edge.setAttribute("ui.label",  "n");
-			}
-
-			listNode = listNode.next;
-		}
-
-		Node headNode = graphStream.addNode("HEAD");
-		headNode.setAttribute("ui.label",  "HEAD");
-		headNode.setAttribute("ui.class",  "head");
-		Edge headEdge = graphStream.addEdge(new Uid().toString(), "HEAD", head.toString(), true);
-		Node tailNode = graphStream.addNode("TAIL");
-		tailNode.setAttribute("ui.label",  "TAIL");
-		tailNode.setAttribute("ui.class",  "tail");
-		Edge tailEdge = graphStream.addEdge(new Uid().toString(), "TAIL", tail.toString(), true);
-
-		for (Iterator<T> iter : iterators) {
-			CorrectingIterator ci = (CorrectingIterator)iter;
-			Node iterNode = graphStream.addNode(ci.toString());
-			iterNode.setAttribute("ui.label",  "ITER");
-			ListNode<T> currentListNode = ci.current;
-			if (isRemovedItem(currentListNode)) {
-				Node removedListNode = graphStream.addNode(currentListNode.toString());
-				removedListNode.setAttribute("ui.class",  "removed");
-				removedListNode.setAttribute("ui.label",  currentListNode.item.toString());
-				if (currentListNode.prev != null) {
-					Edge edge = graphStream.addEdge(new Uid().toString(), currentListNode.toString(), currentListNode.prev.toString(), true);
-					edge.setAttribute("ui.label",  "p");
-				}
-				if (currentListNode.next != null) {
-					Edge edge = graphStream.addEdge(new Uid().toString(), currentListNode.toString(), currentListNode.next.toString(), true);
-					edge.setAttribute("ui.label",  "n");
-				}
-				Edge iterEdge = graphStream.addEdge(new Uid().toString(), iterNode.toString(), removedListNode.toString(), true);								
-			} else {
-				Edge iterEdge = graphStream.addEdge(new Uid().toString(), iterNode.toString(), currentListNode.toString(), true);				
-			}
-		}
-		graphStream.display();
 	}
 
 }
