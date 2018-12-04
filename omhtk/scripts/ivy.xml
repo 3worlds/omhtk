@@ -28,6 +28,8 @@
 		</artifact>
 	</publications>
 
-	<dependencies/>
+	<dependencies>
+		<dependency org="commons-io" name="commons-io" rev="1.+" />
+	</dependencies>
 
 </ivy-module>

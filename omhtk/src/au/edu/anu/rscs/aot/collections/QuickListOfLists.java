@@ -27,65 +27,102 @@
  *  along with UIT.  If not, see <https://www.gnu.org/licenses/gpl.html>. *
  *                                                                        *
  **************************************************************************/
-package fr.ens.biologie.optimisation;
+package au.edu.anu.rscs.aot.collections;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
 
-import org.junit.jupiter.api.Test;
+/**
+ * <p>An immutable list of list enabling to iterate over the whole set as if it was a single 
+ * list, with a minimal cost at creation time (hence the 'Quick').
+ * Immutable.</p>
+ * <p>CAUTION: the contained lists may have changed between two accesses to this one - so
+ * use with care !</p>
+ * 
+ * @author Jacques Gignoux - 4/6/2012
+ *
+ * @param <T> the list content type
+ */
+public class QuickListOfLists<T> implements Iterable<T> {
 
-import au.edu.anu.rscs.aot.collections.QuickListOfLists;
+	private LinkedList<Iterable<T>> lists = new LinkedList<Iterable<T>>();
 
-class QuickListOfListsTest {
-	
-	private QuickListOfLists<Integer> makeList() {
-		List<Integer> list1 = new ArrayList<Integer>();
-		List<Integer> list2 = new LinkedList<Integer>();
-		Set<Integer> list3 = new HashSet<Integer>();
-		list1.add(1); list1.add(2); list1.add(3);
-		list2.add(4); list2.add(5);
-		list3.add(6); list3.add(7); list3.add(8);
-		QuickListOfLists<Integer> list = new QuickListOfLists<Integer>(list1,list2,list3);
-		return list;
+	@SafeVarargs
+	public QuickListOfLists(Iterable<T>...list) {
+		super();
+		for (int i=0;i<list.length;i++)
+			lists.add(list[i]);
 	}
 	
-	private String listToString(Iterable<Integer> l) {
-		StringBuilder sb = new StringBuilder();
-		for (Integer i:l)
-			sb.append(i).append(',');
-		return sb.toString();
+	@Override
+	public Iterator<T> iterator() {
+		return new AggregatedIterator<T>(lists);
 	}
 
-	@Test
-	void testQuickListOfLists() {
-		assertNotNull(makeList());
+	public void addList(Iterable<T> list) {
+		lists.add(list);
 	}
+		
+	public void clear() {
+		lists.clear();
+	}
+	
+	// All this copied from Shayne's AggregatedIterator
+    private class AggregatedIterator<U> implements Iterator<U> {
 
-	@Test
-	void testIterator() {
-		assertEquals(listToString(makeList()),"1,2,3,4,5,6,7,8,");
-	}
+		private Iterator<Iterable<U>> iterablesIterator;
+	
+		private Iterator<U> iterator;
+	
+		public AggregatedIterator(Iterable<Iterable<U>> list) {
+			super();
+		    iterablesIterator = list.iterator();
+		    if (iterablesIterator.hasNext()) {
+				Iterable<U> i = iterablesIterator.next();
+				iterator = i.iterator();
+		    } else
+			iterator = null;
+		}
+	
+		private Iterator<U> nextIterator() {
+		    Iterator<U> result;
+		    if (iterablesIterator.hasNext()) {
+			result = iterablesIterator.next().iterator();
+			if (!result.hasNext())
+			    result = nextIterator();
+			return result;
+		    } else
+			return null;
+		}
+	
+	
+		@Override
+		public boolean hasNext() {
+		    if (iterator == null)
+			return false;
+	
+		    if (iterator.hasNext())
+			return true;
+		    else {
+			iterator = nextIterator();
+			if (iterator == null)
+			    return false;
+			else
+			    return iterator.hasNext();
+		    }
+		}
+	
+		@Override
+		public U next() {
+		    return (U) iterator.next();
+		}
+	
+		@Override
+		public void remove() {
+		    iterator.remove();
+		}
 
-	@Test
-	void testAddList() {
-		List<Integer> list = new LinkedList<Integer>();
-		list.add(9);
-		QuickListOfLists<Integer> l = makeList();
-		assertEquals(listToString(l),"1,2,3,4,5,6,7,8,");
-		l.addList(list);
-		assertEquals(listToString(l),"1,2,3,4,5,6,7,8,9,");
-	}
-
-	@Test
-	void testClear() {
-		QuickListOfLists<Integer> l = makeList();
-		l.clear();
-		assertEquals(listToString(l),"");
-	}
+    }
+    
 
 }

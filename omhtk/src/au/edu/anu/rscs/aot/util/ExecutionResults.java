@@ -27,65 +27,96 @@
  *  along with UIT.  If not, see <https://www.gnu.org/licenses/gpl.html>. *
  *                                                                        *
  **************************************************************************/
-package fr.ens.biologie.optimisation;
+package au.edu.anu.rscs.aot.util;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.util.AbstractCollection;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import au.edu.anu.rscs.aot.OmhtkException;
 
-import org.junit.jupiter.api.Test;
+/**
+ * 
+ * @author Shayne Flint - before 27/2/2012
+ *
+ */
+public class ExecutionResults {
 
-import au.edu.anu.rscs.aot.collections.QuickListOfLists;
+	public static final int NORMAL_EXIT = 0;
+	public static final int ABNORMAL_EXIT = -1; // something went wrong but the error code is unknown
 
-class QuickListOfListsTest {
-	
-	private QuickListOfLists<Integer> makeList() {
-		List<Integer> list1 = new ArrayList<Integer>();
-		List<Integer> list2 = new LinkedList<Integer>();
-		Set<Integer> list3 = new HashSet<Integer>();
-		list1.add(1); list1.add(2); list1.add(3);
-		list2.add(4); list2.add(5);
-		list3.add(6); list3.add(7); list3.add(8);
-		QuickListOfLists<Integer> list = new QuickListOfLists<Integer>(list1,list2,list3);
-		return list;
+
+	private String   command;
+	private int      exitCode;
+	private String[] results;
+
+	public ExecutionResults(String command, int exitCode, String... results) {
+		this.command = command;
+		this.exitCode = exitCode;
+		this.results = results;
+	}
+
+	public ExecutionResults(String command, int exitCode, AbstractCollection<String> results) {
+		this.command = command;
+		this.exitCode = exitCode;
+		this.results = new String[results.size()];
+		int i = 0;
+		for (String s : results) {
+			this.results[i] = s;
+			i++;
+		}
+	}
+
+	public ExecutionResults(String command, int exitCode, File results) {
+		this.command = command;
+		this.exitCode = exitCode;
+		try {
+			BufferedReader br = new BufferedReader(new FileReader(results));
+			int len = 0;
+			while (br.readLine() != null)
+				len++;
+			br.close();
+			br = new BufferedReader(new FileReader(results));
+			this.results = new String[len];
+			for (int i=0; i< len; i++)
+				this.results[i] = br.readLine();
+		} catch (Exception e) {
+			throw new OmhtkException(e);
+		}
+	}
+
+	public String command() {
+		return command;
+	}
+
+	public int exitCode() {
+		return exitCode;
+	}
+
+	public String[] results() {
+		return results;
+	}
+
+	public String resultsString() {
+		String result = "";
+		for (String s : results) {
+			if (result.length() == 0)
+				result = s;
+			else
+				result = result + "\n" + s;
+		}
+		return result;
+	}
+
+
+	public String toString() {
+		return "[ExecutionResults command=" + command + ", exitCode=" + exitCode + "\n" + resultsString() + "]";
 	}
 	
-	private String listToString(Iterable<Integer> l) {
-		StringBuilder sb = new StringBuilder();
-		for (Integer i:l)
-			sb.append(i).append(',');
-		return sb.toString();
-	}
-
-	@Test
-	void testQuickListOfLists() {
-		assertNotNull(makeList());
-	}
-
-	@Test
-	void testIterator() {
-		assertEquals(listToString(makeList()),"1,2,3,4,5,6,7,8,");
-	}
-
-	@Test
-	void testAddList() {
-		List<Integer> list = new LinkedList<Integer>();
-		list.add(9);
-		QuickListOfLists<Integer> l = makeList();
-		assertEquals(listToString(l),"1,2,3,4,5,6,7,8,");
-		l.addList(list);
-		assertEquals(listToString(l),"1,2,3,4,5,6,7,8,9,");
-	}
-
-	@Test
-	void testClear() {
-		QuickListOfLists<Integer> l = makeList();
-		l.clear();
-		assertEquals(listToString(l),"");
+	public void check() {
+		if (exitCode != NORMAL_EXIT)
+			throw new OmhtkException(toString());
 	}
 
 }

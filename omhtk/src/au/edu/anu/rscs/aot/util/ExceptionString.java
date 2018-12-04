@@ -27,101 +27,21 @@
  *  along with UIT.  If not, see <https://www.gnu.org/licenses/gpl.html>. *
  *                                                                        *
  **************************************************************************/
-package fr.ens.biologie.optimisation;
-
-import java.util.Iterator;
-import java.util.LinkedList;
+package au.edu.anu.rscs.aot.util;
 
 /**
- * <p>An immutable list of list enabling to iterate over the whole set as if it was a single 
- * list, with a minimal cost at creation time (hence the 'Quick').
- * Immutable.</p>
- * <p>CAUTION: the contained lists may have changed between two accesses to this one - so
- * use with care !</p>
- * @author gignoux
+ * 
+ * @author Shayne Flint - before 27/2/2012
  *
- * @param <T> the list content type
  */
-public class QuickListOfLists<T> implements Iterable<T> {
+// NOT TESTED
+public class ExceptionString {
 
-	private LinkedList<Iterable<T>> lists = new LinkedList<Iterable<T>>();
-
-	@SafeVarargs
-	public QuickListOfLists(Iterable<T>...list) {
-		super();
-		for (int i=0;i<list.length;i++)
-			lists.add(list[i]);
+	public static String exceptionString(Exception e) {
+		String result = e.toString();
+		for (StackTraceElement ste : e.getStackTrace()) {
+			result = result + "\n  at " + ste.toString();
+		}
+		return result;
 	}
-	
-	@Override
-	public Iterator<T> iterator() {
-		return new AggregatedIterator<T>(lists);
-	}
-
-	public void addList(Iterable<T> list) {
-		lists.add(list);
-	}
-		
-	public void clear() {
-		lists.clear();
-	}
-	
-	// All this copied from Shayne's AggregatedIterator
-    private class AggregatedIterator<U> implements Iterator<U> {
-
-		private Iterator<Iterable<U>> iterablesIterator;
-	
-		private Iterator<U> iterator;
-	
-		public AggregatedIterator(Iterable<Iterable<U>> list) {
-			super();
-		    iterablesIterator = list.iterator();
-		    if (iterablesIterator.hasNext()) {
-				Iterable<U> i = iterablesIterator.next();
-				iterator = i.iterator();
-		    } else
-			iterator = null;
-		}
-	
-		private Iterator<U> nextIterator() {
-		    Iterator<U> result;
-		    if (iterablesIterator.hasNext()) {
-			result = iterablesIterator.next().iterator();
-			if (!result.hasNext())
-			    result = nextIterator();
-			return result;
-		    } else
-			return null;
-		}
-	
-	
-		@Override
-		public boolean hasNext() {
-		    if (iterator == null)
-			return false;
-	
-		    if (iterator.hasNext())
-			return true;
-		    else {
-			iterator = nextIterator();
-			if (iterator == null)
-			    return false;
-			else
-			    return iterator.hasNext();
-		    }
-		}
-	
-		@Override
-		public U next() {
-		    return (U) iterator.next();
-		}
-	
-		@Override
-		public void remove() {
-		    iterator.remove();
-		}
-
-    }
-    
-
 }
