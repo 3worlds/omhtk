@@ -39,6 +39,8 @@ import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 
+import au.edu.anu.rscs.aot.collections.QuickListOfLists;
+
 class QuickListOfListsTest {
 	
 	private QuickListOfLists<Integer> makeList() {

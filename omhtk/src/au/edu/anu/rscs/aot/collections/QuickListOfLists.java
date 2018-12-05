@@ -27,71 +27,102 @@
  *  along with UIT.  If not, see <https://www.gnu.org/licenses/gpl.html>. *
  *                                                                        *
  **************************************************************************/
-package au.edu.anu.rscs.aot.util;
+package au.edu.anu.rscs.aot.collections;
+
+import java.util.Iterator;
+import java.util.LinkedList;
 
 /**
+ * <p>An immutable list of list enabling to iterate over the whole set as if it was a single 
+ * list, with a minimal cost at creation time (hence the 'Quick').
+ * Immutable.</p>
+ * <p>CAUTION: the contained lists may have changed between two accesses to this one - so
+ * use with care !</p>
  * 
- * @author Shayne Flint - 4/4/2012
+ * @author Jacques Gignoux - 4/6/2012
  *
+ * @param <T> the list content type
  */
-public class NumberRange {
+public class QuickListOfLists<T> implements Iterable<T> {
 
-	public static String range(int min, int max) {
-		String result = "";
-		if (min == Integer.MIN_VALUE)
-			result = "MinInteger";
-		else 
-			result = result + min;
-		result = result + "..";
-		if (max == Integer.MAX_VALUE)
-			result = result + "MaxInteger";
-		else 
-			result = result + max;	
-		return result;
+	private LinkedList<Iterable<T>> lists = new LinkedList<Iterable<T>>();
+
+	@SafeVarargs
+	public QuickListOfLists(Iterable<T>...list) {
+		super();
+		for (int i=0;i<list.length;i++)
+			lists.add(list[i]);
+	}
+	
+	@Override
+	public Iterator<T> iterator() {
+		return new AggregatedIterator<T>(lists);
 	}
 
-
-	public static String range(long min, long max) {
-		String result = "";
-		if (min == Long.MIN_VALUE)
-			result = "MinLong";
-		else 
-			result = result + min;
-		result = result + "..";
-		if (max == Long.MAX_VALUE)
-			result = result + "MaxLong";
-		else 
-			result = result + max;	
-		return result;
+	public void addList(Iterable<T> list) {
+		lists.add(list);
 	}
-
-	public static String range(float min, float max) {
-		String result = "";
-		if (min == Float.MIN_VALUE)
-			result = "MinFloat";
-		else 
-			result = result + min;
-		result = result + "..";
-		if (max == Float.MAX_VALUE)
-			result = result + "MaxFloat";
-		else 
-			result = result + max;	
-		return result;
+		
+	public void clear() {
+		lists.clear();
 	}
+	
+	// All this copied from Shayne's AggregatedIterator
+    private class AggregatedIterator<U> implements Iterator<U> {
 
-	public static String range(double min, double max) {
-		String result = "";
-		if (min == Double.MIN_VALUE)
-			result = "MinDouble";
-		else 
-			result = result + min;
-		result = result + "..";
-		if (max == Double.MAX_VALUE)
-			result = result + "MaxDouble";
-		else 
-			result = result + max;	
-		return result;
-	}
+		private Iterator<Iterable<U>> iterablesIterator;
+	
+		private Iterator<U> iterator;
+	
+		public AggregatedIterator(Iterable<Iterable<U>> list) {
+			super();
+		    iterablesIterator = list.iterator();
+		    if (iterablesIterator.hasNext()) {
+				Iterable<U> i = iterablesIterator.next();
+				iterator = i.iterator();
+		    } else
+			iterator = null;
+		}
+	
+		private Iterator<U> nextIterator() {
+		    Iterator<U> result;
+		    if (iterablesIterator.hasNext()) {
+			result = iterablesIterator.next().iterator();
+			if (!result.hasNext())
+			    result = nextIterator();
+			return result;
+		    } else
+			return null;
+		}
+	
+	
+		@Override
+		public boolean hasNext() {
+		    if (iterator == null)
+			return false;
+	
+		    if (iterator.hasNext())
+			return true;
+		    else {
+			iterator = nextIterator();
+			if (iterator == null)
+			    return false;
+			else
+			    return iterator.hasNext();
+		    }
+		}
+	
+		@Override
+		public U next() {
+		    return (U) iterator.next();
+		}
+	
+		@Override
+		public void remove() {
+		    iterator.remove();
+		}
 
+    }
+    
 
 }

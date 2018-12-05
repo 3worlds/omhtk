@@ -108,6 +108,7 @@ public class VersionManager {
 	 * 
 	 */
 	private static String[][] DEPS = { 
+		{"commons-io", "commons-io", "1.+"},
 	};
 	// ============================================================================================
 	

@@ -29,69 +29,94 @@
  **************************************************************************/
 package au.edu.anu.rscs.aot.util;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.util.AbstractCollection;
+
+import au.edu.anu.rscs.aot.OmhtkException;
+
 /**
  * 
- * @author Shayne Flint - 4/4/2012
+ * @author Shayne Flint - before 27/2/2012
  *
  */
-public class NumberRange {
+public class ExecutionResults {
 
-	public static String range(int min, int max) {
+	public static final int NORMAL_EXIT = 0;
+	public static final int ABNORMAL_EXIT = -1; // something went wrong but the error code is unknown
+
+
+	private String   command;
+	private int      exitCode;
+	private String[] results;
+
+	public ExecutionResults(String command, int exitCode, String... results) {
+		this.command = command;
+		this.exitCode = exitCode;
+		this.results = results;
+	}
+
+	public ExecutionResults(String command, int exitCode, AbstractCollection<String> results) {
+		this.command = command;
+		this.exitCode = exitCode;
+		this.results = new String[results.size()];
+		int i = 0;
+		for (String s : results) {
+			this.results[i] = s;
+			i++;
+		}
+	}
+
+	public ExecutionResults(String command, int exitCode, File results) {
+		this.command = command;
+		this.exitCode = exitCode;
+		try {
+			BufferedReader br = new BufferedReader(new FileReader(results));
+			int len = 0;
+			while (br.readLine() != null)
+				len++;
+			br.close();
+			br = new BufferedReader(new FileReader(results));
+			this.results = new String[len];
+			for (int i=0; i< len; i++)
+				this.results[i] = br.readLine();
+		} catch (Exception e) {
+			throw new OmhtkException(e);
+		}
+	}
+
+	public String command() {
+		return command;
+	}
+
+	public int exitCode() {
+		return exitCode;
+	}
+
+	public String[] results() {
+		return results;
+	}
+
+	public String resultsString() {
 		String result = "";
-		if (min == Integer.MIN_VALUE)
-			result = "MinInteger";
-		else 
-			result = result + min;
-		result = result + "..";
-		if (max == Integer.MAX_VALUE)
-			result = result + "MaxInteger";
-		else 
-			result = result + max;	
+		for (String s : results) {
+			if (result.length() == 0)
+				result = s;
+			else
+				result = result + "\n" + s;
+		}
 		return result;
 	}
 
 
-	public static String range(long min, long max) {
-		String result = "";
-		if (min == Long.MIN_VALUE)
-			result = "MinLong";
-		else 
-			result = result + min;
-		result = result + "..";
-		if (max == Long.MAX_VALUE)
-			result = result + "MaxLong";
-		else 
-			result = result + max;	
-		return result;
+	public String toString() {
+		return "[ExecutionResults command=" + command + ", exitCode=" + exitCode + "\n" + resultsString() + "]";
 	}
-
-	public static String range(float min, float max) {
-		String result = "";
-		if (min == Float.MIN_VALUE)
-			result = "MinFloat";
-		else 
-			result = result + min;
-		result = result + "..";
-		if (max == Float.MAX_VALUE)
-			result = result + "MaxFloat";
-		else 
-			result = result + max;	
-		return result;
+	
+	public void check() {
+		if (exitCode != NORMAL_EXIT)
+			throw new OmhtkException(toString());
 	}
-
-	public static String range(double min, double max) {
-		String result = "";
-		if (min == Double.MIN_VALUE)
-			result = "MinDouble";
-		else 
-			result = result + min;
-		result = result + "..";
-		if (max == Double.MAX_VALUE)
-			result = result + "MaxDouble";
-		else 
-			result = result + max;	
-		return result;
-	}
-
 
 }
