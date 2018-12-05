@@ -48,6 +48,10 @@ import au.edu.anu.rscs.aot.OmhtkException;
  * change, is fast and well reviewed. I presume it suffers from the "planes"
  * problem but not sure.
  * 
+ * This approach only allows handling the various options from the src code of
+ * the user model. In other words, there is no parameter in the dsl that can be
+ * changed to make a resettable stream non-resettable etc.
+ * 
  * Model developers create a stream as:
  * 
  * RandomFactory.makeRandom("test1", 0, ResetType.ONRUNSTART);
