@@ -865,7 +865,7 @@ public class DynamicList<T> implements List<T>, Deque<T>, Queue<T>, Sizeable {
 			return add(item);
 	}
 
-	public boolean addAllUnique(DynamicList<T> list) {
+	public boolean addAllUnique(Iterable<T> list) {
 		boolean result = true;
 		for (T item : list) {
 			if (!addUnique(item))
