@@ -30,6 +30,7 @@
 
 package au.edu.anu.fses.rng;
 
+import java.security.SecureRandom;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -100,26 +101,35 @@ public class RngFactory {
 
 	/**
 	 * 
-	 * There a 4 random number generators available:
+	 * There a 4 random number generators available. However, SecureRandom cannot be
+	 * reset to a seed. As this factory relies on the ability to reset the seed and
+	 * get a deterministic outcome it should not be included but could be used for
+	 * some other purpose e.g.creating seed sets for other rngs. The currently
+	 * available prng are:
 	 * 
 	 * 1) Java.util.Random - medium speed, poor quality;
 	 * 
-	 * 2) java.security.SecureRandom.SecureRandom() - slow, good quality?;
+	 * 2) java.security.SecureRandom.SecureRandom() - slow, good quality, cannot be
+	 * reset in the normal way so should only be used with ResetType.NEVER;
 	 * 
-	 * 3) au.edu.anu.fses.rng.XSRandom - very fast, medium quality
+	 * 3) au.edu.anu.fses.rng.XSRandom - very fast (76% faster than
+	 * Java.util.Random), medium quality
 	 * 
-	 * 4) au.edu.anu.fses.rng.PCGRandom - medium speed (as in (1)) and good quality
+	 * 4) au.edu.anu.fses.rng.Pcg32 - fast (65% faster than Java.util.Random)
+	 * and good quality
 	 * 
 	 * The choice is really between 3 & 4.
 	 * 
 	 * @param name      unique name
 	 * @param seedIndex index into array[0..999] of naturally generated random
-	 *                  numbers
+	 *                  numbers to act as seeds for resetting.
 	 * @param st        type of reset method
 	 * @param rnd       random number generator
 	 */
 	public static void makeRandom(String name, int seedIndex, ResetType st, Random rnd) {
 		if (!rngs.containsKey(name)) {
+			if ((rnd instanceof SecureRandom) && (!st.equals(ResetType.NEVER)))
+				throw new OmhtkException("Can only use SecureRandom with ResetType.NEVER");
 			Generator rng = new Generator(seedIndex, st, rnd);
 			rngs.put(name, rng);
 		} else

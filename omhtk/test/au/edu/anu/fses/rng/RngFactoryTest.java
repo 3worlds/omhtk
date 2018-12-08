@@ -41,42 +41,72 @@ import au.edu.anu.fses.rng.RngFactory.ResetType;
 
 class RngFactoryTest {
 
+	private long timing(Random rng) {
+		long s = System.nanoTime();
+		double sum = 0;
+		double min = Double.MAX_VALUE;
+		for (int i = 0; i < 100_000_000; i++)
+			sum += rng.nextDouble();
+		long e = System.nanoTime();
+		System.out.println(e - s + " nano seconds. Sum: " + sum);
+		return e-s;
+	}
+	private void checkRange(Random rng) {
+		double min = Double.MAX_VALUE;
+		double max = -min;
+		for (int i = 0; i < 100_000_000; i++) {
+			double v = rng.nextDouble();
+			min=Math.min(min, v);
+			max=Math.max(max, v);
+		}
+		assertTrue(min>=0.0);
+		assertTrue(max<1.0);
+		
+//		System.out.println("min: "+min+" max: "+max);
+				
+	}
+
 	@Test
 	void test() {
-		RngFactory.makeRandom("Random", 0, ResetType.ONCREATIONSTART, new Random());
-		Random random = RngFactory.getRandom("Random");
-		assertNotNull(random);
-		System.out.println("Random: "+ random.nextLong());
-		assertNotEquals(random.nextLong(),random.nextLong());
-		
-		RngFactory.makeRandom("SecureRandom", 0, ResetType.ONCREATIONSTART, new SecureRandom());
-		Random secureRandom = RngFactory.getRandom("SecureRandom");
-		assertNotNull(secureRandom);
-		System.out.println("SercureRandom: "+ secureRandom.nextLong());	
-		assertNotEquals(secureRandom.nextLong(),secureRandom.nextLong());
-
-		RngFactory.makeRandom("XSRandom", 0, ResetType.ONCREATIONSTART, new XSRandom());
-		Random xsRandom = RngFactory.getRandom("XSRandom");
-		assertNotNull(xsRandom);
-		System.out.println("XSRandom: "+ xsRandom.nextLong());	
-		assertNotEquals(xsRandom.nextLong(),xsRandom.nextLong());
-
-		RngFactory.makeRandom("PCGRandom", 0, ResetType.ONCREATIONSTART, new PCGRandom(0));
-		Random pcgRandom = RngFactory.getRandom("PCGRandom");
-		assertNotNull(pcgRandom);
-		System.out.println("PCGRandom: "+ pcgRandom.nextLong());	
-		assertNotEquals(pcgRandom.nextLong(),pcgRandom.nextLong());
 		String s = "\t";
-		for (int i = 0;i<100;i++) {
-			System.out.println(random.nextLong()+s+secureRandom.nextLong()+s+xsRandom.nextLong()+s+pcgRandom.nextLong());
-		}
-	// Only nextLong seems valid for pcgRandom. Other methods will need to be overwritten!
+
+		RngFactory.makeRandom("Random", 0, ResetType.ONRUNSTART, new Random());
+//		RngFactory.makeRandom("SecureRandom", 0, ResetType.ONRUNSTART, new SecureRandom());
+		RngFactory.makeRandom("XSRandom", 0, ResetType.ONRUNSTART, new XSRandom());
+		RngFactory.makeRandom("PCGRandom", 0, ResetType.ONRUNSTART, new Pcg32());
+
+		Random random = RngFactory.getRandom("Random");
+//		Random secureRandom = RngFactory.getRandom("SecureRandom");
+		Random xsRandom = RngFactory.getRandom("XSRandom");
+		Random pcgRandom = RngFactory.getRandom("PCGRandom");
 		
-//		for (int i = 0;i<1000;i++) {
-//			double v = pcgRandom.nextDouble();
-//			assertTrue(v<=1.0);
-//			assertTrue(v>=0.0);
-//		}
+		
+//		System.out.println("random" + s + "xsRandom" + s + "pcgRandom");
+
+		// SecureRandom cannot be reset like this
+		RngFactory.resetRun();
+		double v1 = random.nextDouble();
+		double v2 = xsRandom.nextDouble();
+		double v3 = pcgRandom.nextDouble();
+		RngFactory.resetRun();
+		assertEquals(v1, random.nextDouble());
+		assertEquals(v2, xsRandom.nextDouble());
+		assertEquals(v3, pcgRandom.nextDouble());
+		
+		checkRange(random);
+		checkRange(xsRandom);
+		checkRange(pcgRandom);
+
+		RngFactory.resetRun();
+		double t1 = timing(random);
+		double t2 = timing(xsRandom);
+		double t3 = timing(pcgRandom);
+		//timing(new SecureRandom()); too slow to be useful for simulation but maybe something else
+		System.out.println((1-t2/t1)*100);
+		System.out.println((1-t3/t1)*100);
+		
+		
+
 	}
 
 }
