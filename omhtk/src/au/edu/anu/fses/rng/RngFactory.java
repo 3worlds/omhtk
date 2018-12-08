@@ -80,8 +80,8 @@ public class RngFactory {
 		int seedIndex;
 		Random rns;
 
-		private Generator(int seedIndex, ResetType rt) {
-			this.rns = new Random();
+		private Generator(int seedIndex, ResetType rt, Random rnd) {
+			this.rns = rnd;
 			this.seedIndex = seedIndex;
 			this.rt = rt;
 			// DO NOT use a fixed seed for "NEVER" - use that supplied by the system.
@@ -98,9 +98,29 @@ public class RngFactory {
 
 	private static Map<String, Generator> rngs = new HashMap<>();
 
-	public static void makeRandom(String name, int seedIndex, ResetType st) {
+	/**
+	 * 
+	 * There a 4 random number generators available:
+	 * 
+	 * 1) Java.util.Random - medium speed, poor quality;
+	 * 
+	 * 2) java.security.SecureRandom.SecureRandom() - slow, good quality?;
+	 * 
+	 * 3) au.edu.anu.fses.rng.XSRandom - very fast, medium quality
+	 * 
+	 * 4) au.edu.anu.fses.rng.PCGRandom - medium speed (as in (1)) and good quality
+	 * 
+	 * The choice is really between 3 & 4.
+	 * 
+	 * @param name      unique name
+	 * @param seedIndex index into array[0..999] of naturally generated random
+	 *                  numbers
+	 * @param st        type of reset method
+	 * @param rnd       random number generator
+	 */
+	public static void makeRandom(String name, int seedIndex, ResetType st, Random rnd) {
 		if (!rngs.containsKey(name)) {
-			Generator rng = new Generator(seedIndex, st);
+			Generator rng = new Generator(seedIndex, st, rnd);
 			rngs.put(name, rng);
 		} else
 			throw new OmhtkException("Attempt to create duplicate random number generetor (" + name + ")");
