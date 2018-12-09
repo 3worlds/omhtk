@@ -44,49 +44,55 @@ import au.edu.anu.omhtk.rng.RngFactory.ResetType;
 
 class RngFactoryTest {
 
+	private final static int trials = 100_000_000;
+
+//	private Integer[] intTest(Random rng) {
+//		Integer[] res = new Integer[10];
+//		for (int i = 0; i < res.length; i++)
+//			res[i] = new Integer(0);
+//		for (int i = 0; i < trials; i++)
+//			res[rng.nextInt(10)]++;
+//		return res;
+//	}
+
 	private long timing(Random rng) {
 		long s = System.nanoTime();
 		double sum = 0;
-		double min = Double.MAX_VALUE;
-		for (int i = 0; i < 100_000_000; i++)
+		for (int i = 0; i < trials; i++)
 			sum += rng.nextDouble();
 		long e = System.nanoTime();
-		System.out.println(e - s + " nano seconds. Sum: " + sum);
-		return e-s;
+		double mean = sum / (double) trials;
+		assertTrue(mean > 0.4999);
+		assertTrue(mean < 0.5001);
+		return e - s;
 	}
+
 	private void checkRange(Random rng) {
 		double min = Double.MAX_VALUE;
 		double max = -min;
-		for (int i = 0; i < 100_000_000; i++) {
+		for (int i = 0; i < trials; i++) {
 			double v = rng.nextDouble();
-			min=Math.min(min, v);
-			max=Math.max(max, v);
+			min = Math.min(min, v);
+			max = Math.max(max, v);
 		}
-		assertTrue(min>=0.0);
-		assertTrue(max<1.0);
-		
-//		System.out.println("min: "+min+" max: "+max);
-				
+		assertTrue(min >= 0.0);
+		assertTrue(max < 1.0);
 	}
 
 	@Test
 	void test() {
-		String s = "\t";
 
 		RngFactory.makeRandom("Random", 0, ResetType.ONRUNSTART, new Random());
-//		RngFactory.makeRandom("SecureRandom", 0, ResetType.ONRUNSTART, new SecureRandom());
 		RngFactory.makeRandom("XSRandom", 0, ResetType.ONRUNSTART, new XSRandom());
 		RngFactory.makeRandom("PCGRandom", 0, ResetType.ONRUNSTART, new Pcg32());
+		// SecureRandom must use "NEVER" - it cannot be reset deterministically
+		RngFactory.makeRandom("SecureRandom", 0, ResetType.NEVER, new SecureRandom());
 
 		Random random = RngFactory.getRandom("Random");
-//		Random secureRandom = RngFactory.getRandom("SecureRandom");
 		Random xsRandom = RngFactory.getRandom("XSRandom");
 		Random pcgRandom = RngFactory.getRandom("PCGRandom");
-		
-		
-//		System.out.println("random" + s + "xsRandom" + s + "pcgRandom");
+//		Random secureRandom = RngFactory.getRandom("SecureRandom");
 
-		// SecureRandom cannot be reset like this
 		RngFactory.resetRun();
 		double v1 = random.nextDouble();
 		double v2 = xsRandom.nextDouble();
@@ -95,21 +101,45 @@ class RngFactoryTest {
 		assertEquals(v1, random.nextDouble());
 		assertEquals(v2, xsRandom.nextDouble());
 		assertEquals(v3, pcgRandom.nextDouble());
-		
+
+		// Integer[] r1 = intTest(random);
+		// System.out.println("Random: "+Arrays.deepToString(r1));
+		// Integer[] r2 = intTest(xsRandom);
+		// System.out.println("XSRandom: "+Arrays.deepToString(r2));
+		// Integer[] r3 = intTest(pcgRandom);
+		// System.out.println("PCGRandom: "+Arrays.deepToString(r3));
+		// Integer[] r4 = intTest(secureRandom);
+		// System.out.println("SecureRandom: "+Arrays.deepToString(r4));
+		// String s = "\t";
+		// System.out.println("Random"+s+"XSRandom"+s+"PCGRandom"+s+"SecureRandom");
+		// for (int i= 0;i<r1.length;i++) {
+		// System.out.println(r1[i]+s+r2[i]+s+r3[i]+s+r4[i]);
+		// }
+
+		System.out.println("Range check Random");
 		checkRange(random);
+		System.out.println("Range check XSRandom");
 		checkRange(xsRandom);
+		System.out.println("Range check PCGRandom");
 		checkRange(pcgRandom);
+		// System.out.println("Range check Random");
+		// checkRange(secureRandom);
 
 		RngFactory.resetRun();
-		double t1 = timing(random);
-		double t2 = timing(xsRandom);
-		double t3 = timing(pcgRandom);
-		//timing(new SecureRandom()); too slow to be useful for simulation but maybe something else
-		System.out.println((1-t2/t1)*100);
-		System.out.println((1-t3/t1)*100);
-		
-		
 
+		System.out.println("Time trial Random");
+		double t1 = timing(random);
+		System.out.println("Time trial XSRandom");
+		double t2 = timing(xsRandom);
+		System.out.println("Time trial PCGRandom");
+		double t3 = timing(pcgRandom);
+		// > 2000% slower
+		// double t4 = timing(secureRandom);
+
+		System.out.println(("xsRandom is: " + (1 - t2 / t1) * 100) + " % faster than Java.util.Random");
+		System.out.println(("pcgRandom is: " + (1 - t3 / t1) * 100) + " % faster than Java.util.Random");
+		// System.out.println(("SecureRandom is: "+(1-t4/t1)*100)+" % faster than
+		// Java.util.Random");
 	}
 
 }
