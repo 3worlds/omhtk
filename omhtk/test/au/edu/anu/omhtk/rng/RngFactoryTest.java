@@ -28,7 +28,7 @@
  *                                                                        *
  **************************************************************************/
 
-package au.edu.anu.fses.rng;
+package au.edu.anu.omhtk.rng;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -37,7 +37,10 @@ import java.util.Random;
 
 import org.junit.jupiter.api.Test;
 
-import au.edu.anu.fses.rng.RngFactory.ResetType;
+import au.edu.anu.omhtk.rng.Pcg32;
+import au.edu.anu.omhtk.rng.RngFactory;
+import au.edu.anu.omhtk.rng.XSRandom;
+import au.edu.anu.omhtk.rng.RngFactory.ResetType;
 
 class RngFactoryTest {
 

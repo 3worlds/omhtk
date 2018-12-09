@@ -1,4 +1,4 @@
-package au.edu.anu.fses.rng;
+package au.edu.anu.omhtk.rng;
 
 /**************************************************************************
  *  OMHTK - One More Handy Tool Kit                                       *

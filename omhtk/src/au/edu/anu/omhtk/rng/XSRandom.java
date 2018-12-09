@@ -28,7 +28,7 @@
  *                                                                        *
  **************************************************************************/
 
-package au.edu.anu.fses.rng;
+package au.edu.anu.omhtk.rng;
 
 import java.util.Random;
 
