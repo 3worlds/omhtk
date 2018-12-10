@@ -50,8 +50,6 @@ class RngFactoryTest {
 //		Integer[] res = new Integer[10];
 //		for (int i = 0; i < res.length; i++)
 //			res[i] = new Integer(0);
-//		for (int i = 0; i < trials; i++)
-//			res[rng.nextInt(10)]++;
 //		return res;
 //	}
 
