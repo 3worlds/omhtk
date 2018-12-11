@@ -40,7 +40,7 @@ class PrefImplTest {
 
 	@Test
 	void test() {
-		PrefImpl prefs = new PrefImpl(this,"_");
+		PrefImpl prefs = new PrefImpl(this);
 		String key1 = "Test1";
 		String key2 = "Test2";
 		String key3 = "Test3";
@@ -77,7 +77,8 @@ class PrefImplTest {
 		assertTrue(prefs.getFloat(key7, 0) == 0.0f);
 		assertTrue(prefs.getFloats(key8, defFloats)[0] == 0.0f);
 		assertTrue(prefs.getString(key9, "s") == "s");
-		assertTrue(prefs.getStrings(key10, defStrings)[0] == "s");
+		String[] sts = prefs.getStrings(key10, defStrings);
+		assertTrue(sts[0].equals("s"));
 
 		// make changes
 		prefs.putInt(key1, 1);
@@ -103,9 +104,9 @@ class PrefImplTest {
 		assertTrue(prefs.getFloat(key7, 0) == 10.5f);
 		assertTrue(prefs.getFloats(key8, defFloats)[0] == 1.1f);
 		assertTrue(prefs.getFloats(key8, defFloats)[4] == 5.5f);
-		assertTrue(prefs.getString(key9, "s") == "ss");
-		assertTrue(prefs.getStrings(key10, defStrings)[0] == "s1");
-		assertTrue(prefs.getStrings(key10, defStrings)[4] == "s5");
+		assertTrue(prefs.getString(key9, "s").equals("ss"));
+		assertTrue(prefs.getStrings(key10, defStrings)[0].equals("s1"));
+		assertTrue(prefs.getStrings(key10, defStrings)[4].equals("s5"));
 
 		prefs.remove(key1);
 		prefs.remove(key2);
