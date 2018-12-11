@@ -28,3 +28,35 @@
  *  If not, see <https://www.gnu.org/licenses/gpl.html>.                  *
  *                                                                        *
  **************************************************************************/
+
+package au.edu.anu.omhtk.bytearrays;
+
+import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
+
+/**
+ * Author Ian Davies
+ *
+ * Date Dec 11, 2018
+ */
+public class ByteArrayConversion {
+	
+	public static int[] bytesAsInts(byte[] bytes) {
+		ByteBuffer bb = ByteBuffer.wrap(bytes);
+		IntBuffer ib = bb.asIntBuffer();
+		int n = bytes.length / Integer.BYTES;
+		int[] res = new int[n];
+		for (int i = 0; i < res.length; i++)
+			res[i] = ib.get(i);
+		return res;
+	}
+
+	public static byte[] IntsAsBytes(int... values) {
+		ByteBuffer buffer = ByteBuffer.allocate(values.length * Integer.BYTES);
+		IntBuffer ib = buffer.asIntBuffer();
+		for (int i = 0; i < values.length; i++)
+			ib.put(values[i]);
+		return buffer.array();
+	}
+
+}
