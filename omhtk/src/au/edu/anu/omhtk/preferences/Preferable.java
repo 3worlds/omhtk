@@ -28,3 +28,51 @@
  *  If not, see <https://www.gnu.org/licenses/gpl.html>.                  *
  *                                                                        *
  **************************************************************************/
+
+package au.edu.anu.omhtk.preferences;
+
+/**
+ * Author Ian Davies
+ *
+ * Date Dec 11, 2018
+ */
+
+/**
+ * Java has a preferences API {@link java.util.prefs.Preferences} . Therefore, I
+ * hope we no longer need the graph-dependent implementation for preference saving.
+ * However, the Java system only deals with primitives and so this code is an
+ * interface to a preference helper class for 3Worlds
+ */
+
+public interface Preferable {
+	public void putInt(String key, int value);
+	public void putInts(String key, int... values);
+	public void putLong(String key, long value);
+	public void putLongs(String key, long... values);
+	public void putBoolean(String key, boolean value);
+	public void putBooleans(String key, boolean... values);
+	public void putFloat(String key, float value);
+	public void putFloats(String key, float... values);
+	public void putDouble(String key, double value);
+	public void putDoubles(String key, double... values);
+	public void putString(String key, String value);
+	public void putStrings(String key, String... values);
+
+	public int getInt(String key,int def);
+	public int[] getInts(String key, int... defs);
+	public long getLong(String key,long def);
+	public long[] getLongs(String key, long... defs);
+	public boolean getBoolean(String key,boolean def);
+	public boolean[] getBooleans(String key, boolean... defs);
+	public float getFloat(String key,float def);
+	public float[] getFloats(String key, float... defs);
+	public double getDouble(String key, double def);
+	public double[] getDoubles(String key, double...defs);
+	public String getString(String key,String def);
+	public String[] getStrings(String key, String... defs);
+	
+	public void remove(String key);
+	public void flush();
+	public boolean isEmpty();
+
+}
