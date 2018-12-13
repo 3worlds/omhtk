@@ -33,14 +33,15 @@ package au.edu.anu.omhtk.preferences;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import org.junit.jupiter.api.Test;
+import java.io.File;
 
+import org.junit.jupiter.api.Test;
 
 class PrefImplTest {
 
 	@Test
 	void test() {
-		PrefImpl prefs = new PrefImpl(this);
+		PrefImpl prefs = new PrefImpl(new File(System.getProperty("user.home") + File.separator + "MM.xml"));
 		String key1 = "Test1";
 		String key2 = "Test2";
 		String key3 = "Test3";
@@ -107,6 +108,8 @@ class PrefImplTest {
 		assertTrue(prefs.getString(key9, "s").equals("ss"));
 		assertTrue(prefs.getStrings(key10, defStrings)[0].equals("s1"));
 		assertTrue(prefs.getStrings(key10, defStrings)[4].equals("s5"));
+		
+		prefs.flush();
 
 		prefs.remove(key1);
 		prefs.remove(key2);

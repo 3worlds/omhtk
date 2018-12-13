@@ -31,10 +31,15 @@
 
 package au.edu.anu.omhtk.preferences;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.prefs.BackingStoreException;
+import java.util.prefs.InvalidPreferencesFormatException;
 import java.util.prefs.Preferences;
 
-import au.edu.anu.omhtk.bytearrays.ByteArrayConversion;
+import au.edu.anu.omhtk.stringarrays.StringArrayConversion;
 
 /**
  * Author Ian Davies
@@ -43,12 +48,47 @@ import au.edu.anu.omhtk.bytearrays.ByteArrayConversion;
  */
 public class PrefImpl implements Preferable {
 	private Preferences prefs;
-	private final String sep = "\t";
+	private final String sep = ",";
+	private File file;
 
-	public PrefImpl(Object item) {
-		this.prefs = Preferences.userRoot().node(item.getClass().getName());
-		// TODO: Need logging system here
-		System.out.println(prefs.absolutePath().toString());
+	/**
+	 * A wrapper class for {@link java.util.prefs.Preferences}. This impl loads the
+	 * node from file, if present, and writes to file on flush()
+	 * 
+	 * It also contains methods to get/put primitive arrays by conversion to String.
+	 * 
+	 * Keys and values have a maximum size imposed by
+	 * {@link java.util.prefs.Preferences}. If this is exceeded there will be
+	 * problems.
+	 * 
+	 * Keys: 80
+	 * 
+	 * Values: 8192
+	 * 
+	 * @param file file name for local storage of the preferences (and for node
+	 *             hierarchy in backingstore)
+	 */
+	public PrefImpl(File file) {
+		// file /a/b/c creates node children a -> b -> c
+		this.prefs = Preferences.userRoot().node(file.getAbsolutePath());
+		try {
+			// Ignore the backingstore: we want to see the file for checking and possible
+			// editing
+			prefs.clear();
+		} catch (BackingStoreException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
+		this.file = file;
+		if (file.exists())
+			try {
+				Preferences.importPreferences(new FileInputStream(file));
+			} catch (IOException | InvalidPreferencesFormatException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
 	}
 
 	@Override
@@ -58,7 +98,7 @@ public class PrefImpl implements Preferable {
 
 	@Override
 	public void putInts(String key, int... values) {
-		prefs.putByteArray(key, ByteArrayConversion.IntsAsBytes(values));
+		prefs.put(key, String.join(sep, StringArrayConversion.IntsAsStrings(values)));
 	}
 
 	@Override
@@ -68,7 +108,7 @@ public class PrefImpl implements Preferable {
 
 	@Override
 	public void putLongs(String key, long... values) {
-		prefs.putByteArray(key, ByteArrayConversion.LongsAsBytes(values));
+		prefs.put(key, String.join(sep, StringArrayConversion.LongsAsStrings(values)));
 	}
 
 	@Override
@@ -78,7 +118,7 @@ public class PrefImpl implements Preferable {
 
 	@Override
 	public void putBooleans(String key, boolean... values) {
-		prefs.putByteArray(key, ByteArrayConversion.BooleansAsBytes(values));
+		prefs.put(key, String.join(sep, StringArrayConversion.BooleansAsStrings(values)));
 	}
 
 	@Override
@@ -88,7 +128,7 @@ public class PrefImpl implements Preferable {
 
 	@Override
 	public void putFloats(String key, float... values) {
-		prefs.putByteArray(key, ByteArrayConversion.FloatsAsBytes(values));
+		prefs.put(key, String.join(sep, StringArrayConversion.FloatsAsStrings(values)));
 	}
 
 	@Override
@@ -99,7 +139,7 @@ public class PrefImpl implements Preferable {
 
 	@Override
 	public void putDoubles(String key, double... values) {
-		prefs.putByteArray(key, ByteArrayConversion.DoublesAsBytes(values));
+		prefs.put(key, String.join(sep, StringArrayConversion.DoublesAsStrings(values)));
 	}
 
 	@Override
@@ -109,8 +149,7 @@ public class PrefImpl implements Preferable {
 
 	@Override
 	public void putStrings(String key, String... values) {
-		String s = String.join(sep, values);
-		prefs.put(key, s);
+		prefs.put(key, String.join(sep, values));
 	}
 
 	@Override
@@ -120,8 +159,8 @@ public class PrefImpl implements Preferable {
 
 	@Override
 	public int[] getInts(String key, int... defs) {
-		byte[] bytes = prefs.getByteArray(key, ByteArrayConversion.IntsAsBytes(defs));
-		return ByteArrayConversion.bytesAsInts(bytes);
+		String value = prefs.get(key, String.join(sep, StringArrayConversion.IntsAsStrings(defs)));
+		return StringArrayConversion.stringsAsInts(value.split(sep));
 	}
 
 	@Override
@@ -131,8 +170,8 @@ public class PrefImpl implements Preferable {
 
 	@Override
 	public long[] getLongs(String key, long... defs) {
-		byte[] bytes = prefs.getByteArray(key, ByteArrayConversion.LongsAsBytes(defs));
-		return ByteArrayConversion.bytesAsLongs(bytes);
+		String value = prefs.get(key, String.join(sep, StringArrayConversion.LongsAsStrings(defs)));
+		return StringArrayConversion.stringsAsLongs(value.split(sep));
 	}
 
 	@Override
@@ -142,8 +181,8 @@ public class PrefImpl implements Preferable {
 
 	@Override
 	public boolean[] getBooleans(String key, boolean... defs) {
-		byte[] bytes = prefs.getByteArray(key, ByteArrayConversion.BooleansAsBytes(defs));
-		return ByteArrayConversion.bytesAsBooleans(bytes);
+		String value = prefs.get(key, String.join(sep, StringArrayConversion.BooleansAsStrings(defs)));
+		return StringArrayConversion.stringsAsBooleans(value.split(sep));
 	}
 
 	@Override
@@ -153,8 +192,8 @@ public class PrefImpl implements Preferable {
 
 	@Override
 	public float[] getFloats(String key, float... defs) {
-		byte[] bytes = prefs.getByteArray(key, ByteArrayConversion.FloatsAsBytes(defs));
-		return ByteArrayConversion.bytesAsFloats(bytes);
+		String value = prefs.get(key, String.join(sep, StringArrayConversion.FloatsAsStrings(defs)));
+		return StringArrayConversion.stringsAsFloats(value.split(sep));
 	}
 
 	@Override
@@ -164,8 +203,8 @@ public class PrefImpl implements Preferable {
 
 	@Override
 	public double[] getDoubles(String key, double... defs) {
-		byte[] bytes = prefs.getByteArray(key, ByteArrayConversion.DoublesAsBytes(defs));
-		return ByteArrayConversion.bytesAsDoubles(bytes);
+		String value = prefs.get(key, String.join(sep, StringArrayConversion.DoublesAsStrings(defs)));
+		return StringArrayConversion.stringsAsDoubles(value.split(sep));
 	}
 
 	@Override
@@ -188,6 +227,12 @@ public class PrefImpl implements Preferable {
 	public void flush() {
 		try {
 			prefs.flush();
+			try {
+				prefs.exportNode(new FileOutputStream(file));
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		} catch (BackingStoreException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
