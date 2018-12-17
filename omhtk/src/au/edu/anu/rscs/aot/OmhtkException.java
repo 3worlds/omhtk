@@ -42,10 +42,11 @@ import fr.ens.biologie.generic.Textable;
 //The general advice for exceptions is to throw early and catch late.
 public class OmhtkException extends RuntimeException {
 
+
 	/**
-	 * Serializable
+	 * 
 	 */
-	private static final long serialVersionUID = 4121451020638650287L;
+	private static final long serialVersionUID = -8889113181614003738L;
 
 	public OmhtkException(Textable item, String message) {
 		super("[on " + item + "]\n[" + message + "]");
