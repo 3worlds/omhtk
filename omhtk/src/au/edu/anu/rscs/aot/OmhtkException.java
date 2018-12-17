@@ -37,7 +37,9 @@ import fr.ens.biologie.generic.Textable;
  * 
  * 
  */
-// NB: this was AotException before - but Exception have to stay local to their Library
+//NB: this was previously AotException
+//Policy is to make an exception at least for each library
+//The general advice for exceptions is to throw early and catch late.
 public class OmhtkException extends RuntimeException {
 
 	/**
