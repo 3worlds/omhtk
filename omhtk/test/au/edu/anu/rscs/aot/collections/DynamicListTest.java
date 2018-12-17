@@ -31,7 +31,6 @@ package au.edu.anu.rscs.aot.collections;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 
 import org.junit.jupiter.api.BeforeEach;

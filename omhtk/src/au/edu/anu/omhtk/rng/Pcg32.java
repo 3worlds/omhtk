@@ -72,6 +72,10 @@ import java.util.concurrent.atomic.AtomicLong;
  * </ul>
  */
 public class Pcg32 extends Random {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private long state;
 	private long inc;
 
