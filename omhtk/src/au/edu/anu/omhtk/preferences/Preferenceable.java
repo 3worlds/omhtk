@@ -41,10 +41,10 @@ package au.edu.anu.omhtk.preferences;
  * Java has a preferences API {@link java.util.prefs.Preferences} . Therefore, I
  * hope we no longer need the graph-dependent implementation for preference saving.
  * However, the Java system only deals with primitives and so this code is an
- * interface to a preference helper class for 3Worlds
+ * interface to a preference helper class for 3Worlds to implement array handling.
  */
 
-public interface Preferable {
+public interface Preferenceable {
 	public void putInt(String key, int value);
 	public void putInts(String key, int... values);
 	public void putLong(String key, long value);

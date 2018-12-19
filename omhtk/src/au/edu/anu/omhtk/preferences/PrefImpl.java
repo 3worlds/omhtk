@@ -46,7 +46,7 @@ import au.edu.anu.omhtk.stringarrays.StringArrayConversion;
  *
  * Date Dec 11, 2018
  */
-public class PrefImpl implements Preferable {
+public class PrefImpl implements Preferenceable {
 	private Preferences prefs;
 	private final String sep = ",";
 	private File file;
