@@ -36,17 +36,22 @@ import java.net.URL;
 
 import au.edu.anu.omhtk.jars.Jars;
 import au.edu.anu.rscs.aot.OmhtkException;
-// not sure about all this!!
+// TODO not sure about all this!! Needs testing, documenting  and a home
 /**
  * Author Ian Davies
  *
  * Date 19 Dec. 2018
  */
+// Copied from old code by S. Flint.
 public class Resources {
+	/**
+	 * @param name
+	 * @return
+	 */
 	public static URL getURL(String name) {
 		URL result = ClassLoader.getSystemResource(name);
 		if (new File(result.getFile()).isDirectory()) {
-			throw new OmhtkException("JavaUtils.getClassesInPackage: Directory resources are not permitted '" + name + "'");				
+			throw new OmhtkException("Directory resources are not permitted '" + name + "'");				
 		}
 		return result;
 	}
