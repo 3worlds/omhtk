@@ -38,6 +38,7 @@ class UidTest {
 	void testUid() {
 		show("testUid",uid.toString());
 		assertNotNull(uid);
+		assertFalse(uid.toShortString().equals("000000000000-0000000000000000-0000"));
 	}
 
 	/**
@@ -164,7 +165,9 @@ class UidTest {
 	 */
 	@Test
 	void testToShortString() {
-		assertEquals(uid2.toShortString(),"0");
+//		assertEquals(uid2.toShortString(),"0");
+		show("testToShortString",uid2.toShortString());
+		assertEquals(uid2.toShortString(),"000000000000-0000000000000000-0000");
 	}
 
 	/**
