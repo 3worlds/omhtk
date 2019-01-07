@@ -62,7 +62,8 @@ public class Uid implements Serializable, Comparable<Uid> {
 
 	static {
 		try {
-			lastUidTime = new DateTime().getTime();
+//			lastUidTime = new DateTime().getTime();
+			lastUidTime = System.currentTimeMillis();
 			Enumeration<NetworkInterface> networkInterfaces = NetworkInterface.getNetworkInterfaces();
 			while (networkInterfaces.hasMoreElements()) {
 				NetworkInterface network = networkInterfaces.nextElement();
@@ -159,7 +160,8 @@ public class Uid implements Serializable, Comparable<Uid> {
 
 	private void newUid() {
 		mac = macAddress;
-		long time = new DateTime().getTime();
+		//long time = new DateTime().getTime();
+		long time = System.currentTimeMillis();
 		if (time > lastUidTime) {
 			lastUidTime = time;
 			count = 0;

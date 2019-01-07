@@ -44,13 +44,13 @@ import au.edu.anu.rscs.aot.collections.QuickListOfLists;
 class QuickListOfListsTest {
 	
 	private QuickListOfLists<Integer> makeList() {
-		List<Integer> list1 = new ArrayList<Integer>();
-		List<Integer> list2 = new LinkedList<Integer>();
-		Set<Integer> list3 = new HashSet<Integer>();
+		List<Integer> list1 = new ArrayList<>();
+		List<Integer> list2 = new LinkedList<>();
+		Set<Integer> list3 = new HashSet<>();
 		list1.add(1); list1.add(2); list1.add(3);
 		list2.add(4); list2.add(5);
 		list3.add(6); list3.add(7); list3.add(8);
-		QuickListOfLists<Integer> list = new QuickListOfLists<Integer>(list1,list2,list3);
+		QuickListOfLists<Integer> list = new QuickListOfLists<>(list1,list2,list3);
 		return list;
 	}
 	
