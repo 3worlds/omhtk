@@ -31,6 +31,8 @@
 
 package au.edu.anu.omhtk.preferences;
 
+import java.io.File;
+
 /**
  * Author Ian Davies
  *
@@ -52,10 +54,11 @@ public class Preferences {
 	private Preferences() {
 	};
 
-	public static void initialise(Preferenceable impl) {
+	public static void initialise(File file) {
+		
 		if (Preferences.impl != null)
 			Preferences.impl.flush();
-		Preferences.impl = impl;
+		Preferences.impl = new PrefImpl(file);
 	}
 
 	public static void putInt(String key, int value) {

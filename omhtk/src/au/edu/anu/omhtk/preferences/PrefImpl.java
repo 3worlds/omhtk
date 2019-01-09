@@ -68,7 +68,7 @@ public class PrefImpl implements Preferenceable {
 	 * @param file file name for local storage of the preferences (and for node
 	 *             hierarchy in backingstore)
 	 */
-	public PrefImpl(File file) {
+	protected PrefImpl(File file) {
 		// file /a/b/c creates node children a -> b -> c
 		this.prefs = Preferences.userRoot().node(file.getAbsolutePath());
 		try {
