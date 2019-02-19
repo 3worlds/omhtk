@@ -6,10 +6,11 @@
  If you need to change this file, edit ../version/Setup.java appropriately and run it.
  This will re-generate this file and manage version numbers properly. 
 ===================================================================================-->
-<project xmlns:ivy="antlib:org.apache.ivy.ant" basedir="..">
+<project xmlns:ivy="antlib:org.apache.ivy.ant" basedir=".." default="publishJar">
 
 	<!-- Artifacts are produced in the project lib directory-->
 	<property name="jarRepo" location="${user.dir}/../lib"/>
+	<property name="docRepo" location="${user.dir}/../doc/javadoc"/>
 
 	<!-- Use this string as the organisation package -->
 	<property name="org" value="fr.ens.biologie"/>
@@ -21,8 +22,13 @@
 	<property name="jarlib" location="${jarRepo}/${org}.${project}"/>
 
 	<!-- Tasks -->
-	<target name="makeArtifactDir" description="create directory for jars">
+	<target name="makeArtifactDir" description="create directory for jars and doc">
 		<mkdir dir="${jarlib}"/>
+		<mkdir dir="${docRepo}"/>
+	</target>
+	
+	<target name="cleanDoc" description="clenaup javadoc directory">
+		<delete dir="${docRepo}"/>
 	</target>
 
 	<target name="resolve" description="resolve dependencies and setup publication environment">
@@ -51,4 +57,10 @@
 		</ivy:publish>
 	</target>
 
+	<target name="javadoc" description="generate JavaDoc" depends="makeArtifactDir,cleanDoc">
+		<javadoc destdir="${docRepo}">
+			<fileset dir="src"/>
+		</javadoc>
+	</target>
+	
 </project>
