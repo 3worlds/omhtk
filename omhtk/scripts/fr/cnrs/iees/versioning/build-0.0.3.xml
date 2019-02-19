@@ -1,5 +1,5 @@
 <!--===================================================================================
- ant and ivy scripts for project <generics> version 0.0.4 (Tue Feb 19 08:51:02 CET 2019)
+ ant and ivy scripts for project <generics> version 0.0.3 (Thu Jan 24 13:35:08 CET 2019)
  author: Jacques Gignoux <jacques.gignoux@upmc.fr>
 
  CAUTION: this file is generated - DO NOT EDIT!
@@ -32,17 +32,7 @@
 	</target>
 
 	<target name="makeJar" description="pack as a jar library" depends="makeArtifactDir,resolve">
-		<jar destfile="${jarlib}/${project}.jar">
-			<fileset dir="bin" 
-				excludes="**/VersionManager.*,**/LicenseManager.*,**/current-version.txt,**/*.xml,**/*Test.class"/>
-			<fileset dir="src"/>
-			<manifest>
-				<attribute name="Implementation-Vendor" value="CNRS/ANU"/>
-				<attribute name="Implementation-Title" value="fr.ens.biologie"/>
-				<attribute name="Implementation-Version" value="0.0.4"/>
-				<attribute name="Built-By" value="${user.name}"/>
- 			</manifest>
-		</jar>
+		<jar destfile="${jarlib}/${project}.jar" basedir="bin" excludes="**/VersionManager.*,**/LicenseManager.*,**/current-version.txt"/>
 	</target>
 
 	<target name="publishJar" description="make jar library available to others" depends="makeJar">
