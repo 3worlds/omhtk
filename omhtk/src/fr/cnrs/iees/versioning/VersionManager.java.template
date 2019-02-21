@@ -93,23 +93,36 @@ public class VersionManager {
 	
 	private static String build1 =
 	"<project xmlns:ivy=\"antlib:org.apache.ivy.ant\" basedir=\"..\" default=\"publishJar\">\n\n" +
+
 	"\t<!-- Artifacts are produced in the project lib directory-->\n" +
 	"\t<property name=\"jarRepo\" location=\"${user.dir}/../lib\"/>\n\n" +
+	"\t<property name=\"docRepo\" location=\"${user.dir}/../doc/javadoc\"/>" +
+
 	"\t<!-- Use this string as the organisation package -->\n" +
 	"\t<property name=\"org\" value=\"" + ORG +"\"/>\n\n" +
+
 	"\t<!-- The project name -->\n" +
 	"\t<property name=\"project\" value=\""+ MODULE +"\"/>\n\n" +
+
 	"\t<!-- Append the project name to the organisation string -->\n" +
 	"\t<property name=\"jarlib\" location=\"${jarRepo}/${org}.${project}\"/>\n\n" +
+
 	"\t<!-- Tasks -->\n" +
-	"\t<target name=\"makeArtifactDir\" description=\"create directory for jars\">\n" +
+	"\t<target name=\"makeArtifactDir\" description=\"create directory for jars and doc\">\n" +
 	"\t\t<mkdir dir=\"${jarlib}\"/>\n" +
+	"\t\t<mkdir dir=\"${docRepo}\"/>" +
 	"\t</target>\n\n" +
+
+	"\t<target name=\"cleanDoc\" description=\"cleanup javadoc directory\">\n" + 
+	"\t\t<delete dir=\"${docRepo}\"/>\n" + 
+	"\t</target>\n" + 
+
 	"\t<target name=\"resolve\" description=\"resolve dependencies and setup publication environment\">\n" +
 	"\t\t<ivy:configure/>\n" +
 	"\t\t<ivy:resolve file=\"scripts/${ivy.dep.file}\" conf=\"${ivy.configurations}\"/>\n" +
 	"\t\t<ivy:retrieve pattern=\"${ivy.retrieve.pattern}\" conf=\"${ivy.configurations}\"/>\n" +
 	"\t</target>\n\n" +
+
 	"\t<target name=\"makeJar\" description=\"pack as a jar library\" depends=\"makeArtifactDir,resolve\">\n" +
 	"\t\t<jar destfile=\"${jarlib}/${project}.jar\">\n" + 
 	"\t\t\t<fileset dir=\"bin\" \n" + 
@@ -128,11 +141,19 @@ public class VersionManager {
 	"\t\t\t</manifest>\n" + 
 	"\t\t</jar>\n" + 
 	"\t</target>\n\n" +
+
 	"\t<target name=\"publishJar\" description=\"make jar library available to others\" depends=\"makeJar\">\n" +
 	"\t\t<ivy:publish resolver=\"local\" overwrite=\"true\"  forcedeliver=\"true\">\n" +
 	"\t\t\t<artifacts pattern=\"${jarlib}/[artifact].[ext]\"/>\n" +
 	"\t\t</ivy:publish>\n" +
 	"\t</target>\n\n" +
+
+	"\t<target name=\"javadoc\" description=\"generate JavaDoc\" depends=\"makeArtifactDir,cleanDoc\">\n" + 
+	"\t\t<javadoc destdir=\"${docRepo}\">\n" + 
+	"\t\t\t<fileset dir=\"src\"/>\n" + 
+	"\t\t</javadoc>\n" + 
+	"\t</target>\n" + 
+
 	"</project>\n";
 	
 	private static String buildDependencyList() {
