@@ -1,5 +1,5 @@
 <!--===================================================================================
- ant and ivy scripts for project <generics> version 0.0.5 (Mon Mar 25 10:46:13 AEDT 2019)
+ ant and ivy scripts for project <generics> version 0.0.4 (Tue Feb 19 08:51:02 CET 2019)
  author: Jacques Gignoux <jacques.gignoux@upmc.fr>
 
  CAUTION: this file is generated - DO NOT EDIT!
@@ -10,8 +10,9 @@
 
 	<!-- Artifacts are produced in the project lib directory-->
 	<property name="jarRepo" location="${user.dir}/../lib"/>
+	<property name="docRepo" location="${user.dir}/../doc/javadoc"/>
 
-	<property name="docRepo" location="${user.dir}/../doc/javadoc"/>	<!-- Use this string as the organisation package -->
+	<!-- Use this string as the organisation package -->
 	<property name="org" value="fr.ens.biologie"/>
 
 	<!-- The project name -->
@@ -23,11 +24,13 @@
 	<!-- Tasks -->
 	<target name="makeArtifactDir" description="create directory for jars and doc">
 		<mkdir dir="${jarlib}"/>
-		<mkdir dir="${docRepo}"/>	</target>
-
-	<target name="cleanDoc" description="cleanup javadoc directory">
+		<mkdir dir="${docRepo}"/>
+	</target>
+	
+	<target name="cleanDoc" description="clenaup javadoc directory">
 		<delete dir="${docRepo}"/>
 	</target>
+
 	<target name="resolve" description="resolve dependencies and setup publication environment">
 		<ivy:configure/>
 		<ivy:resolve file="scripts/${ivy.dep.file}" conf="${ivy.configurations}"/>
@@ -42,7 +45,7 @@
 			<manifest>
 				<attribute name="Implementation-Vendor" value="CNRS/ANU"/>
 				<attribute name="Implementation-Title" value="fr.ens.biologie"/>
-				<attribute name="Implementation-Version" value="0.0.5"/>
+				<attribute name="Implementation-Version" value="0.0.4"/>
 				<attribute name="Built-By" value="${user.name}"/>
  			</manifest>
 		</jar>
@@ -59,4 +62,5 @@
 			<fileset dir="src"/>
 		</javadoc>
 	</target>
+	
 </project>

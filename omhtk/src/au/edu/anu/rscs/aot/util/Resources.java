@@ -84,6 +84,11 @@ public class Resources {
 			return null;
 	}
 
+	/**
+	 * @param name file name of resource
+	 * @param packageName package location
+	 * @return fully qualified File obtained by the ClassLoader
+	 */
 	public static File getFile(String name, String packageName) {
 		URL url = getURL(name, packageName);
 		if (url != null)
@@ -91,12 +96,19 @@ public class Resources {
 		else
 			return null;
 	}
+	
+	/**
+	 * @param name package relative resource file (dot separated)
+	 * @return fully qualified File obtained by the ClassLoader
+	 */
 	public static File getPackagedFile(String name) {
 		int idx = name.lastIndexOf('.');
-		String modString = name.substring(0, idx).replace(".","/")
-		        + name.substring(idx);
-		return new File(modString);
+		String fname = new File( name.substring(0, idx).replace(".","/")
+		        + name.substring(idx)).getName();
+		String packageName = name.replace("."+fname, "");
+		return getFile(fname,packageName);
 		
 	}
+	
 
 }
