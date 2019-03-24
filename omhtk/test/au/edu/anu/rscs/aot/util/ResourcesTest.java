@@ -31,72 +31,22 @@
 
 package au.edu.anu.rscs.aot.util;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 import java.io.File;
-import java.net.URL;
 
-import au.edu.anu.omhtk.jars.Jars;
-import au.edu.anu.rscs.aot.OmhtkException;
-// TODO not sure about all this!! Needs testing, documenting  and a home
-/**
- * Author Ian Davies
- *
- * Date 19 Dec. 2018
- */
-// Copied from old code by S. Flint.
-public class Resources {
-	/**
-	 * @param name
-	 * @return
-	 */
-	public static URL getURL(String name) {
-		URL result = ClassLoader.getSystemResource(name);
-		if (result==null)
-			throw new OmhtkException("Resource not found by ClassLoader: "+name);
-		if (new File(result.getFile()).isDirectory()) {
-			throw new OmhtkException("Directory resources are not permitted '" + name + "'");				
-		}
-		return result;
-	}
+import org.junit.jupiter.api.Test;
 
-	public static URL getURL(String name, String packageName) {
-		String resourceName = packageName.replace('.', Jars.separatorChar) + Jars.separator + name;
-		return getURL(resourceName);
-	}
+class ResourcesTest {
 
-	public static URL getURL(String name, Class<?> associatedWithClass) {
-		return associatedWithClass.getResource(name);
-	}
-
-	public static File getFile(String name) {
-		URL url = getURL(name);
-		if (url != null)
-			return new File(url.getFile());
-		else
-			return null;
-	}
-
-	public static File getFile(String name, Class<?> associatedWithClass) {
-		URL url = getURL(name, associatedWithClass);
-		if (url != null) {
-			return new File(url.getFile());
-		}
-		else
-			return null;
-	}
-
-	public static File getFile(String name, String packageName) {
-		URL url = getURL(name, packageName);
-		if (url != null)
-			return new File(url.getFile());
-		else
-			return null;
-	}
-	public static File getPackagedFile(String name) {
-		int idx = name.lastIndexOf('.');
-		String modString = name.substring(0, idx).replace(".","/")
-		        + name.substring(idx);
-		return new File(modString);
-		
+	@Test
+	void test() {
+		String textFile = "TestFile.txt";
+		String javaFile = "DateTime";
+		String pkg = "au.edu.anu.rscs.aot.util";
+		String location = pkg+"."+javaFile;
+		File file = Resources.getFile(textFile, pkg);
+		assertTrue(file.exists());
 	}
 
 }
