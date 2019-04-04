@@ -30,6 +30,7 @@
 package au.edu.anu.rscs.aot.util;
 
 /**
+ * Static methods to format number ranges as Strings.
  * 
  * @author Shayne Flint - 4/4/2012
  *

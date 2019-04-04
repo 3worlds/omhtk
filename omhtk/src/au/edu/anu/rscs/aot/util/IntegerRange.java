@@ -31,6 +31,13 @@ package au.edu.anu.rscs.aot.util;
 
 import au.edu.anu.rscs.aot.OmhtkException;
 
+/**
+ * A property type for multiplicities (i.e. accepts the '*' notation for 'any number').
+ * 
+ * @author Shayne Flint - 2012?
+ *
+ */
+// Tested OK with version 0.0.5 on 4/4/2019
 public class IntegerRange {
 
 	private int first = 0;
@@ -110,14 +117,5 @@ public class IntegerRange {
 	
 	public int getLast() {
 		return last;
-	}
-	
-	// TESTING
-	//
-	public static void main(String[] args) {
-		System.out.println(IntegerRange.valueOf("0..23"));
-		System.out.println(IntegerRange.valueOf("0..*"));
-		System.out.println(IntegerRange.valueOf("-12..-2"));
-		System.out.println(IntegerRange.valueOf(".."));
 	}
 }
