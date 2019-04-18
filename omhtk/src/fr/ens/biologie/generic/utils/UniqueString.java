@@ -31,7 +31,13 @@ package fr.ens.biologie.generic.utils;
 
 import java.util.Set;
 
-import javafx.util.Pair;
+// I get a crash here because this class is not found in my system.
+// I found this explanation on the internet:
+// This is because javafx.util.Pair is not a part of OpenJDK. 
+// You need to use Oracle JDK which include JavaFX where it contains javafx.util.Pair
+// Do use this class often ? if not, I prefer to redefine it at our level
+// since it's a handy utility.
+// import javafx.util.Pair;
 
 /**
  * A Scope for unique Ids
