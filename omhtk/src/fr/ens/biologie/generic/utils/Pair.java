@@ -2,6 +2,8 @@ package fr.ens.biologie.generic.utils;
 
 /**
  * A kind of clone of javafx.util.Pair which is not available in OpenJDK but in Oracle JDK only.
+ * cf bug #11 for details on why I implemented this class
+ * 
  * @author Jacques Gignoux - 18 avr. 2019
  *
  * @param <K>
