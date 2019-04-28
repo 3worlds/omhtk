@@ -15,14 +15,16 @@ class PairTest {
 
 	@Test
 	void testGetKey() {
-		Pair<Integer,Double> p =new Pair<>(1,2.1);
+		Pair<Integer,Double> p =new Pair<>(1,2.0);
 		assertEquals((int)p.getKey(),1);
+		assertTrue(p.getKey()==1);
 	}
 
 	@Test
 	void testGetValue() {
 		Pair<Integer,Double> p =new Pair<>(1,2.1);
 		assertEquals((double)p.getValue(),2.1);
+		assertTrue(p.getValue()==2.1);
 	}
 
 	@Test
