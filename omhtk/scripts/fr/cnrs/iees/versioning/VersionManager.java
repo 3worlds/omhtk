@@ -68,6 +68,7 @@ public class VersionManager {
 	private static String ivy1 = 
 	"<ivy-module version=\"2.0\"\n" +
 	"\t\txmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n" +
+	"\t\txmlns:m=\"http://maven.apache.org/POM/4.0.0\"\n" +
 	"\t\txsi:noNamespaceSchemaLocation=\"http://ant.apache.org/ivy/schemas/ivy.xsd\">\n\n" +
 	"\t<info\torganisation=\"" + ORG  + "\"\n" +
 	"\t\t\tmodule=\"" + MODULE + "\"\n" +
@@ -167,7 +168,28 @@ public class VersionManager {
 					.append(DEPS[i][1])
 					.append("\" rev=\"")
 					.append(DEPS[i][2])
-					.append("\"/>\n");
+					.append("\"");
+				if (DEPS[i][3]!=null) {
+					if (DEPS[i][3].equals("_os")) {
+						// this is a stupid joke - "os" in French means "bone" in English
+						String bone = System.getProperty("os.name").toLowerCase();
+						String os = "src"; // by default will search for source files
+						if (bone.indexOf("win")>=0)
+							os = "win";
+						else if (bone.indexOf("linux")>=0)
+							os = "linux";
+						else if (bone.indexOf("mac")>=0)
+							os = "mac";
+						sb.append(" m:classifier=\"")
+							.append(os)
+							.append("\"");
+					}
+					else
+						sb.append(" m:classifier=\"")
+							.append(DEPS[i][3])
+							.append("\"");
+				}
+				sb.append("/>\n");
 			}
 			sb.append("\t</dependencies>\n\n");
 			return sb.toString();
