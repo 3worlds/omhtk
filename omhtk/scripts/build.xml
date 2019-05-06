@@ -36,8 +36,13 @@
 
 	<target name="makeJar" description="pack as a jar library" depends="makeArtifactDir,resolve">
 		<jar destfile="${jarlib}/${project}.jar">
-			<fileset dir="bin" 
-				excludes="**/VersionManager.*,**/LicenseManager.*,**/current-version.txt,**/*.xml,**/*Test.class"/>
+			<fileset dir="bin"> 
+				<exclude name="**/*Version*.*"/>
+				<exclude name="**/LicenseManager.*"/>
+				<exclude name="**/current-version.txt"/>
+				<exclude name="**/*Test.class"/>
+				<exclude name="**/*.xml"/>
+			</fileset>
 			<fileset dir="src"/>
 			<manifest>
 				<attribute name="Implementation-Vendor" value="CNRS/ANU"/>

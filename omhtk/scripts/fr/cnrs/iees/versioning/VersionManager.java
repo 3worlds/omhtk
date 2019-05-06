@@ -126,8 +126,13 @@ public class VersionManager {
 
 	"\t<target name=\"makeJar\" description=\"pack as a jar library\" depends=\"makeArtifactDir,resolve\">\n" +
 	"\t\t<jar destfile=\"${jarlib}/${project}.jar\">\n" + 
-	"\t\t\t<fileset dir=\"bin\" \n" + 
-	"\t\t\t\texcludes=\"**/VersionManager.*,**/LicenseManager.*,**/current-version.txt,**/*.xml,**/*Test.class\"/>\n" + 
+	"\t\t\t<fileset dir=\"bin\"> \n" + 
+	"\t\t\t\t<exclude name=\"**/*Version*.*\"/>\n" + 
+	"\t\t\t\t<exclude name=\"**/LicenseManager.*\"/>\n" + 
+	"\t\t\t\t<exclude name=\"**/current-version.txt\"/>\n" + 
+	"\t\t\t\t<exclude name=\"**/*Test.class\"/>\n" + 
+	"\t\t\t\t<exclude name=\"**/*.xml\"/>\n" + 
+	"\t\t\t\t</fileset>\n" + 
 	"\t\t\t<fileset dir=\"src\"/>\n" + 
 	"\t\t\t<manifest>\n" + 
 	"\t\t\t\t<attribute name=\"Implementation-Vendor\" value=\"CNRS/ANU\"/>\n" + 
