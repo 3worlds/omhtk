@@ -27,27 +27,47 @@
  *  along with UIT.  If not, see <https://www.gnu.org/licenses/gpl.html>. *
  *                                                                        *
  **************************************************************************/
-package fr.ens.biologie.generic;
+package au.edu.anu.rscs.aot.init;
 
 /**
- * 
+ * A class to store error messages from initialisation.
  * @author Jacques Gignoux - 7 mai 2019
  *
  */
-public interface Initialisable {
+public class InitialiseMessage {
 
-	/**
-	 * An object which can be initialise must have this method, which will be called
-	 * by initialisers.
-	 */
-	public void initialise();
+	/** the error raised by the initialise() method */
+	private Exception exc = null;
+	/** the object which caused the error - NB it may be an archetype node (if there was an error in the archetype file) */
+	private Object target = null;
 	
 	/**
-	 * This is used to decide in which order objects must be initialised. They will be
-	 * initialised from the lowest to the highest priority. The use case is to set this
-	 * as a class constant.
-	 * @return the priority level for the object to initialise.
+	 * 
+	 * @param check
+	 * @param failed
+	 * @param onNode
 	 */
-	public int initRank();
+	public InitialiseMessage(Object item, Exception failed) {
+		super();
+		target = item;
+		exc = failed;
+	}
 
+	public Exception getException() {
+		return exc;
+	}
+
+	public Object getTarget() {
+		return target;
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("Initialisation failed for object:\n\t")
+			.append(target.toString())
+			.append("\n--with Error:\n\t")
+			.append(exc.toString());
+		return sb.toString();
+	}
 }
