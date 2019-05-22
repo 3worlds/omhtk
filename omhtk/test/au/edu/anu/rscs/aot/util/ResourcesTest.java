@@ -85,4 +85,14 @@ class ResourcesTest {
 		assertEquals(fcontent.toString(),"[Test file , line 1, line 2]");
 	}
 
+	@Test
+	final void testGetPackagedFileName() {
+		String s = Resources.getPackagedFileName("au.edu.anu.twcore.archetype.tw.3wA-Experiment.ugt");
+		show("testGetPackagedFileName",s);
+		assertEquals(s,"au/edu/anu/twcore/archetype/tw/3wA-Experiment.ugt");
+		s = Resources.getPackagedFileName("au.edu.anu.twcore.archetype.tw/3wA-Experiment.ugt");
+		show("testGetPackagedFileName",s);
+		assertEquals(s,"au/edu/anu/twcore/archetype/tw/3wA-Experiment.ugt");
+	}
+	
 }

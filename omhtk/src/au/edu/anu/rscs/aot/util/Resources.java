@@ -178,5 +178,30 @@ public class Resources {
 		return readText(reader,name);
 	}
 	
+	/**
+	 * @param name package relative resource file (dot separated)
+	 * @return fully qualified File obtained by the ClassLoader
+	 */
+	public static File getPackagedFile(String name) {
+		int idx = name.lastIndexOf('.');
+		String fname = new File( name.substring(0, idx).replace(".","/")
+		        + name.substring(idx)).getName();
+		String packageName = name.replace("."+fname, "");
+		return getFile(fname,packageName);
+	}
+
+	/**
+	 * returns a name in the form: 	au.edu.anu.twcore.archetype.tw.3wA-Experiment.ugt
+	 * as a name in the form:		au/edu/anu/twcore/archetype/tw/3wA-Experiment.ugt
+	 * which can be directly used as a resource name in the above methods
+	 * @param name
+	 * @return
+	 */
+	public static String getPackagedFileName(String name) {
+		int idx = name.lastIndexOf('.');
+		String fname = name.substring(0, idx).replace(".","/")
+		        + name.substring(idx);
+		return fname;
+	}
 
 }
