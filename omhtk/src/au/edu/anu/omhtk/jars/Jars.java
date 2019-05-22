@@ -39,20 +39,11 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 /**
- * Author Ian Davies
- *
- * Date 19 Dec. 2018
+ * <p>Utilities to handle jar files.</p>
  * 
- * Re-implementation of  Shayne Flint's work refactored by Jacques Gignoux 2017
- */
-
-/**
- * <p>
- * Testing if this code is running from a jar - hack found <a
- * href=https://stackoverflow.com/questions/482560/can-you-tell-on-runtime-
- * if-youre-running-java-from-within-a-jar> there</a>. The test is based on the
- * existence of the manifest.
- * </p>
+ * @author Ian Davies - 19 Dec. 2018
+ * 
+ * <p>Re-implementation of  Shayne Flint's work refactored by Jacques Gignoux 2017</p>
  */
 public class Jars {
 	public static final char separatorChar = '/';
@@ -73,6 +64,16 @@ public class Jars {
 		dependsOnJars.add(jarName);
 	}
 
+	/**
+	 * <p>
+	 * Testing if the code where the klass argument was found originates from a jar - 
+	 * hack found <a
+	 * href=https://stackoverflow.com/questions/482560/can-you-tell-on-runtime-
+	 * if-youre-running-java-from-within-a-jar> there</a>. The test is based on the
+	 * existence of the manifest.
+	 * </p>
+	 * @param klass the class to search for
+	 */
 	public static String getRunningJarFilePath(Class<?> klass) {
 		String result = null;
 		try {
