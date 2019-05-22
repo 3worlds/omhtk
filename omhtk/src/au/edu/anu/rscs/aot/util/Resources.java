@@ -50,7 +50,7 @@ import au.edu.anu.omhtk.jars.Jars;
  *		Copied from old code by S. Flint.<br/>
  *      refactored by J. Gignoux 22/5/2019
  */
-// Tested OK with version 0.1.0 on 22/5/2019 EXCEPT for loading from a jar
+// Tested OK with version 0.1.1 on 22/5/2019 EXCEPT for loading from a jar
 public class Resources {
 	
 	private static Logger log = Logger.getLogger(Resources.class.getName());
