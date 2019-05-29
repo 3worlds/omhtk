@@ -52,6 +52,10 @@ import au.edu.anu.rscs.aot.OmhtkException;
 // NOT TESTED
 public class FileUtilities {
 
+// JG 29/5/2019 - I prefer to remove this method because it induces a dependency on
+// apache commons-io which has a dependency on JUnit which messes up with eclipse
+// management of JUnit - we never use this method !
+	
 	public static void deleteTree(File dir) throws IOException {
 		org.apache.commons.io.FileUtils.deleteDirectory(dir);
 	}
