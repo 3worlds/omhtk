@@ -42,6 +42,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import au.edu.anu.omhtk.jars.Jars;
+import au.edu.anu.rscs.aot.OmhtkException;
 
 /**
  * Utilities to locate resources (usually text files) in the project class hierarchy.
@@ -161,6 +162,8 @@ public class Resources {
 	 */
 	public static List<String> getTextResource(String name) {
 		InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream(name);
+		if (in==null)
+			throw new OmhtkException("Resource '"+name+"' not found");
 		BufferedReader reader = new BufferedReader(new InputStreamReader(in));
 		return readText(reader,name);
 	}
@@ -174,6 +177,8 @@ public class Resources {
 	 */
 	public static List<String> getTextResource(String name, Class<?> associatedWithClass) {
 		InputStream in = associatedWithClass.getResourceAsStream(name);
+		if (in==null)
+			throw new OmhtkException("Resource '"+name+"' not found");
 		BufferedReader reader = new BufferedReader(new InputStreamReader(in));
 		return readText(reader,name);
 	}
