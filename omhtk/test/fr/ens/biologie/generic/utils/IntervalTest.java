@@ -16,36 +16,59 @@ class IntervalTest {
 	
 	@BeforeEach
 	private void init() {
-		i = Interval.interval(2.0,5.5);
-		j = Interval.openInterval(Double.NEGATIVE_INFINITY,3.0);
-		k = Interval.halfOpenInfInterval(2.0,5.5);
-		l = Interval.halfOpenSupInterval(2.0,5.5);
+		i = Interval.newInstance(2.0,5.5);
+		j = Interval.open(Double.NEGATIVE_INFINITY,3.0);
+		k = Interval.halfOpenInf(2.0,5.5);
+		l = Interval.halfOpenSup(2.0,5.5);
 	}
 
 	@Test
 	final void testClosedInterval() {
-		i = Interval.closedInterval(2.0,3.0);
+		i = Interval.closed(2.0,3.0);
 		assertEquals(i.toString(),"[2.0,3.0]");
 	}
 
 	@Test
 	final void testOpenInterval() {
-		i = Interval.openInterval(2.0,3.0);
+		i = Interval.open(2.0,3.0);
 		assertEquals(i.toString(),"]2.0,3.0[");
 	}
 
 	@Test
 	final void testHalfOpenInfInterval() {
-		i = Interval.halfOpenInfInterval(2.0,3.0);
+		i = Interval.halfOpenInf(2.0,3.0);
 		assertEquals(i.toString(),"]2.0,3.0]");
 	}
 
 	@Test
 	final void testHalfOpenSupInterval() {
-		i = Interval.halfOpenSupInterval(2.0,3.0);
+		i = Interval.halfOpenSup(2.0,3.0);
 		assertEquals(i.toString(),"[2.0,3.0[");
 	}
 
+	@Test
+	final void testToNegInf() {
+		i = Interval.toNegInf(12.0);
+		assertEquals(i.toString(),"]-∞,12.0]");
+	}
+
+	@Test
+	final void testToPosInf() {
+		i = Interval.toPosInf(12.0);
+		assertEquals(i.toString(),"[12.0,+∞[");
+	}
+	@Test
+	final void testOpenToNegInf() {
+		i = Interval.openToNegInf(12.0);
+		assertEquals(i.toString(),"]-∞,12.0[");
+	}
+	@Test
+	final void testOpenToPosInf() {
+		i = Interval.openToPosInf(12.0);
+		assertEquals(i.toString(),"]12.0,+∞[");
+	}
+	
+	
 	@Test
 	final void testSup() {
 		assertEquals(i.sup(),5.5);
@@ -73,33 +96,15 @@ class IntervalTest {
 	}
 
 	@Test
-	final void testContainsInt() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	final void testContainsLong() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	final void testContainsShort() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	final void testContainsByte() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	final void testContainsDouble() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	final void testContainsFloat() {
-		fail("Not yet implemented");
+	final void testContains() {
+		assertTrue(i.contains(2));
+		assertTrue(j.contains(2));
+		assertFalse(k.contains(2));
+		assertTrue(l.contains(2));
+		assertTrue(i.contains(5.5d));
+		assertTrue(j.contains(-5.5d));
+		assertTrue(k.contains(5.5d));
+		assertFalse(l.contains(5.5d));
 	}
 
 	@Test
@@ -114,6 +119,36 @@ class IntervalTest {
 	final void testValueOf() {
 		Interval z = Interval.valueOf("[2.0,5.5[");
 		assertEquals(z,l);
+		z = Interval.valueOf("[2.0,+Inf[");
+		assertEquals(z.toString(),"[2.0,+∞[");
+	}
+
+	@Test
+	final void testOverlaps() {
+		assertTrue(i.overlaps(j));
+		Interval z = Interval.open(0,2); 
+		assertFalse(i.overlaps(z));
+	}
+
+	@Test
+	final void testUnion() {
+		assertEquals(k.union(l),i);
+		assertEquals(i.union(j).toString(),"]-∞,5.5]");
+	}
+	
+	@Test
+	final void testIntersection() {
+		assertEquals(i.intersection(k),k);
+		Interval z = Interval.closed(0,2);
+		assertEquals(i.intersection(z).toString(),"[2.0,2.0]");
+		assertEquals(k.intersection(j).toString(),"]2.0,3.0[");
+	}
+	
+	@Test
+	final void testContiguousTo() {
+		Interval z = Interval.closed(0,2);
+		assertTrue(z.contiguousTo(k));
+		assertFalse(z.contiguousTo(l));
 	}
 
 }
