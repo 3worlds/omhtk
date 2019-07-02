@@ -34,7 +34,7 @@ package fr.ens.biologie.generic;
  * @author Jacques Gignoux - 7 mai 2019
  *
  */
-public interface Initialisable extends Comparable<Initialisable> {
+public interface Initialisable {
 
 	/**
 	 * An object which can be initialise must have this method, which will be called
@@ -50,15 +50,15 @@ public interface Initialisable extends Comparable<Initialisable> {
 	 */
 	public int initRank();
 	
-	@Override
-	public default int compareTo(Initialisable i) {
-		if (initRank() == i.initRank())
-			return 0;
-		if (initRank() > i.initRank())
-			return 1;
-		if (initRank() < i.initRank())
-			return -1;
-		return 0;
-	}
+//	@Override
+//	public default int compareTo(Initialisable i) {
+//		if (initRank() == i.initRank())
+//			return 0;
+//		if (initRank() > i.initRank())
+//			return 1;
+//		if (initRank() < i.initRank())
+//			return -1;
+//		return 0;
+//	}
 
 }
