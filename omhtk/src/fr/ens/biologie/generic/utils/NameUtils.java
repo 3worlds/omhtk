@@ -7,6 +7,7 @@ package fr.ens.biologie.generic.utils;
  *
  */
 // tested OK with version 0.1.5
+// TODO Check all this - may already be done by apache commons.lang3.wordUtils
 public class NameUtils {
     
     /**
