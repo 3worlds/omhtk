@@ -1,5 +1,5 @@
 <!--===================================================================================
- ant and ivy scripts for project <generics> version 0.1.5 (Thu Jul 04 09:46:52 CEST 2019)
+ ant and ivy scripts for project <generics> version 0.1.4 (Fri Jun 14 11:38:49 CEST 2019)
  author: Jacques Gignoux <jacques.gignoux@upmc.fr>
 
  CAUTION: this file is generated - DO NOT EDIT!
@@ -47,7 +47,7 @@
 			<manifest>
 				<attribute name="Implementation-Vendor" value="CNRS/ANU"/>
 				<attribute name="Implementation-Title" value="fr.ens.biologie"/>
-				<attribute name="Implementation-Version" value="0.1.5"/>
+				<attribute name="Implementation-Version" value="0.1.4"/>
 				<attribute name="Built-By" value="${user.name}"/>
  			</manifest>
 		</jar>
