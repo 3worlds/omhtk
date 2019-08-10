@@ -42,25 +42,25 @@ public class UniqueString {
 	public static String makeString(String proposedString, Set<String> set) {
 		if (!set.contains(proposedString))
 			return proposedString;
-		Pair<String, Integer> pair = parseNumberedString(proposedString);
-		int count = pair.getValue() + 1;
-		proposedString = pair.getKey() + count;
+		Duple<String, Integer> duple = parseNumberedString(proposedString);
+		int count = duple.getSecond() + 1;
+		proposedString = duple.getFirst() + count;
 		return makeString(proposedString, set);
 	}
 
-	private static Pair<String, Integer> parseNumberedString(String numberedString) {
+	private static Duple<String, Integer> parseNumberedString(String numberedString) {
 		int idx = getCountStartIndex(numberedString);
 		// has no numbers at the end
 		if (idx < 0)
-			return new Pair<>(numberedString, 0);
+			return new Duple<>(numberedString, 0);
 		// all numbers
 		if (idx == 0)
-			return new Pair<String, Integer>(numberedString + "_", 0);
+			return new Duple<String, Integer>(numberedString + "_", 0);
 		// ends with some numbers
 		String key = numberedString.substring(0, idx);
 		String sCount = numberedString.substring(idx, numberedString.length());
 		int count = Integer.parseInt(sCount);
-		return new Pair<>(key, count);
+		return new Duple<>(key, count);
 	}
 
 	private static int getCountStartIndex(String numberedString) {

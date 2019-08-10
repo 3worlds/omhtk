@@ -39,6 +39,8 @@ package fr.ens.biologie.generic.utils;
  * @param <K>
  * @param <V>
  */
+// replaced by Duple to avoid class name confusion with javafx pair
+@Deprecated
 public class Pair<K,V> {
 	
 	private K key;
