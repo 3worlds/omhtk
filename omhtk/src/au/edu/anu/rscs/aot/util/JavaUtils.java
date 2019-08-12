@@ -14,7 +14,7 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.logging.Logger;
 
-import au.edu.anu.omhtk.jars.JarPackager;
+import au.edu.anu.omhtk.jars.Jars;
 import au.edu.anu.rscs.aot.OmhtkException;
 import au.edu.anu.rscs.aot.collections.DynamicList;
 
@@ -121,7 +121,7 @@ public class JavaUtils {
 				if (name.startsWith(packageName))
 					if (doTree)
 						getClassFromJar(classList, entry);
-					else if (name.substring(packageName.length()).indexOf(JarPackager.separator) > 0)
+					else if (name.substring(packageName.length()).indexOf(Jars.separator) > 0)
 						getClassFromJar(classList, entry);
 			}
 			jarFile.close();
@@ -224,7 +224,7 @@ public class JavaUtils {
 	}
 
 	public static File fileForClass(String className) {
-		URL theURL = Resources.getURL(className.replaceAll("\\.", JarPackager.separator) + ".class");
+		URL theURL = Resources.getURL(className.replaceAll("\\.", Jars.separator) + ".class");
 		return new File(theURL.getPath());
 	}
 
