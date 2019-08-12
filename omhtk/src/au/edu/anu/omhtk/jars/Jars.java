@@ -30,17 +30,20 @@ import au.edu.anu.rscs.aot.util.Resources;
  * @author Shayne Flint refactored by Jacques Gignoux 2017
  *
  */
-public abstract class Jars {
+public abstract class Jars { 
 	
 	public static final char separatorChar = '/';
 	public static final String separator = ""+separatorChar;
-	private String version = "0.0.0";
+	
+	protected String version = "0.0.0";
 	private static Logger log = Logger.getLogger(Jars.class.getName());
 	private Set<String> classNames = new HashSet<String>();
 	private Set<JarFileRecord> files = new HashSet<JarFileRecord>();
 	private Set<String> jars = new HashSet<String>();
 	// for the manifest:
-	private String mainClassName = null;
+	protected String specVendor = null;
+	protected String specTitle = null;
+	protected String mainClassName = null;
 	private Set<String> dependsOnJars = new HashSet<String>();
 	
 	/**
@@ -69,13 +72,21 @@ public abstract class Jars {
 		}
 	}
 	
+	public String getSpecVendor() {
+		return specVendor;
+	}
+	
+	public String getSpecTitle() {
+		return specTitle;
+	}
+	
 	public String getVersion() {
 		return version;
 	}
 	
-	public void setVersion(String major, String minor, String micro) {
-		version = major+"."+minor+"."+micro;
-	}
+//	public void setVersion(String major, String minor, String micro) {
+//		version = major+"."+minor+"."+micro;
+//	}
 
 	public void addDependencyOnJar(String jarName) {
 		dependsOnJars.add(jarName);
@@ -185,8 +196,8 @@ public abstract class Jars {
 			// manifest
 			Manifest manifest = new Manifest();
 			manifest.getMainAttributes().put(Attributes.Name.MANIFEST_VERSION, "1.0");
-			manifest.getMainAttributes().put(Attributes.Name.SPECIFICATION_TITLE, "3Worlds");
-			manifest.getMainAttributes().put(Attributes.Name.SPECIFICATION_VENDOR, "Gignoux, Davies & Flint");
+			manifest.getMainAttributes().put(Attributes.Name.SPECIFICATION_TITLE, specTitle);
+			manifest.getMainAttributes().put(Attributes.Name.SPECIFICATION_VENDOR, specVendor);
 			manifest.getMainAttributes().put(Attributes.Name.SPECIFICATION_VERSION, version);
 			if (mainClassName != null)
 				manifest.getMainAttributes().put(Attributes.Name.MAIN_CLASS, mainClassName);
@@ -299,7 +310,7 @@ public abstract class Jars {
 
 	}
 
-	public void writeJarContents(String fileName) {
+	public void listJarContents(String fileName) {
 		File file = new File(fileName);
 		FileInputStream stream;
 		try {
