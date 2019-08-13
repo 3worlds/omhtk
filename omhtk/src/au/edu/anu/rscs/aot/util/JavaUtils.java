@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
-import java.net.URLClassLoader;
 import java.net.URLDecoder;
 import java.util.Enumeration;
 import java.util.LinkedList;
@@ -60,21 +59,33 @@ public class JavaUtils {
 		DynamicList<Class<?>> classList = new DynamicList<Class<?>>();
 
 		ClassLoader cl = ClassLoader.getSystemClassLoader();
-		URL[] urls = ((URLClassLoader) cl).getURLs();
-		for (URL url: urls) {
-			if (url.getFile().endsWith(".jar")) {
-				File jarFile=null;
-				try {
-					// under windows at least, %20 needs to be replaced by " "
-					jarFile = new File(URLDecoder.decode(url.getFile(),"UTF-8"));
-				} catch (UnsupportedEncodingException e) {
-					e.printStackTrace();
+//		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+// 		this no longer works - was changed in java 9
+//		URL[] urls = ((URLClassLoader) cl).getURLs();
+        assert cl != null;
+        String path = packageName.replace('.', '/');
+        Enumeration<URL> resources;
+		try {
+			resources = cl.getResources(path);
+	        while (resources.hasMoreElements()) {
+	            URL url = resources.nextElement();
+				if (url.getFile().endsWith(".jar")) {
+					File jarFile=null;
+					try {
+						// under windows at least, %20 needs to be replaced by " "
+						jarFile = new File(URLDecoder.decode(url.getFile(),"UTF-8"));
+					} catch (UnsupportedEncodingException e) {
+						e.printStackTrace();
+					}
+					getClassesFromJar(packageName, jarFile, classList, doTree);
+				} else {
+					File dir = new File(url.getFile());
+					getClassesFromDisk(packageName, dir, classList, doTree);				
 				}
-				getClassesFromJar(packageName, jarFile, classList, doTree);
-			} else {
-				File dir = new File(url.getFile());
-				getClassesFromDisk(packageName, dir, classList, doTree);				
-			}
+	        }
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
 		}
 		return classList;
 	}
@@ -82,14 +93,11 @@ public class JavaUtils {
 	// Collect classes from a disk-based class path
 	// filtered by package name
 	//
-	private static void getClassesFromDisk(String packageName, File classPath, DynamicList<Class<?>> classList, boolean doTree)  {
+	private static void getClassesFromDisk(String packageName, File packageDir, DynamicList<Class<?>> classList, boolean doTree)  {
 		ClassLoader classLoader = ClassLoader.getSystemClassLoader();
-		String packagePath = packageName.replace(".", File.separator);
-		String fullPath = FileUtilities.makePath(classPath.getAbsolutePath(), packagePath);
-		File dir = new File(fullPath);
-		if (dir.isDirectory()) {
-			for (String name : dir.list()) {
-				File subDirectory = FileUtilities.makeFile(fullPath, name);
+		if (packageDir.isDirectory()) {
+			for (String name : packageDir.list()) {
+				File subDirectory = FileUtilities.makeFile(packageDir.toString(), name);
 				if (name.endsWith(".class")) {
 					String className = packageName + '.' + name.substring(0, name.length() - 6);
 					//				System.out.println(className);
@@ -101,7 +109,7 @@ public class JavaUtils {
 					}
 				} else if (subDirectory.isDirectory() && doTree) {
 					//				System.out.println(packageName + ", " + directory + ", " + subDirectory + ", " + name);
-					getClassesFromDisk(packageName + "." + name, classPath, classList, doTree);
+					getClassesFromDisk(packageName + "." + name, subDirectory, classList, doTree);
 				}
 			}					
 		}
@@ -148,6 +156,8 @@ public class JavaUtils {
 		return getClassList(getClassNameList());
 	}
 
+	// doesnt work because some classes dont load simply.
+	// forget this. Bad idea.
 	public static List<Class<?>> getClassList(List<String> classNameList) {
 		List<Class<?>> result = new LinkedList<Class<?>>();
 		for (String className : classNameList)
@@ -161,14 +171,19 @@ public class JavaUtils {
 		return result;
 	}
 
+	/**
+	 * Returns all the classes found on the class path. 
+	 * Use with caution, returns a huge mess.
+	 * @return
+	 */
 	public static List<String> getClassNameList() {
 		List<String> result = new LinkedList<String>();
 		String classPath = System.getProperty("java.class.path");
 		String[] paths   = classPath.split(File.pathSeparator);
-		for (String p : paths) {
-			System.out.println("PATH: " + p);
-		}
-
+//		for debugging only
+//		for (String p : paths) {
+//			System.out.println("PATH: " + p);
+//		}
 		for (String path : paths) {
 			File file = new File(path);
 			result.addAll(getClasses(file, file));
@@ -236,27 +251,5 @@ public class JavaUtils {
 			e.printStackTrace();
 		}
 	}
-
-//	public static void main(String[] args) throws Exception {
-//
-//		for (String c : getClassNameList()) {
-//			System.out.println("CLASSNAME: " + c);			
-//		}
-//
-//		for (Class<?> c : getClassList()) {
-//			System.out.println("CLASS: " + c);			
-//		}
-//
-//		System.out.println("PACKAGE");
-//		for (Class<?> c : getClassesInPackage("au.edu.anu.rscs.aot")) {
-//			System.out.println(fileForClass(c));
-//			System.out.println(c);
-//		}
-//
-//		System.out.println("PACKAGE TREE");
-//		for (Class<?> c : getClassesInPackageTree("au.edu.anu.rscs.aot"))
-//			System.out.println(c);
-//
-//	}
 
 }
