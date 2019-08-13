@@ -24,6 +24,7 @@ import au.edu.anu.rscs.aot.collections.DynamicList;
  * 		refactored Jacques Gignoux - 12 août 2019
  *
  */
+// Tested ok with version 0.1.9, except getting classes from jars.
 public class JavaUtils {
 	
 	private static Logger log = Logger.getLogger(JavaUtils.class.getName());
