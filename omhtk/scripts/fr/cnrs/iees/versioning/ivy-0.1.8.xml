@@ -1,5 +1,5 @@
 <!--===================================================================================
- ant and ivy scripts for project <generics> version 0.1.9 (Tue Aug 13 12:00:05 CEST 2019)
+ ant and ivy scripts for project <generics> version 0.1.8 (Mon Aug 12 14:20:46 CEST 2019)
  author: Jacques Gignoux <jacques.gignoux@upmc.fr>
 
  CAUTION: this file is generated - DO NOT EDIT!
@@ -13,7 +13,7 @@
 
 	<info	organisation="fr.ens.biologie"
 			module="generics"
-			revision="0.1.9"
+			revision="0.1.8"
 			status="integration">
 		<license name="gpl3" url="https://www.gnu.org/licenses/gpl-3.0.txt"/>
 		<description>This module contains generic, all-purpose, basic utilities for almost any java project.</description>
