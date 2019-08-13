@@ -60,7 +60,7 @@ public class JavaUtils {
 		DynamicList<Class<?>> classList = new DynamicList<Class<?>>();
 
 		ClassLoader cl = ClassLoader.getSystemClassLoader();
-//		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+//		ClassLoader cl = Thread.currentThread().getContextClassLoader();
 // 		this no longer works - was changed in java 9
 //		URL[] urls = ((URLClassLoader) cl).getURLs();
         assert cl != null;

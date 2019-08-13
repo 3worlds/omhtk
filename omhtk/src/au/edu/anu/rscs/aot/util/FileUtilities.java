@@ -143,10 +143,10 @@ public class FileUtilities {
 
 	// QUICK TEST
 	//
-	public static void main(String[] args) throws IOException {
-		File testFile = File.createTempFile("TestileUtils", "txt");
-		createFile(testFile, "Line 1", "Line 2", "Line 3", 67, 3.4);
-		catFile(testFile);
-	}
+//	public static void main(String[] args) throws IOException {
+//		File testFile = File.createTempFile("TestileUtils", "txt");
+//		createFile(testFile, "Line 1", "Line 2", "Line 3", 67, 3.4);
+//		catFile(testFile);
+//	}
 
 }
