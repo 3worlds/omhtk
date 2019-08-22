@@ -26,39 +26,38 @@ public final class JavaCompiler {
 	private Logger log = Logger.getLogger(JavaCompiler.class.getName());
 	/** the java compiler */
 	private javax.tools.JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
+
 	/** the directory where the compiler is called from (sourcepath) */
 
 	/**
 	 * compiles one .java file into a .class file
 	 * 
-	 * @param classFile the java file to compile
+	 * @param classFile    the java file to compile
 	 * @param compilerRoot the root directory for compilation
 	 */
-	public final boolean compileCode(File classFile, File compilerRoot) {
+	public final String compileCode(File classFile, File compilerRoot) {
 		boolean errors = false;
 		log.info("Compiling " + classFile.getName() + " ...");
-		String s = compileClass(classFile, compilerRoot);
-		if ((s != null) && (!s.isEmpty())) {
-			errors = true;
-//			CodeCompliance.add(new CompileErrorMsg(classFile, s));
+		String result = compileClass(classFile, compilerRoot);
+		if ((result != null) && (!result.isEmpty())) {
 			log.severe("********************************************************************");
 			log.severe("There were compiling errors in " + classFile.getName() + ":");
-			log.severe(s);
+			log.severe(result);
 			log.severe("********************************************************************");
 		}
 		log.info("done.");
-		return errors;
+		if ((result != null) && (!result.isEmpty())) {
+			return result;
+		} else
+			return null;
 	}
 
 	/**
 	 * This method compiles one .java file into one .class file.
 	 * 
-	 * @param classFile
-	 *            the .java file to compile
-	 * @param sourceDir
-	 *            the source directory (containing .java file)
-	 * @param targetDir
-	 *            the target directory (where to put .class file)
+	 * @param classFile the .java file to compile
+	 * @param sourceDir the source directory (containing .java file)
+	 * @param targetDir the target directory (where to put .class file)
 	 */
 	private final String compileClass(File classFile, File sourceDir) {
 		String result = null;
