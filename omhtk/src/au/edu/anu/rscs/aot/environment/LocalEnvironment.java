@@ -179,13 +179,13 @@ public class LocalEnvironment extends Environment {
 
 	@Override
 	public void rmTree(String path) {
-		log.entering("LocalEnvironment", "rmTree");  
-		log.fine(path);
-		try {
-			FileUtils.deleteDirectory(makeFile(path));
-		} catch (IOException e) {
-			throw new OmhtkException(e);
-		}
+//		log.entering("LocalEnvironment", "rmTree");  
+//		log.fine(path);
+//		try {
+//			FileUtils.deleteDirectory(makeFile(path));
+//		} catch (IOException e) {
+//			throw new OmhtkException(e);
+//		}
 	}
 
 	@Override

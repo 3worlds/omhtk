@@ -56,9 +56,9 @@ public class FileUtilities {
 // apache commons-io which has a dependency on JUnit which messes up with eclipse
 // management of JUnit - we never use this method !
 	
-	public static void deleteTree(File dir) throws IOException {
-		org.apache.commons.io.FileUtils.deleteDirectory(dir);
-	}
+//	public static void deleteTree(File dir) throws IOException {
+//		org.apache.commons.io.FileUtils.deleteDirectory(dir);
+//	}
 
 	public static void copyFileReplace(File src, File dst) {
 		try {
