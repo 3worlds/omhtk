@@ -24,71 +24,46 @@
  *  GNU General Public License for more details.                          *                         
  *                                                                        *
  *  You should have received a copy of the GNU General Public License     *
- *  along with UIT.  If not, see <https://www.gnu.org/licenses/gpl.html>. *
+ *  along with OMHTK.
+ *  If not, see <https://www.gnu.org/licenses/gpl.html>.                  *
  *                                                                        *
  **************************************************************************/
+
 package au.edu.anu.rscs.aot.init;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.SortedMap;
-import java.util.TreeMap;
+import java.util.Random;
+
+import org.junit.jupiter.api.Test;
 
 import fr.ens.biologie.generic.Initialisable;
 
 /**
- * A new version of Shayne's initialiser - much, much simpler.
- * @author Jacques Gignoux - 7 mai 2019
+ * @author Ian Davies
  *
+ * @date 27 Aug 2019
  */
-public class Initialiser {
-	
-	private SortedMap<Integer,List<Initialisable>> toInit = new TreeMap<>();
-	private List<InitialiseMessage> initFailList = new LinkedList<>();
+class InitialiserTest {
 
-	/**
-	 * Constructor takes a list of Initialisable objects
-	 * @param initList the list of objects ot initialise
-	 */
-	public Initialiser(Iterable<Initialisable> initList) {
-		super();
-		for (Initialisable init:initList) {
-			int priority = init.initRank();
-			if (!toInit.containsKey(priority))
-				toInit.put(priority, new LinkedList<>());
-			// the sorted map sorts the key integers in increasing order
-//			if (toInit.get(priority).isEmpty())
-//				toInit.put(priority, new LinkedList<>());
-			toInit.get(priority).add(init);
+	@Test
+	void test() {
+		Random rnd = new Random();
+		List<Initialisable> list = new ArrayList<>();
+		for (int i=0;i<20;i++) 
+			list.add(new DummyNode(rnd.nextInt(10)));
+		Initialiser initer = new Initialiser(list);
+		initer.initialise();
+		int lastRank = 0;
+		for (InitialiseMessage msg:initer.errorList()) {
+			Initialisable i = (Initialisable) msg.getTarget();
+			assertTrue(i.initRank()>=lastRank);
+			lastRank = i.initRank();
+			System.out.println(i.initRank());
 		}
+		
 	}
-	
-	/**
-	 * Initialises all objects passed to the constructor
-	 * following their priority ranking, from the lowest to the highest priority
-	 */
-	public void initialise() {
-		// the SortedMap iterator returns its content in ascending order
-		for (int priority:toInit.keySet())
-			for (Initialisable init:toInit.get(priority))
-				try {
-					init.initialise();
-				}
-				catch (Exception e) {
-					initFailList.add(new InitialiseMessage(init,e));
-				}
-	}
-	
-	/**
-	 * Returns the problems which occured during the initialisation process.
-	 * @return null if no error, the error list otherwise
-	 */
-	public Iterable<InitialiseMessage> errorList() {
-		if (initFailList.isEmpty())
-			return null;
-		else 
-			return initFailList;
-	}
-	
+
 }

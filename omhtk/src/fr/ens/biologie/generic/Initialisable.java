@@ -39,8 +39,9 @@ public interface Initialisable {
 	/**
 	 * An object which can be initialise must have this method, which will be called
 	 * by initialisers.
+	 * @throws Exception 
 	 */
-	public void initialise();
+	public void initialise() throws Exception;
 	
 	/**
 	 * This is used to decide in which order objects must be initialised. They will be
