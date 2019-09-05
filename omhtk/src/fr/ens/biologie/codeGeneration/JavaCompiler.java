@@ -36,7 +36,6 @@ public final class JavaCompiler {
 	 * @param compilerRoot the root directory for compilation
 	 */
 	public final String compileCode(File classFile, File compilerRoot) {
-		boolean errors = false;
 		log.info("Compiling " + classFile.getName() + " ...");
 		String result = compileClass(classFile, compilerRoot);
 		if ((result != null) && (!result.isEmpty())) {
