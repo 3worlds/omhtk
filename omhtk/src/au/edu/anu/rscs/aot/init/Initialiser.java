@@ -29,7 +29,6 @@
  **************************************************************************/
 package au.edu.anu.rscs.aot.init;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.SortedMap;
@@ -58,8 +57,6 @@ public class Initialiser {
 			if (!toInit.containsKey(priority))
 				toInit.put(priority, new LinkedList<>());
 			// the sorted map sorts the key integers in increasing order
-//			if (toInit.get(priority).isEmpty())
-//				toInit.put(priority, new LinkedList<>());
 			toInit.get(priority).add(init);
 		}
 	}
