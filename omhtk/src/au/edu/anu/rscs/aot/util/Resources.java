@@ -43,6 +43,7 @@ import java.util.logging.Logger;
 
 import au.edu.anu.omhtk.jars.Jars;
 import au.edu.anu.rscs.aot.OmhtkException;
+import fr.ens.biologie.generic.utils.Logging;
 
 /**
  * Utilities to locate resources (usually text files) in the project class hierarchy.
@@ -54,7 +55,7 @@ import au.edu.anu.rscs.aot.OmhtkException;
 // Tested OK with version 0.1.1 on 22/5/2019 - works with jars too.
 public class Resources {
 	
-	private static Logger log = Logger.getLogger(Resources.class.getName());
+	private static Logger log = Logging.getLogger(Resources.class);
 	
 	/**
 	 * Creates a URL for the required resource, based on the SystemClassLoader class path, i.e.

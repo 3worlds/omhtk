@@ -14,7 +14,6 @@ import java.util.jar.JarFile;
 import java.util.jar.JarInputStream;
 import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -24,6 +23,7 @@ import au.edu.anu.rscs.aot.environment.Environment;
 import au.edu.anu.rscs.aot.environment.LocalEnvironment;
 import au.edu.anu.rscs.aot.util.JavaUtils;
 import au.edu.anu.rscs.aot.util.Resources;
+import fr.ens.biologie.generic.utils.Logging;
 
 /**
  * A class to package items into a jar with a version number
@@ -37,10 +37,7 @@ public abstract class Jars {
 	public static final String separator = ""+separatorChar;
 	
 	protected String version = "0.0.0";
-	private static Logger log = Logger.getLogger(Jars.class.getName());
-	static {
-		log.setLevel(Level.OFF);
-	}
+	private static Logger log = Logging.getLogger(Jars.class);
 	private Set<String> classNames = new HashSet<String>();
 	private Set<JarFileRecord> files = new HashSet<JarFileRecord>();
 	private Set<String> jars = new HashSet<String>();

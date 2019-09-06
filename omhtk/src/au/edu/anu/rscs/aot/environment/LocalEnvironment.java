@@ -43,6 +43,7 @@ import org.apache.commons.io.FileUtils;
 import au.edu.anu.rscs.aot.OmhtkException;
 import au.edu.anu.rscs.aot.util.ExceptionString;
 import au.edu.anu.rscs.aot.util.ExecutionResults;
+import fr.ens.biologie.generic.utils.Logging;
 
 /**
  * 
@@ -54,7 +55,7 @@ import au.edu.anu.rscs.aot.util.ExecutionResults;
 // NOT TESTED
 public class LocalEnvironment extends Environment {
 
-	private static Logger log = Logger.getLogger(LocalEnvironment.class.getName());
+	private static Logger log = Logging.getLogger(LocalEnvironment.class);
 
 	public static LocalEnvironment env = new LocalEnvironment("local");
 

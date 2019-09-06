@@ -16,6 +16,7 @@ import java.util.logging.Logger;
 import au.edu.anu.omhtk.jars.Jars;
 import au.edu.anu.rscs.aot.OmhtkException;
 import au.edu.anu.rscs.aot.collections.DynamicList;
+import fr.ens.biologie.generic.utils.Logging;
 
 
 /**
@@ -27,7 +28,7 @@ import au.edu.anu.rscs.aot.collections.DynamicList;
 // Tested ok with version 0.1.9, except getting classes from jars.
 public class JavaUtils {
 	
-	private static Logger log = Logger.getLogger(JavaUtils.class.getName());
+	private static Logger log = Logging.getLogger(JavaUtils.class);
 
 	public static Class<?> getClass(String className) throws Exception {
 		return Class.forName(className);

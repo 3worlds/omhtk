@@ -13,6 +13,7 @@ import javax.tools.StandardJavaFileManager;
 import javax.tools.ToolProvider;
 
 import au.edu.anu.rscs.aot.OmhtkException;
+import fr.ens.biologie.generic.utils.Logging;
 
 /**
  * Compiles a .java file to a .class file
@@ -23,7 +24,7 @@ import au.edu.anu.rscs.aot.OmhtkException;
  */
 public final class JavaCompiler {
 
-	private Logger log = Logger.getLogger(JavaCompiler.class.getName());
+	private static Logger log = Logging.getLogger(JavaCompiler.class);
 	/** the java compiler */
 	private javax.tools.JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
 
