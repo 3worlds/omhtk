@@ -41,6 +41,7 @@ public class Logging {
 	 * sets the log level of all loggers
 	 * @param level the logging level. Possible values are: 
 	 * <ul>
+	 * <li>OFF: no logging at all</li>
 	 * <li>SEVERE: error messages only</li>
 	 * <li>WARNING: error+warning messages only</li>
 	 * <li>INFO: error+warning+debug messages only</li>
