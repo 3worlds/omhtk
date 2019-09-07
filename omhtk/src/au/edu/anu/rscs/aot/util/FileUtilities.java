@@ -29,6 +29,9 @@
  **************************************************************************/
 package au.edu.anu.rscs.aot.util;
 
+import static org.junit.Assert.assertFalse;
+
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -37,8 +40,10 @@ import java.io.PrintWriter;
 import java.io.Reader;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.Comparator;
 import java.util.List;
 
 import au.edu.anu.rscs.aot.OmhtkException;
@@ -52,13 +57,28 @@ import au.edu.anu.rscs.aot.OmhtkException;
 // NOT TESTED
 public class FileUtilities {
 
-// JG 29/5/2019 - I prefer to remove this method because it induces a dependency on
-// apache commons-io which has a dependency on JUnit which messes up with eclipse
-// management of JUnit - we never use this method !
-	
-//	public static void deleteTree(File dir) throws IOException {
-//		org.apache.commons.io.FileUtils.deleteDirectory(dir);
-//	}
+	/* deletes all files and directories include the root. */
+	public static void deleteFileTree(File dir) throws IOException {
+		Path root = dir.toPath();
+		Files.walk(root).sorted(Comparator.reverseOrder()).map(Path::toFile).forEach(File::delete);
+		if (Files.exists(root))
+			throw new OmhtkException("Failed to delete directory tree: [" + root + "]");
+	}
+
+	/* https://dzone.com/articles/comparing-files-in-java */
+	public static boolean identicalStreams(BufferedInputStream fis1, BufferedInputStream fis2) throws IOException {
+		int b1 = 0, b2 = 0;
+		while (b1 != -1 && b2 != -1) {
+			if (b1 != b2)
+				return false;
+			b1 = fis1.read();
+			b2 = fis2.read();
+		}
+		if (b1 != b2)
+			return false;
+		else
+			return true;
+	}
 
 	public static void copyFileReplace(File src, File dst) {
 		try {
@@ -66,7 +86,7 @@ public class FileUtilities {
 				dst.getParentFile().mkdirs();
 			Files.copy(src.toPath(), dst.toPath(), StandardCopyOption.REPLACE_EXISTING);
 		} catch (IOException e) {
-			e.printStackTrace();
+			throw new OmhtkException("FileUtilities.copyFileReplace: ",e);
 		}
 	}
 
