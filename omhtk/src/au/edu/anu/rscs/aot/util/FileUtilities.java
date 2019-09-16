@@ -29,8 +29,6 @@
  **************************************************************************/
 package au.edu.anu.rscs.aot.util;
 
-import static org.junit.Assert.assertFalse;
-
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
