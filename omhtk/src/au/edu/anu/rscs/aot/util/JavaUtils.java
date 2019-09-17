@@ -60,8 +60,8 @@ public class JavaUtils {
 	private static DynamicList<Class<?>> getClassesInPackage(String packageName, boolean doTree) {
 		DynamicList<Class<?>> classList = new DynamicList<Class<?>>();
 
-		ClassLoader cl = ClassLoader.getSystemClassLoader();
-//		ClassLoader cl = Thread.currentThread().getContextClassLoader();
+//		ClassLoader cl = ClassLoader.getSystemClassLoader();
+		ClassLoader cl = Thread.currentThread().getContextClassLoader();
 // 		this no longer works - was changed in java 9
 //		URL[] urls = ((URLClassLoader) cl).getURLs();
         assert cl != null;
@@ -96,7 +96,8 @@ public class JavaUtils {
 	// filtered by package name
 	//
 	private static void getClassesFromDisk(String packageName, File packageDir, DynamicList<Class<?>> classList, boolean doTree)  {
-		ClassLoader classLoader = ClassLoader.getSystemClassLoader();
+//		ClassLoader classLoader = ClassLoader.getSystemClassLoader();
+		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 		if (packageDir.isDirectory()) {
 			for (String name : packageDir.list()) {
 				File subDirectory = FileUtilities.makeFile(packageDir.toString(), name);
@@ -143,7 +144,8 @@ public class JavaUtils {
 	
 	private static void getClassFromJar(DynamicList<Class<?>> classList, JarEntry entry) {
 		System.out.println("Adding " + entry);
-		ClassLoader classLoader = ClassLoader.getSystemClassLoader();
+//		ClassLoader classLoader = ClassLoader.getSystemClassLoader();
+		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 		try {
 			Class<?> theClass = classLoader.loadClass(entry.getName());
 			classList.addUnique(theClass);
