@@ -79,6 +79,9 @@ public class RandomSeeds {
 		else
 			throw new OmhtkException("Random seed index out of range (" + index + ") [0.." + (seeds.length - 1) + "] ");
 	}
+	public static int nSeeds() {
+		return seeds.length;
+	}
 
 	private static long[] seeds = { 74166303, 67003535, 7933682, -72857062, 97397995, 38332659, -14962701, 98627878,
 			79696189, 66830942, -37722071, -48513871, -25517240, -92588666, -4533370, -31456065, 11168849, -52818586,

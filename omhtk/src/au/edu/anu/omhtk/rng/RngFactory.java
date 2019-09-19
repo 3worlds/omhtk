@@ -34,37 +34,38 @@ import java.security.SecureRandom;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+import java.util.logging.Logger;
 
 import au.edu.anu.rscs.aot.OmhtkException;
+import fr.ens.biologie.generic.utils.Logging;
 
 /**
  * Author Ian Davies
  *
  * Date Dec 5, 2018
  */
-
 /**
- * Simplest possible random number stream factory for simulators. I have not
- * allowed for different types of PRNG. The java PRNG will reportedly not
- * change, is fast and well reviewed. I presume it suffers from the "planes"
- * problem but not sure.
- * 
- * This approach only allows handling the various options from the src code of
- * the user model. In other words, there is no parameter in the dsl that can be
- * changed to make a resettable stream non-resettable etc.
+ * Simplest possible random number stream factory for simulators.
  * 
  * Model developers create a stream as:
  * 
  * RandomFactory.makeRandom("test1", 0, ResetType.ONRUNSTART);
- * 
  * Then use it as:
  * 
  * Random rns = RandomFactory.getRandom("test1");
  * 
  * rns.nextDouble(); etc
  * 
+ * This system contains a table of 1000 random numbers that have been generated
+ * from atmospheric noise. This are used as seeds by the given index. If the
+ * supplied seedIndex is outside the table range, then a seed will be generated
+ * by SecureRandom algorithm.
+ * 
+ * 
  */
 public class RngFactory {
+	private static Logger log = Logging.getLogger(RngFactory.class);
+
 	public enum ResetType {
 		/* Do not use a seed. Always created with a new "unique" seed */
 		NEVER,
@@ -78,22 +79,41 @@ public class RngFactory {
 
 	private final static class Generator {
 		ResetType rt;
-		int seedIndex;
+		long seed;
 		Random rns;
 
 		private Generator(int seedIndex, ResetType rt, Random rnd) {
 			this.rns = rnd;
-			this.seedIndex = seedIndex;
+			if (seedIndex >= 0 && seedIndex < RandomSeeds.nSeeds()) {
+				log.info("Get seed from table [" + seedIndex + "]");
+				seed = RandomSeeds.getSeed(seedIndex);
+			} else {
+				log.info("Get seed from SecureRandom [index: " + seedIndex + "]");
+				seed = new SecureRandom().nextLong();
+			}
 			this.rt = rt;
-			// DO NOT use a fixed seed for "NEVER" - use that supplied by the system.
+
 			if (!rt.equals(ResetType.NEVER))
 				reset();
-			else
-				this.seedIndex = -1;// should cause a crash if mistakenly used.
+			log.info("Created random number stream" + toString());
 		}
 
 		private void reset() {
-			rns.setSeed(RandomSeeds.getSeed(seedIndex));
+			rns.setSeed(seed);
+		}
+
+		@Override
+		public String toString() {
+			StringBuilder sb = new StringBuilder();
+			sb.append("[class: ");
+			sb.append(rns.getClass().getSimpleName());
+			sb.append("; Seed: ");
+			sb.append(seed);
+			sb.append("; Reset: ");
+			sb.append(rt.name());
+			sb.append("]");
+			return sb.toString();
+
 		}
 	}
 
@@ -110,13 +130,15 @@ public class RngFactory {
 	 * 1) Java.util.Random - medium speed, poor quality;
 	 * 
 	 * 2) java.security.SecureRandom.SecureRandom() - slow, good quality, cannot be
-	 * reset in the normal way so should only be used with ResetType.NEVER;
+	 * reset in the normal way so should only be used with ResetType.NEVER; Maybe
+	 * this has changed now - not sure, But its very slow so really useless for us
+	 * except for generating seeds for other generators.
 	 * 
 	 * 3) au.edu.anu.fses.rng.XSRandom - very fast (76% faster than
 	 * Java.util.Random), medium quality
 	 * 
-	 * 4) au.edu.anu.fses.rng.Pcg32 - fast (65% faster than Java.util.Random)
-	 * and good quality
+	 * 4) au.edu.anu.fses.rng.Pcg32 - fast (65% faster than Java.util.Random) and
+	 * good quality
 	 * 
 	 * The choice is really between 3 & 4.
 	 * 
@@ -127,13 +149,18 @@ public class RngFactory {
 	 * @param rnd       random number generator
 	 */
 	public static void makeRandom(String name, int seedIndex, ResetType st, Random rnd) {
+		if (rnd instanceof SecureRandom) {
+			log.warning("Creating random number stream with VERY slow algorithm.[" + name + "]");
+		}
 		if (!rngs.containsKey(name)) {
 			if ((rnd instanceof SecureRandom) && (!st.equals(ResetType.NEVER)))
-				throw new OmhtkException("Can only use SecureRandom with ResetType.NEVER");
+				throw new OmhtkException("Can only use SecureRandom with ResetType.NEVER.[" + name + "]");
+
+			log.info("Creating random stream [" + name + "]");
 			Generator rng = new Generator(seedIndex, st, rnd);
 			rngs.put(name, rng);
 		} else
-			throw new OmhtkException("Attempt to create duplicate random number generetor (" + name + ")");
+			throw new OmhtkException("Attempt to create duplicate random number generetor [" + name + "]");
 	}
 
 	public static Random getRandom(String name) {

@@ -112,7 +112,7 @@ public class Pcg32 extends Random {
 	}
 
 	@Override
-	synchronized public void setSeed(long seed) {
+	 public synchronized void setSeed(long seed) {
 		this.state = seed;
 		this.inc = 1;
 	}
@@ -126,7 +126,7 @@ public class Pcg32 extends Random {
 	 *
 	 * @see java.util.Random#nextInt()
 	 */
-	public int nextInt() {
+	public synchronized int nextInt() {
 		long oldState = state;
 
 		state = oldState * MULTIPLIER + inc;
@@ -173,7 +173,7 @@ public class Pcg32 extends Random {
 	 * Returns the next pseudorandom, approximately uniformly distributed
 	 * {@code long} value between 0 (inclusive) and {@code n} (exclusive).
 	 */
-	public long nextLong(long n) {
+	public synchronized long nextLong(long n) {
 		if (n <= 0) {
 			throw new IllegalArgumentException("n must be positive");
 		}
