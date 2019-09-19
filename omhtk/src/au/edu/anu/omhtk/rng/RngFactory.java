@@ -64,6 +64,8 @@ import fr.ens.biologie.generic.utils.Logging;
  * 
  */
 public class RngFactory {
+	
+	private static Random seedGenerator = new SecureRandom();
 	private static Logger log = Logging.getLogger(RngFactory.class);
 
 	public enum ResetType {
@@ -89,7 +91,7 @@ public class RngFactory {
 				seed = RandomSeeds.getSeed(seedIndex);
 			} else {
 				log.info("Get seed from SecureRandom [index: " + seedIndex + "]");
-				seed = new SecureRandom().nextLong();
+				seed = seedGenerator.nextLong();
 			}
 			this.rt = rt;
 
