@@ -45,21 +45,21 @@ import fr.ens.biologie.generic.utils.Logging;
  * Date Dec 5, 2018
  */
 /**
- * Simplest possible random number stream factory for simulators.
+ * <p>Simplest possible random number stream factory for simulators.</p>
  * 
- * Model developers create a stream as:
+ * <p>Model developers create a stream as:</p>
  * 
- * RandomFactory.makeRandom("test1", 0, ResetType.ONRUNSTART);
- * Then use it as:
+ * {@code RandomFactory.makeRandom("test1", 0, ResetType.ONRUNSTART);}<br/>
+ * <p>Then use it as:</p>
  * 
- * Random rns = RandomFactory.getRandom("test1");
+ * {@code Random rns = RandomFactory.getRandom("test1");}<br/>
  * 
- * rns.nextDouble(); etc
+ * {@code rns.nextDouble();} etc</p>
  * 
- * This system contains a table of 1000 random numbers that have been generated
+ * <p>This system contains a table of 1000 random numbers that have been generated
  * from atmospheric noise. This are used as seeds by the given index. If the
  * supplied seedIndex is outside the table range, then a seed will be generated
- * by SecureRandom algorithm.
+ * by SecureRandom algorithm.</p>
  * 
  * 
  */
@@ -123,24 +123,25 @@ public class RngFactory {
 
 	/**
 	 * 
-	 * There a 4 random number generators available. However, SecureRandom cannot be
+	 * There are 4 random number generators available. However, SecureRandom cannot be
 	 * reset to a seed. As this factory relies on the ability to reset the seed and
 	 * get a deterministic outcome it should not be included but could be used for
 	 * some other purpose e.g.creating seed sets for other rngs. The currently
 	 * available prng are:
+	 * <ol>
+	 * <li> Java.util.Random - medium speed, poor quality;</li>
 	 * 
-	 * 1) Java.util.Random - medium speed, poor quality;
-	 * 
-	 * 2) java.security.SecureRandom.SecureRandom() - slow, good quality, cannot be
+	 * <li>java.security.SecureRandom.SecureRandom() - slow, good quality, cannot be
 	 * reset in the normal way so should only be used with ResetType.NEVER; Maybe
 	 * this has changed now - not sure, But its very slow so really useless for us
-	 * except for generating seeds for other generators.
+	 * except for generating seeds for other generators.</li>
 	 * 
-	 * 3) au.edu.anu.fses.rng.XSRandom - very fast (76% faster than
-	 * Java.util.Random), medium quality
+	 * <li>au.edu.anu.fses.rng.XSRandom - very fast (76% faster than
+	 * Java.util.Random), medium quality</li>
 	 * 
-	 * 4) au.edu.anu.fses.rng.Pcg32 - fast (65% faster than Java.util.Random) and
-	 * good quality
+	 * <li>au.edu.anu.fses.rng.Pcg32 - fast (65% faster than Java.util.Random) and
+	 * good quality</li>
+	 * </ol>
 	 * 
 	 * The choice is really between 3 & 4.
 	 * 
