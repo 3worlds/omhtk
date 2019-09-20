@@ -41,6 +41,7 @@ import au.edu.anu.omhtk.rng.Pcg32;
 import au.edu.anu.omhtk.rng.RngFactory;
 import au.edu.anu.omhtk.rng.XSRandom;
 import au.edu.anu.omhtk.rng.RngFactory.ResetType;
+import au.edu.anu.omhtk.rng.RngFactory.SeedSource;
 
 class RngFactoryTest {
 
@@ -80,11 +81,11 @@ class RngFactoryTest {
 	@Test
 	void test() {
 
-		RngFactory.makeRandom("Random", 0, ResetType.ONRUNSTART, new Random());
-		RngFactory.makeRandom("XSRandom", 0, ResetType.ONRUNSTART, new XSRandom());
-		RngFactory.makeRandom("PCGRandom", 0, ResetType.ONRUNSTART, new Pcg32());
+		RngFactory.makeRandom("Random", 0, ResetType.ONRUNSTART, SeedSource.TABLE, new Random());
+		RngFactory.makeRandom("XSRandom", 0, ResetType.ONRUNSTART, SeedSource.TABLE, new XSRandom());
+		RngFactory.makeRandom("PCGRandom", 0, ResetType.ONRUNSTART, SeedSource.TABLE, new Pcg32());
 		// SecureRandom must use "NEVER" - it cannot be reset deterministically
-		RngFactory.makeRandom("SecureRandom", 0, ResetType.NEVER, new SecureRandom());
+		RngFactory.makeRandom("SecureRandom", 0, ResetType.NEVER, SeedSource.TABLE, new SecureRandom());
 
 		Random random = RngFactory.getRandom("Random");
 		Random xsRandom = RngFactory.getRandom("XSRandom");
