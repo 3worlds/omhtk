@@ -32,7 +32,6 @@ package au.edu.anu.omhtk.rng;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.security.SecureRandom;
 import java.util.Random;
 
 import org.junit.jupiter.api.Test;
@@ -81,11 +80,20 @@ class RngFactoryTest {
 	@Test
 	void test() {
 
+<<<<<<< HEAD
 		RngFactory.makeRandom("Random", 0, ResetType.ONRUNSTART, SeedSource.TABLE, new Random());
 		RngFactory.makeRandom("XSRandom", 0, ResetType.ONRUNSTART, SeedSource.TABLE, new XSRandom());
+=======
+		RngFactory.makeRandom("Random", 0, ResetType.ONRUNSTART, SeedSource.SECURE, new Random());
+		RngFactory.makeRandom("XSRandom", 0, ResetType.ONRUNSTART, SeedSource.ZERO, new XSRandom());
+>>>>>>> branch 'master' of git@gitlab.anu.edu.au:ThreeWorlds/omhtk.git
 		RngFactory.makeRandom("PCGRandom", 0, ResetType.ONRUNSTART, SeedSource.TABLE, new Pcg32());
 		// SecureRandom must use "NEVER" - it cannot be reset deterministically
+<<<<<<< HEAD
 		RngFactory.makeRandom("SecureRandom", 0, ResetType.NEVER, SeedSource.TABLE, new SecureRandom());
+=======
+//		RngFactory.makeRandom("SecureRandom", 0, ResetType.NEVER, SeedSource.ZERO, new SecureRandom());
+>>>>>>> branch 'master' of git@gitlab.anu.edu.au:ThreeWorlds/omhtk.git
 
 		Random random = RngFactory.getRandom("Random");
 		Random xsRandom = RngFactory.getRandom("XSRandom");
