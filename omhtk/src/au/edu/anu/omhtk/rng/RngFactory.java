@@ -201,6 +201,16 @@ public class RngFactory {
 	public static void resetExperiment() {
 		reset(ResetType.ONEXPERIMENTSTART);
 	}
+	
+	/**
+	 * A little check method to call before calling makeRandom(...) or getRandom(...)
+	 * 
+	 * @param key
+	 * @return
+	 */
+	public static boolean exists(String key) {
+		return rngs.containsKey(key);
+	}
 
 	private static void reset(ResetType type) {
 		rngs.entrySet().forEach(entry -> {
