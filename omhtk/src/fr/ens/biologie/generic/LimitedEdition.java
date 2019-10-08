@@ -16,6 +16,6 @@ public interface LimitedEdition<T> {
 	 * @param id the unique identifier
 	 * @return the mathcing {@code T} instance
 	 */
-	public T getInstance(Object id);
+	public T getInstance(int id);
 
 }
