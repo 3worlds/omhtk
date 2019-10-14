@@ -31,79 +31,99 @@
 package fr.ens.biologie.generic.utils;
 
 /**
- * A kind of clone of javafx.util.Pair which is not available in OpenJDK but in Oracle JDK only.
- * cf bug #11 for details on why I implemented this class
- * 
- * @author Jacques Gignoux - 18 avr. 2019
+ * A three element Tuple based on javafx.util.Pair
  *
  * @param <F>
  * @param <S>
+ * @param <T>
  */
-public class Duple<F,S> {
-	
+/**
+ * @author Ian Davies
+ *
+ * @date 14 Oct 2019
+ */
+public class Tuple<F, S, T> {
+
 	private F first;
 	private S second;
-	
-	public Duple(F f, S s) {
+	private T third;
+
+	public Tuple(F f, S s, T t) {
 		super();
 		first = f;
 		second = s;
+		third = t;
 	}
-	
+
 	public F getFirst() {
 		return first;
 	}
-	
+
 	public S getSecond() {
 		return second;
 	}
-	
+
+	public T getThird() {
+		return third;
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		sb.append(first).append("|").append(second);
+		sb.append(first).append("|").append(second).append("|").append(third);
 		return sb.toString();
 	}
-	
+
 	@Override
 	public int hashCode() {
 		return toString().hashCode();
 	}
-	
+
 	@Override
 	@SuppressWarnings("unchecked")
 	public boolean equals(java.lang.Object o) {
-		if (o==null)
+		if (o == null)
 			return false;
 		try {
-			Duple<F,S> p = (Duple<F,S>) o;
+			Tuple<F, S, T> other = (Tuple<F, S, T>) o;
 			boolean equalFirst = false;
-			if (first==null)
-				if (p.first==null)
+			if (first == null)
+				if (other.first == null)
 					equalFirst = true;
 				else
 					return false;
-			else 
-				if (p.first==null)
-					return false;
-				else
-					equalFirst = first.equals(p.first);
-			boolean equalSecond = false;
-			if (second==null)
-				if (p.second==null)
-					equalSecond = true;
-				else 
-					return false;
+			else if (other.first == null)
+				return false;
 			else
-				if (p.second==null)
-					return false;
+				equalFirst = first.equals(other.first);
+
+			boolean equalSecond = false;
+			if (second == null)
+				if (other.second == null)
+					equalSecond = true;
 				else
-					equalSecond = second.equals(p.second);
-			return equalFirst && equalSecond;
+					return false;
+			else if (other.second == null)
+				return false;
+			else
+				equalSecond = second.equals(other.second);
+
+			boolean equalThird = false;
+			if (third == null)
+				if (other.third == null)
+					equalThird = true;
+				else
+					return false;
+			else if (other.third == null)
+				return false;
+			else
+				equalThird = third.equals(other.third);
+
+			return equalFirst && equalSecond && equalThird;
+
 		} catch (Exception e) {
 			return false;
 		}
 	}
 
-	
 }
