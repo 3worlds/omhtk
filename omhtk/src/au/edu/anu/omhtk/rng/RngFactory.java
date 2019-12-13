@@ -135,35 +135,29 @@ public class RngFactory {
 
 	/**
 	 * 
-	 * There are 4 random number generators available. However, SecureRandom cannot
-	 * be reset to a seed. As this factory relies on the ability to reset the seed
-	 * and get a deterministic outcome it should not be included but could be used
-	 * for some other purpose e.g.creating seed sets for other rngs. The currently
-	 * available prng are:
+	 * There are 3 random number generators available. Note that SecureRandom cannot
+	 * be used as it has no means of resetting the seed; a feature this factory
+	 * relies upon. The currently available generators are:
 	 * <ol>
 	 * <li>Java.util.Random - medium speed, poor quality;</li>
-	 * 
-	 * <li>java.security.SecureRandom.SecureRandom() - slow, good quality, cannot be
-	 * reset in the normal way so should only be used with ResetType.NEVER; Maybe
-	 * this has changed now - not sure, But its very slow so really useless for us
-	 * except for generating seeds for other generators.</li>
 	 * 
 	 * <li>au.edu.anu.fses.rng.XSRandom - very fast (76% faster than
 	 * Java.util.Random), medium quality</li>
 	 * 
-	 * <li>au.edu.anu.fses.rng.Pcg32 - fast (65% faster than Java.util.Random) and
+	 * <li>au.edu.anu.fses.rng.Pcg32 - fast (56% faster than Java.util.Random) and
 	 * good quality</li>
 	 * </ol>
 	 * 
-	 * The choice is really between 3 & 4.
+	 * The choice is really between 3 (faster) & 4 (better quality).
 	 * 
 	 * @param name      unique name
 	 * @param seedIndex index into array[0..999] of naturally generated random
 	 *                  numbers to act as seeds for resetting.
-	 * @param resetType        type of reset method
+	 * @param resetType type of reset method (NEVER, ONRUNSTART, ONEXPERIMENTSTART)
 	 * 
-	 * @param source	Method of creating the random number seed
-	 * @param rns       random number generator
+	 * @param source    Method of creating the random number seed (TABLE, SECURE,
+	 *                  ZERO)
+	 * @param rns       random number generator.
 	 */
 	public static void makeRandom(String name, int seedIndex, ResetType resetType, SeedSource source, Random rns) {
 		if (rns instanceof SecureRandom)
@@ -203,9 +197,10 @@ public class RngFactory {
 	public static void resetExperiment() {
 		reset(ResetType.ONEXPERIMENTSTART);
 	}
-	
+
 	/**
-	 * A little check method to call before calling makeRandom(...) or getRandom(...)
+	 * A little check method to call before calling makeRandom(...) or
+	 * getRandom(...)
 	 * 
 	 * @param key
 	 * @return
