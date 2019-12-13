@@ -60,6 +60,7 @@ class RngFactoryTest {
 			sum += rng.nextDouble();
 		long e = System.nanoTime();
 		double mean = sum / (double) trials;
+		System.out.println(rng.getClass().getSimpleName()+ " mean ="+mean);
 		assertTrue(mean > 0.4999);
 		assertTrue(mean < 0.5001);
 		return e - s;
@@ -80,9 +81,11 @@ class RngFactoryTest {
 	@Test
 	void test() {
 
-		RngFactory.makeRandom("Random", 0, ResetType.ONRUNSTART, SeedSource.SECURE, new Random());
+		RngFactory.makeRandom("Random", 0, ResetType.ONRUNSTART, SeedSource.ZERO, new Random());
+		// TODO If XSRandom is set with seed==0 it is never changed! The other generators seem to be ok.
 		RngFactory.makeRandom("XSRandom", 0, ResetType.ONRUNSTART, SeedSource.ZERO, new XSRandom());
-		RngFactory.makeRandom("PCGRandom", 0, ResetType.ONRUNSTART, SeedSource.TABLE, new Pcg32());
+//		RngFactory.makeRandom("XSRandom", 0, ResetType.ONRUNSTART, SeedSource.TABLE, new XSRandom());
+		RngFactory.makeRandom("PCGRandom", 0, ResetType.ONRUNSTART, SeedSource.ZERO, new Pcg32());
 		//RngFactory.makeRandom("SecureRandom", 0, ResetType.NEVER, SeedSource.TABLE, new SecureRandom());
 
 		Random random = RngFactory.getRandom("Random");
@@ -135,6 +138,7 @@ class RngFactoryTest {
 
 		System.out.println(("xsRandom is: " + (1 - t2 / t1) * 100) + " % faster than Java.util.Random");
 		System.out.println(("pcgRandom is: " + (1 - t3 / t1) * 100) + " % faster than Java.util.Random");
+		
 		// System.out.println(("SecureRandom is: "+(1-t4/t1)*100)+" % faster than
 		// Java.util.Random");
 	}

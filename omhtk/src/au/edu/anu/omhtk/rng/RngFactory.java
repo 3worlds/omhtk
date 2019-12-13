@@ -179,6 +179,8 @@ public class RngFactory {
 			seed = RandomSeeds.getSeed(seedIndex);
 		else if (source.equals(SeedSource.SECURE))
 			seed = seedGenerator.nextLong();
+		else if (rns instanceof XSRandom)
+			seed = 1L; // NB Cannot be set to zero!
 		else
 			seed = 0L;
 		log.info("Creating random stream [" + name + "; Seed: " + seed);
