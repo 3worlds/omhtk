@@ -30,15 +30,36 @@
 package fr.ens.biologie.generic;
 
 /**
- * <p>3Worlds: component <em>threeWorlds-core</em></p>
- * @author Jacques Gignoux - 2 juin 2012<br/><br/>
- * 
  * <p>An interface for objects that can be reset to an initial state after having been brought
- * into a different state.</p>
+ * into a different state.
+ * It assumes the object has a life cycle of the type "<em>initial state</em> -&gt; <em>running</em>
+ *  -&gt; <em>final state</em>" </p>
+ *  
+ * @author Jacques Gignoux - 2 juin 2012<br/><br/>
  *
  */
 public interface Resettable {
 	
-	public void reset();
+	/**
+	 * Processes whatever has to be done when entering <em>initial state</em> 
+	 * (does nothing by default).
+	 */
+	public default void preProcess() {}
+	
+	/**
+	 * Processes whatever has to be done when entering <em>final state</em> 
+	 * (does nothing by default).
+	 */
+	public default void postProcess() {} 
+	
+	/**
+	 * Revert from <em>final state</em> to <em>initial state</em>
+	 * by calling {@code postProcess()}, then {@code preProcess()}.
+	 * Should never be overriden.
+	 */
+	public default void reset() {
+		postProcess();
+		preProcess();
+	}
 
 }
