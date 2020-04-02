@@ -43,6 +43,17 @@ public class Statistics {
 		super();
 		sep = separator;
 	}
+	public Statistics reset() {
+		mu = 0;
+		var = 0;
+		ss = 0;
+		n = 0;
+		sum = 0;
+		s = "";
+		min = Double.POSITIVE_INFINITY; 
+		max = Double.NEGATIVE_INFINITY;
+		return this;
+	}
 
 	/**
 	 * Statistics for booleans, coded as 1 for true and 0 for false
@@ -92,17 +103,6 @@ public class Statistics {
 		return this;
 	}
 
-	public Statistics reset() {
-		mu = 0;
-		var = 0;
-		ss = 0;
-		n = 0;
-		sum = 0;
-		s = "";
-		min = Double.MAX_VALUE;
-		max = -Double.MAX_VALUE;
-		return this;
-	}
 
 	public int n() {
 		return n;
