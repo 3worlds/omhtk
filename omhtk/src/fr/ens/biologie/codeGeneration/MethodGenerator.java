@@ -16,38 +16,38 @@ import static fr.ens.biologie.codeGeneration.Comments.*;
  * A simple method code generator - does not handle exceptions and annotations.
  * <p>3Worlds: component threeWorlds</p>
  * @author Jacques Gignoux - 19 déc. 2014
- * 
+ *
  * TODO: allow to rename the arguments to more handy user friendly ones (for methods
  * generated from ancestor classes)
  *
  */
 public class MethodGenerator implements JavaCode {
-	
-	private String override;
-	private String scope;
-	private String returnType;
-	private String name;
-	private String[] argTypes;
-	private String[] argNames;
-	private List<String> statements = new LinkedList<String>();
-	private String returnStatement = "return null";
-	private Set<String> dependencies = new HashSet<String>();
-	private boolean insertCodeInsertionComment = false;
-	
+
+	protected String override;
+	protected String scope;
+	protected String returnType;
+	protected String name;
+	protected String[] argTypes;
+	protected String[] argNames;
+	protected List<String> statements = new LinkedList<String>();
+	protected String returnStatement = "return null";
+	protected Set<String> dependencies = new HashSet<String>();
+	protected boolean insertCodeInsertionComment = false;
+
 	private String getLastBit(String s, String regexp) {
 		String[] ss = s.split(regexp);
 		return ss[ss.length-1];
 	}
-	
+
 	public String[] dependencies() {
 		String[] a = new String[dependencies.size()];
 		return dependencies.toArray(a);
 	}
-	
+
 	public void insertCodeInsertionComment() {
 		insertCodeInsertionComment = true;
 	}
-	
+
 	/**
 	 * Constructor from a superclass method - copies all method information from ancestor
 	 * @param method - the ancestor method to generate this one from
@@ -63,19 +63,19 @@ public class MethodGenerator implements JavaCode {
 		else if (Modifier.isProtected(m)) scope="protected";
 		else scope="private";
 		Class<?>[] ct = method.getParameterTypes();
-		
+
 		Type[] pt = method.getGenericParameterTypes();
 		argTypes = new String[pt.length];
 		argNames = new String[pt.length];
-		
+
 		for (int i=0; i<pt.length; i++) {
 			String s = pt[i].toString();
-			if (s.contains("class ")) 
+			if (s.contains("class "))
 				s = getLastBit(s,"class ");
-			if (s.contains("interface ")) 
+			if (s.contains("interface "))
 				s = getLastBit(s,"interface ");
 			dependencies.add(s);
-			argTypes[i] = ct[i].getSimpleName(); 
+			argTypes[i] = ct[i].getSimpleName();
 			// TODO: this doesnt work with templates, i.e. Map<ComplexSystem,?>
 			if (argTypes[i].equals("Class")) argTypes[i]+="<?>";
 			argNames[i] = "v"+i;
@@ -96,7 +96,7 @@ public class MethodGenerator implements JavaCode {
 	}
 	/**
 	 * Constructor from scratch - self explained parameters
-	 * @param scope 
+	 * @param scope
 	 * @param returnType
 	 * @param name
 	 * @param argTypes
@@ -111,44 +111,44 @@ public class MethodGenerator implements JavaCode {
 		for (int i=0; i<argNames.length; i++) argNames[i] = "v"+i;
 		override = null;
 	}
-	
+
 	public MethodGenerator setStatement(String statement) {
 		statements.add(statement);
 		return this;
 	}
-	
+
 	public MethodGenerator setReturnStatement(String statement) {
 		returnStatement = statement;
 		return this;
 	}
-	
+
 	public MethodGenerator setArgumentName(int index, String name) {
-		argNames[index] = name; 
+		argNames[index] = name;
 		return this;
 	}
-	
+
 	// use with caution - only when inherits template types, eg Map<A,B>
 	public MethodGenerator setArgumentType(int index, String type) {
-		argTypes[index] = type; 
+		argTypes[index] = type;
 		return this;
 	}
-	
+
 	public MethodGenerator setArgumentNames(String... names) {
 		for (int i=0; i<names.length; i++)
-			argNames[i] = names[i]; 
+			argNames[i] = names[i];
 		return this;
 	}
-	
+
 	public String name() {
 		return name;
 	}
-	
+
 	// use with caution.
 	public MethodGenerator setReturnType(String type) {
 		returnType = type;
 		return this;
 	}
-	
+
 	@Override
 	public String asText(String indent) {
 		String result = "";
@@ -157,7 +157,7 @@ public class MethodGenerator implements JavaCode {
 			result += indent + scope + " " + name + "(";
 		else
 			result += indent + scope + " " + returnType + " " + name + "(";
-		if (argTypes!=null) 
+		if (argTypes!=null)
 		for (int i=0; i< argTypes.length; i++) {
 			result += argTypes[i]+" "+argNames[i];
 			if (i==argTypes.length-1);
@@ -177,7 +177,7 @@ public class MethodGenerator implements JavaCode {
 		result += indent+"}\n\n";
 		return result;
 	}
-	
+
 //	// For testing only
 //	public static void main(String[] args) {
 //		Class<?> c = TwData.class;
