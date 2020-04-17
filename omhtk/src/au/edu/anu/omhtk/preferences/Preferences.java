@@ -43,8 +43,8 @@ import java.io.File;
  * Java has a preferences API {@link java.util.prefs.Preferences} . Therefore, I
  * hope we no longer need the graph-dependent implementation for preference
  * saving. However, the Java system only deals with primitives and so this code
- * is static wrapper to an interface to a preference helper class for 3Worlds to implement array
- * handling.
+ * is static wrapper to an interface to a preference helper class for 3Worlds to
+ * implement array handling.
  */
 
 public class Preferences {
@@ -55,7 +55,7 @@ public class Preferences {
 	};
 
 	public static void initialise(File file) {
-		
+
 		if (Preferences.impl != null)
 			Preferences.impl.flush();
 		Preferences.impl = new PrefImpl(file);
@@ -105,9 +105,13 @@ public class Preferences {
 		impl.putString(key, value);
 	};
 
-	public void putStrings(String key, String... values) {
+	public static void putStrings(String key, String... values) {
 		impl.putStrings(key, values);
 	};
+
+	public static void putEnum(String key, Enum<?> value) {
+		impl.putEnum(key, value);
+	}
 
 	public static int getInt(String key, int def) {
 		return impl.getInt(key, def);
@@ -156,6 +160,10 @@ public class Preferences {
 	public static String[] getStrings(String key, String... defs) {
 		return impl.getStrings(key, defs);
 	};
+
+	public static Enum<?> getEnum(String key, Enum<?> def) {
+		return impl.getEnum(key, def);
+	}
 
 	public static void remove(String key) {
 		impl.remove(key);

@@ -100,6 +100,8 @@ public class PrefImpl implements Preferenceable {
 	public void putInts(String key, int... values) {
 		prefs.put(key, String.join(sep, StringArrayConversion.IntsAsStrings(values)));
 	}
+	
+	
 
 	@Override
 	public void putLong(String key, long value) {
@@ -247,8 +249,18 @@ public class PrefImpl implements Preferenceable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		;
 		return true;
+	}
+
+	@Override
+	public void putEnum(String key, Enum<?> value) {
+		putString(key, value.name());
+	}
+
+	@Override
+	public Enum<?> getEnum(String key, Enum<?> def) {
+		String value =  getString(key,def.name());
+		return Enum.valueOf(def.getDeclaringClass(),value);
 	}
 
 }

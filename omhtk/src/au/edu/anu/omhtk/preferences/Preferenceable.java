@@ -57,6 +57,8 @@ public interface Preferenceable {
 	public void putDoubles(String key, double... values);
 	public void putString(String key, String value);
 	public void putStrings(String key, String... values);
+	
+	public void putEnum(String key,Enum<?> e);
 
 	public int getInt(String key,int def);
 	public int[] getInts(String key, int... defs);
@@ -70,6 +72,8 @@ public interface Preferenceable {
 	public double[] getDoubles(String key, double...defs);
 	public String getString(String key,String def);
 	public String[] getStrings(String key, String... defs);
+	
+	public Enum<?> getEnum(String key,Enum<?> def);
 	
 	public void remove(String key);
 	public void flush();
