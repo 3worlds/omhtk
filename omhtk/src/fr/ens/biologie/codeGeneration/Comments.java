@@ -48,16 +48,20 @@ public class Comments {
 		"CAUTION: Edit this template but do not change class declaration."
 	};
 
+	public static final String beginCodeInsert = "Code insert Begin";
 	public static String[] startCodeInsertion = {
-		"*************************** INSERT YOUR CODE BELOW THIS LINE ***************************"
+//			"*************************** INSERT YOUR CODE BELOW THIS LINE ***************************"
+			"---- "+beginCodeInsert+ "-->"
 	};
 
+	public static final String endCodeInsert = "Code insert End";
 	public static String[] endCodeInsertion = {
-		"******************************** END CODE INSERTION ZONE *******************************"
+//		"******************************** END CODE INSERTION ZONE *******************************"
+			"---- "+endCodeInsert+ "----<"
 	};
 
-	public static String[] separatingLine = {
-		"****************************************************************************************"
+	public static String[] separatingLine = {// 80 chars
+		    "********************************************************************************"
 	};
 
 	public static String[] copyright(int year, String... authors) {
