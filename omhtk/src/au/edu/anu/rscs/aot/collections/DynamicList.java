@@ -4,13 +4,13 @@
  *  Copyright 2018: Shayne FLint, Jacques Gignoux & Ian D. Davies         *
  *       shayne.flint@anu.edu.au                                          *
  *       jacques.gignoux@upmc.fr                                          *
- *       ian.davies@anu.edu.au                                            * 
+ *       ian.davies@anu.edu.au                                            *
  *                                                                        *
  *  OMHTK is a bunch of useful, very generic interfaces for designing     *
  *  consistent, plus some other utilities. The kind of things you need    *
  *  in all software projects and keep rebuilding all the time.            *
  *                                                                        *
- **************************************************************************                                       
+ **************************************************************************
  *  This file is part of OMHTK (One More Handy Tool Kit).                 *
  *                                                                        *
  *  OMHTK is free software: you can redistribute it and/or modify         *
@@ -21,7 +21,7 @@
  *  OMHTK is distributed in the hope that it will be useful,              *
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of        *
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
- *  GNU General Public License for more details.                          *                         
+ *  GNU General Public License for more details.                          *
  *                                                                        *
  *  You should have received a copy of the GNU General Public License     *
  *  along with UIT.  If not, see <https://www.gnu.org/licenses/gpl.html>. *
@@ -40,6 +40,7 @@ import java.util.NoSuchElementException;
 import java.util.Queue;
 
 import fr.ens.biologie.generic.Sizeable;
+import fr.ens.biologie.generic.Textable;
 
 /**
  * <p>Implementation of List<T> with a <em>self-correcting</em> iterator which allows removing of
@@ -48,23 +49,23 @@ import fr.ens.biologie.generic.Sizeable;
  * (where there are many insertions and deletions in the list).</p>
  * <p>This was formerly known as AotList. Code modified from au.edu.anu.rscs.aot.collections.AotList<T> by Shayne Flint.
  * Removed Query, and dependency from AotCollection and AotIterable.</p>
- * <p>Given the new facilities provided in java 8 lists, this class may be obsolete. For example, 
+ * <p>Given the new facilities provided in java 8 lists, this class may be obsolete. For example,
  * to remove items from a list can be done with instructions such as {@code list.sublist(from,to).clear()}.</p>
- * 
+ *
  * @author Shayne Flint - loooong ago.
  * @author Jacques Gignoux - 30 Nov. 2018
  *
  * @param <T>
  */
 // TODO: finish testing - only partly done.
-public class DynamicList<T> implements List<T>, Deque<T>, Queue<T>, Sizeable {
+public class DynamicList<T> implements List<T>, Deque<T>, Queue<T>, Sizeable, Textable {
 
 	protected ListNode<T> head = null;
 	protected ListNode<T> tail = null;
 	protected int         size = 0;
 
 	// Constructors
-	
+
 	public DynamicList() {
 	}
 
@@ -72,7 +73,7 @@ public class DynamicList<T> implements List<T>, Deque<T>, Queue<T>, Sizeable {
 	public DynamicList(T... items)  {
 		super();
 		for (T item : items)
-			add(item);		
+			add(item);
 	}
 
 	public DynamicList(Iterable<T> iterable)  {
@@ -80,9 +81,9 @@ public class DynamicList<T> implements List<T>, Deque<T>, Queue<T>, Sizeable {
 		for (T item : iterable)
 			add(item);
 	}
-	
+
 	// Sizeable
-	
+
 	@Override
 	public int size() {
 		return size;
@@ -112,7 +113,7 @@ public class DynamicList<T> implements List<T>, Deque<T>, Queue<T>, Sizeable {
 
 	/**
 	 * An iterator which skips removed items.
-	 * 
+	 *
 	 * @author Shayne Flint - long ago
 	 *
 	 */
@@ -133,7 +134,7 @@ public class DynamicList<T> implements List<T>, Deque<T>, Queue<T>, Sizeable {
 			} else {
 				if (isRemovedItem(current))
 					throw new IllegalStateException("Non-correcting iterator is pointing to a removed item");
-			}	
+			}
 		}
 
 		@Override
@@ -173,7 +174,7 @@ public class DynamicList<T> implements List<T>, Deque<T>, Queue<T>, Sizeable {
 
 	/**
 	 * Returns an iterator on this list
-	 * 
+	 *
 	 * @param correcting if true, the iterator is correcting
 	 * @return an iterator, optionally correcting
 	 */
@@ -182,9 +183,9 @@ public class DynamicList<T> implements List<T>, Deque<T>, Queue<T>, Sizeable {
 	}
 
 	/**
-	 * Returns a correcting iterator on this list. 
+	 * Returns a correcting iterator on this list.
 	 * <p>Note: the default iterator() method returns a correcting iterator.</p>
-	 * 
+	 *
 	 * @return a correcting iterator
 	 */
 	public Iterator<T> correctingIterator() {
@@ -456,7 +457,7 @@ public class DynamicList<T> implements List<T>, Deque<T>, Queue<T>, Sizeable {
 
 	/**
 	 * A correcting list iterator, ie an iterator that can traverse the list up or down
-	 * 
+	 *
 	 * @author Shayne Flint - long ago
 	 *
 	 */
@@ -775,7 +776,7 @@ public class DynamicList<T> implements List<T>, Deque<T>, Queue<T>, Sizeable {
 					}
 				} else {
 					throw new IllegalStateException("Non-correcting iterator is pointing to a removed item");
-				}				
+				}
 			}
 		}
 
@@ -806,7 +807,7 @@ public class DynamicList<T> implements List<T>, Deque<T>, Queue<T>, Sizeable {
 		public String toString() {
 			return "[CorrectingDescendingIterator correcting=" + correcting + ", current=" + current + "]";
 		}
-		
+
 	} // private class CorrectingDescendingIterator
 
 
@@ -820,7 +821,7 @@ public class DynamicList<T> implements List<T>, Deque<T>, Queue<T>, Sizeable {
 				result.add(item);
 		for (T item : this)
 			if (!list.contains(item))
-				result.add(item);			
+				result.add(item);
 		return result;
 	}
 
@@ -834,7 +835,7 @@ public class DynamicList<T> implements List<T>, Deque<T>, Queue<T>, Sizeable {
 
 	/**
 	 * Renamed from sort to sortList to avoid conflict with JDK 1.8 List.sort()
-	 * 
+	 *
 	 * @param comparator
 	 */
 	public void sortList(Comparator<? super T> comparator) {
@@ -879,7 +880,7 @@ public class DynamicList<T> implements List<T>, Deque<T>, Queue<T>, Sizeable {
 
 	/**
 	 * Creates a normal array comprising elements which refer to the data items in this AotList
-	 * 
+	 *
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
@@ -896,21 +897,30 @@ public class DynamicList<T> implements List<T>, Deque<T>, Queue<T>, Sizeable {
 
 
 
-	// IO
+	// Object
 	//
 	@Override
 	public String toString() {
-		return "[AotList of " + size() + " element(s)]";
+		StringBuilder result = new StringBuilder("{");
+		for (T item:this)
+			if (item instanceof Textable)
+				result.append(((Textable)item).toShortString()).append(", ");
+			else
+				result.append(item.toString()).append(", ");
+		result.delete(result.length()-2,result.length()).append('}');
+		return result.toString();
 	}
 
-	public String toLongString() {
-		String result = "[AotList of " + size() + " element(s)\n";
-		int idx = 0;
-		for (T item : this) {
-			result = result + "    [" + idx + ":" + item + "]\n";
-			idx++;
-		}
-		return result + "]";
+	// Textable
+	//
+	@Override
+	public String toUniqueString() {
+		return super.toString();
+	}
+
+	@Override
+	public String toShortString() {
+		return "[DynamicList of " + size() + " element(s)]";
 	}
 
 }

@@ -4,13 +4,13 @@
  *  Copyright 2018: Shayne FLint, Jacques Gignoux & Ian D. Davies         *
  *       shayne.flint@anu.edu.au                                          *
  *       jacques.gignoux@upmc.fr                                          *
- *       ian.davies@anu.edu.au                                            * 
+ *       ian.davies@anu.edu.au                                            *
  *                                                                        *
  *  OMHTK is a bunch of useful, very generic interfaces for designing     *
  *  consistent, plus some other utilities. The kind of things you need    *
  *  in all software projects and keep rebuilding all the time.            *
  *                                                                        *
- **************************************************************************                                       
+ **************************************************************************
  *  This file is part of OMHTK (One More Handy Tool Kit).                 *
  *                                                                        *
  *  OMHTK is free software: you can redistribute it and/or modify         *
@@ -21,7 +21,7 @@
  *  OMHTK is distributed in the hope that it will be useful,              *
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of        *
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
- *  GNU General Public License for more details.                          *                         
+ *  GNU General Public License for more details.                          *
  *                                                                        *
  *  You should have received a copy of the GNU General Public License     *
  *  along with UIT.  If not, see <https://www.gnu.org/licenses/gpl.html>. *
@@ -32,18 +32,20 @@ package au.edu.anu.rscs.aot.collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 
+import fr.ens.biologie.generic.Textable;
+
 /**
- * <p>An immutable list of list enabling to iterate over the whole set as if it was a single 
+ * <p>An immutable list of list enabling to iterate over the whole set as if it was a single
  * list, with a minimal cost at creation time (hence the 'Quick').
  * Immutable.</p>
  * <p>CAUTION: the contained lists may have changed between two accesses to this one - so
  * use with care !</p>
- * 
+ *
  * @author Jacques Gignoux - 4/6/2012
  *
  * @param <T> the list content type
  */
-public class QuickListOfLists<T> implements Iterable<T> {
+public class QuickListOfLists<T> implements Iterable<T>, Textable {
 
 	private LinkedList<Iterable<T>> lists = new LinkedList<Iterable<T>>();
 
@@ -53,7 +55,7 @@ public class QuickListOfLists<T> implements Iterable<T> {
 		for (int i=0;i<list.length;i++)
 			lists.add(list[i]);
 	}
-	
+
 	@Override
 	public Iterator<T> iterator() {
 		return new AggregatedIterator<T>(lists);
@@ -62,18 +64,18 @@ public class QuickListOfLists<T> implements Iterable<T> {
 	public void addList(Iterable<T> list) {
 		lists.add(list);
 	}
-		
+
 	public void clear() {
 		lists.clear();
 	}
-	
+
 	// All this copied from Shayne's AggregatedIterator
     private class AggregatedIterator<U> implements Iterator<U> {
 
 		private Iterator<Iterable<U>> iterablesIterator;
-	
+
 		private Iterator<U> iterator;
-	
+
 		public AggregatedIterator(Iterable<Iterable<U>> list) {
 			super();
 		    iterablesIterator = list.iterator();
@@ -83,7 +85,7 @@ public class QuickListOfLists<T> implements Iterable<T> {
 		    } else
 			iterator = null;
 		}
-	
+
 		private Iterator<U> nextIterator() {
 		    Iterator<U> result;
 		    if (iterablesIterator.hasNext()) {
@@ -94,13 +96,13 @@ public class QuickListOfLists<T> implements Iterable<T> {
 		    } else
 			return null;
 		}
-	
-	
+
+
 		@Override
 		public boolean hasNext() {
 		    if (iterator == null)
 			return false;
-	
+
 		    if (iterator.hasNext())
 			return true;
 		    else {
@@ -111,18 +113,39 @@ public class QuickListOfLists<T> implements Iterable<T> {
 			    return iterator.hasNext();
 		    }
 		}
-	
+
 		@Override
 		public U next() {
 		    return (U) iterator.next();
 		}
-	
+
 		@Override
 		public void remove() {
 		    iterator.remove();
 		}
 
     }
-    
+
+	// Object
+	//
+	@Override
+	public String toString() {
+		StringBuilder result = new StringBuilder("{");
+		for (T item:this)
+			if (item instanceof Textable)
+				result.append(((Textable)item).toShortString()).append(", ");
+			else
+				result.append(item.toString()).append(", ");
+		result.delete(result.length()-2,result.length()).append('}');
+		return result.toString();
+	}
+
+	// Textable
+	//
+	@Override
+	public String toUniqueString() {
+		return super.toString();
+	}
+
 
 }
