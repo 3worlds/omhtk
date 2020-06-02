@@ -13,7 +13,7 @@ import fr.ens.biologie.generic.JavaCode;
 import static fr.ens.biologie.codeGeneration.Comments.*;
 
 /**
- * A simple method code generator - does not handle exceptions and annotations.
+ * A simple method code generator - does not handle exceptions, generic types nor annotations.
  * <p>3Worlds: component threeWorlds</p>
  * @author Jacques Gignoux - 19 déc. 2014
  *
@@ -112,6 +112,23 @@ public class MethodGenerator implements JavaCode {
 		override = null;
 	}
 
+	/**
+	 * Constructor from another MethodGenerator
+	 * @param mgen
+	 */
+	public MethodGenerator(MethodGenerator mgen) {
+		super();
+		scope = mgen.scope;
+		returnType = mgen.returnType;
+		name = mgen.name;
+		argTypes = mgen.argTypes.clone();
+		argNames = mgen.argNames.clone();
+		override = mgen.override;
+		statements.addAll(mgen.statements);
+		dependencies.addAll(mgen.dependencies);
+		insertCodeInsertionComment = mgen.insertCodeInsertionComment;
+	}
+
 	public MethodGenerator setStatement(String statement) {
 		statements.add(statement);
 		return this;
@@ -177,17 +194,5 @@ public class MethodGenerator implements JavaCode {
 		result += indent+"}\n\n";
 		return result;
 	}
-
-//	// For testing only
-//	public static void main(String[] args) {
-//		Class<?> c = TwData.class;
-//		Method[] mm = c.getDeclaredMethods();
-//		for (int i=0; i<mm.length; i++) {
-//			if (!Modifier.isFinal(mm[i].getModifiers())) {
-//				MethodGenerator mg = new MethodGenerator(mm[i]);
-//				System.out.print(mg.asText("	"));
-//			}
-//		}
-//	}
 
 }
