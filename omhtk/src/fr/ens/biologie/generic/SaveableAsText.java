@@ -48,7 +48,7 @@ public interface SaveableAsText {
 	/** Utility constants for generating blocks of saved data */
 	/** item separators */
 	public static char[] ITEM_SEPARATORS = 	  
-		{',',';',':','.',' ','\t','\n','|','+','=','-','/','\\','_'};
+		{',',';',':','.',' ','\t','\n','|','+','=','-','/','\\','_','\"','\''};
 	public static char COMMA = 		ITEM_SEPARATORS[0];
 	public static char SEMICOLON = 	ITEM_SEPARATORS[1];
 	public static char COLON = 		ITEM_SEPARATORS[2];
@@ -63,6 +63,9 @@ public interface SaveableAsText {
 	public static char SLASH = 		ITEM_SEPARATORS[11];
 	public static char BACKSLASH = 	ITEM_SEPARATORS[12];
 	public static char UNDERSCORE =	ITEM_SEPARATORS[13];
+	public static char DOUBLEQUOTE= ITEM_SEPARATORS[14];
+	public static char SINGLEQUOTE= ITEM_SEPARATORS[15];
+	//IDD - can't use as block delim for quotes because they're the same char
 
 	/** block delimiters (come in pairs) */
 	public static char[][] BLOCK_DELIMITERS = 
@@ -74,6 +77,7 @@ public interface SaveableAsText {
 	public static char[] SQUARE_BRACKETS = 		BLOCK_DELIMITERS[1];
 	public static char[] BRACKETS = 			BLOCK_DELIMITERS[2];
 	public static char[] TRIANGULAR_BRACKETS = 	BLOCK_DELIMITERS[3];
+	
 
 	/**
 	 * <p>Produces a String that can be saved to a text file (or any other text-based object) and later re-loaded.</p>
