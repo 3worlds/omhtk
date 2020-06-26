@@ -4,13 +4,13 @@
  *  Copyright 2018: Shayne FLint, Jacques Gignoux & Ian D. Davies         *
  *       shayne.flint@anu.edu.au                                          *
  *       jacques.gignoux@upmc.fr                                          *
- *       ian.davies@anu.edu.au                                            * 
+ *       ian.davies@anu.edu.au                                            *
  *                                                                        *
  *  OMHTK is a bunch of useful, very generic interfaces for designing     *
  *  consistent, plus some other utilities. The kind of things you need    *
  *  in all software projects and keep rebuilding all the time.            *
  *                                                                        *
- **************************************************************************                                       
+ **************************************************************************
  *  This file is part of OMHTK (One More Handy Tool Kit).                 *
  *                                                                        *
  *  OMHTK is free software: you can redistribute it and/or modify         *
@@ -21,7 +21,7 @@
  *  OMHTK is distributed in the hope that it will be useful,              *
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of        *
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
- *  GNU General Public License for more details.                          *                         
+ *  GNU General Public License for more details.                          *
  *                                                                        *
  *  You should have received a copy of the GNU General Public License     *
  *  along with UIT.  If not, see <https://www.gnu.org/licenses/gpl.html>. *
@@ -34,12 +34,12 @@ import au.edu.anu.rscs.aot.OmhtkException;
 /**
  * <p>An interface for objects that can be saved as text (in text files or Strings) and later
  * re-loaded with a (static) valueOf() method.</p>
- * 
- * <p>NOTE: classes implementing this interface <strong>must</strong> implement a 
+ *
+ * <p>NOTE: classes implementing this interface <strong>must</strong> implement a
  * {@code static public void valueOf(String)} method
  * returning an instance built from its argument. Don't forget that this method
  * can only be implemented in the class it is going to instantiate (ie no inheritance).</p>
- * 
+ *
  * @author Jacques Gignoux - 8 nov. 2018
  *
  */
@@ -47,7 +47,7 @@ public interface SaveableAsText {
 
 	/** Utility constants for generating blocks of saved data */
 	/** item separators */
-	public static char[] ITEM_SEPARATORS = 	  
+	public static char[] ITEM_SEPARATORS =
 		{',',';',':','.',' ','\t','\n','|','+','=','-','/','\\','_','\"','\''};
 	public static char COMMA = 		ITEM_SEPARATORS[0];
 	public static char SEMICOLON = 	ITEM_SEPARATORS[1];
@@ -68,7 +68,7 @@ public interface SaveableAsText {
 	//IDD - can't use as block delim for quotes because they're the same char
 
 	/** block delimiters (come in pairs) */
-	public static char[][] BLOCK_DELIMITERS = 
+	public static char[][] BLOCK_DELIMITERS =
 		{{'{','}'},{'[',']'},{'(',')'},{'<','>'}};
 	/** indexes to the above */
 	public static int BLOCK_OPEN = 0;
@@ -77,14 +77,25 @@ public interface SaveableAsText {
 	public static char[] SQUARE_BRACKETS = 		BLOCK_DELIMITERS[1];
 	public static char[] BRACKETS = 			BLOCK_DELIMITERS[2];
 	public static char[] TRIANGULAR_BRACKETS = 	BLOCK_DELIMITERS[3];
-	
+
+	/** string delimiters (come in pairs) */
+	public static char[][] STRING_DELIMITERS =
+		{{'\"','\"'},{'\'','\''},{'«','»'},{'“','”'},{'‘','’'},{'„','“'}};
+	public static int STRING_OPEN = 0;
+	public static int STRING_CLOSE = 1;
+	public static char[] DOUBLE_QUOTES = 		STRING_DELIMITERS[0];
+	public static char[] SINGLE_QUOTES = 		STRING_DELIMITERS[1];
+	public static char[] FRENCH_QUOTES = 		STRING_DELIMITERS[2];
+	public static char[] AMERICAN_QUOTES = 		STRING_DELIMITERS[3];
+	public static char[] ENGLISH_QUOTES = 		STRING_DELIMITERS[4];
+	public static char[] GERMAN_QUOTES = 		STRING_DELIMITERS[5];
 
 	/**
 	 * <p>Produces a String that can be saved to a text file (or any other text-based object) and later re-loaded.</p>
 	 * <p>This method (and all its variants) must return a {@code String} that allows to
 	 * reconstruct the object from it using a {@code valueOf(...)} method.</p>
 	 * <p>The general idea is that some external class (a grammar, tokeniser or other thing
-	 * aware of why the transformation to text is done) will call this method or its 
+	 * aware of why the transformation to text is done) will call this method or its
 	 * variants with two types of arguments, <em>block delimiters</em> and <em>item separators</em>.
 	 * This way the exact set of tokens to use for a particular application is not
 	 * hard-coded at this low level but is delegated to a class which contains the overall semantics.
@@ -97,9 +108,9 @@ public interface SaveableAsText {
 	 * The detailed semantics of block delimiters and item separators may vary with implementations
 	 * The important thing to bear in mind when writing such methods is that the generated
 	 * String must enable one to reconstruct the object from it.</p>
-	 * 
-	 * @param blockDelimiters an array of pairs of block delimiters 
-	 * (the second dimension of the array must be 2, with item 0 being the opening 
+	 *
+	 * @param blockDelimiters an array of pairs of block delimiters
+	 * (the second dimension of the array must be 2, with item 0 being the opening
 	 * block delimiter (e.g. '[') and the item 1 being the closing block delimiter
 	 * (e.g. ']').
 	 * @param itemSeparators an array of separators between repeated items
@@ -122,8 +133,8 @@ public interface SaveableAsText {
 
 	/**
 	 * As {@code toSaveableString(char[][],char[])}, but with no separators
-	 * @param blockDelimiters an array of pairs of block delimiters 
-	 * (the second dimension of the array must be 2, with item 0 being the opening 
+	 * @param blockDelimiters an array of pairs of block delimiters
+	 * (the second dimension of the array must be 2, with item 0 being the opening
 	 * block delimiter (e.g. '[') and the item 1 being the closing block delimiter
 	 * (e.g. ']').
 	 * @return  the object as a string that allows to reconstruct it with a {@code valueOf(...)}
@@ -142,11 +153,11 @@ public interface SaveableAsText {
 	public default String toSaveableString() {
 		return toSaveableString(null,null);
 	}
-	
+
 	/**
 	 * As {@code toSaveableString(char[][],char[])}, but with only one pair of block
 	 * delimiters and one item separator
-	 * @param blockDelimiters an array of 2 chars with item 0 being the opening 
+	 * @param blockDelimiters an array of 2 chars with item 0 being the opening
 	 * block delimiter (e.g. '<') and the item 1 being the closing block delimiter
 	 * (e.g. '>').
 	 * @param itemSeparator a separator between repeated items
@@ -160,7 +171,7 @@ public interface SaveableAsText {
 		is[0] = itemSeparator;
 		return toSaveableString(bd,is);
 	}
-	
+
 	/**
 	 * As {@code toSaveableString(char[][],char[])}, but with only one pair of block
 	 * delimiters and one item separator
@@ -185,7 +196,7 @@ public interface SaveableAsText {
 	 * @return the object as a string that allows to reconstruct it with a {@code valueOf(...)}
 	 * method
 	 */
-	
+
 	public default String toSaveableString(char startBlockDelimiter, char endBlockDelimiter) {
 		char[][] bd = new char[1][2];
 		bd[0][0] = startBlockDelimiter;
