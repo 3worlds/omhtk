@@ -3,10 +3,16 @@ package au.edu.anu.omhtk.jars;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.jar.Attributes;
 import java.util.jar.JarEntry;
@@ -18,6 +24,8 @@ import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+import org.apache.commons.io.IOUtils;
+
 import au.edu.anu.rscs.aot.OmhtkException;
 import au.edu.anu.rscs.aot.environment.Environment;
 import au.edu.anu.rscs.aot.environment.LocalEnvironment;
@@ -28,14 +36,15 @@ import fr.ens.biologie.generic.utils.Logging;
 /**
  * A class to package items into a jar with a version number
  * 
- * @author Shayne Flint refactored by Jacques Gignoux 2017
+ * @author Shayne Flint refactored by Jacques Gignoux 2017 - added merging of
+ *         services from multiple jars by Ian Davies 2020.
  *
  */
-public abstract class Jars { 
-	
+public abstract class Jars {
+
 	public static final char separatorChar = '/';
-	public static final String separator = ""+separatorChar;
-	
+	public static final String separator = "" + separatorChar;
+
 	protected String version = "0.0.0";
 	private static Logger log = Logging.getLogger(Jars.class);
 	private Set<String> classNames = new HashSet<String>();
@@ -46,23 +55,23 @@ public abstract class Jars {
 	protected String specTitle = null;
 	protected String mainClassName = null;
 	private Set<String> dependsOnJars = new HashSet<String>();
-	
+
 	/**
 	 * <p>
-	 * Testing if the code where the klass argument was found originates from a jar - 
-	 * hack found <a
+	 * Testing if the code where the klass argument was found originates from a jar
+	 * - hack found <a
 	 * href=https://stackoverflow.com/questions/482560/can-you-tell-on-runtime-
 	 * if-youre-running-java-from-within-a-jar> there</a>. The test is based on the
 	 * existence of the manifest.
 	 * </p>
+	 * 
 	 * @param klass the class to search for
 	 */
 	@SuppressWarnings("unused")
 	public static String getRunningJarFilePath(Class<?> klass) {
 		String result = null;
 		try {
-			result = new File(klass.getProtectionDomain().getCodeSource().getLocation().getPath())
-					.toString();
+			result = new File(klass.getProtectionDomain().getCodeSource().getLocation().getPath()).toString();
 			result = URLDecoder.decode(result, "UTF-8");
 			ZipFile zipFile = new ZipFile(result);
 			ZipEntry zipEntry = zipFile.getEntry("META-INF/MANIFEST.MF");
@@ -72,19 +81,19 @@ public abstract class Jars {
 			return null;
 		}
 	}
-	
+
 	public String getSpecVendor() {
 		return specVendor;
 	}
-	
+
 	public String getSpecTitle() {
 		return specTitle;
 	}
-	
+
 	public String getVersion() {
 		return version;
 	}
-	
+
 //	public void setVersion(String major, String minor, String micro) {
 //		version = major+"."+minor+"."+micro;
 //	}
@@ -125,8 +134,7 @@ public abstract class Jars {
 	 * the threeworlds project hierarchy as a prefix</li>
 	 * </ul>
 	 * 
-	 * @param packageName
-	 *            the java package name
+	 * @param packageName the java package name
 	 */
 	public void addResources(String packageName) {
 		log.info("adding resources in jar from package " + packageName);
@@ -246,13 +254,10 @@ public abstract class Jars {
 				File inFile = new File(jfr.fileName);
 //				String jarEntryString = jfr.jarName.replace("\\", Jar.separator);
 				String jarEntryString = jfr.jarName.replaceAll("\\\\", Jars.separator);
-				// we may need to check : mydir/file.txt as opposed to /mydir/file.txt
 				if (jarEntryString.startsWith(Jars.separator)) {
 					jarEntryString = jarEntryString.replaceFirst(Jars.separator, "");
 				}
 				JarEntry jarEntry = new JarEntry(jarEntryString);
-//				if (jarEntryString.contains(".ods"))
-//					System.out.println(jarEntry);// we need to make these file project relative
 				jarEntry.setSize(inFile.length());
 				jarEntry.setTime(inFile.lastModified());
 				jarEntry.setCompressedSize(-1);
@@ -271,44 +276,95 @@ public abstract class Jars {
 				}
 			}
 
+			Map<String, List<String>> services = getAllServices(jars);
+
 			for (String jarFileName : jars) {
 				File file = new File(jarFileName);
 				JarFile jarInputFile = new JarFile(file);
-				FileInputStream inputStream = new FileInputStream(file);
-				JarInputStream jar = new JarInputStream(inputStream);
+				JarInputStream jarInStream = new JarInputStream(new FileInputStream(file));
 				JarEntry jarEntry;
-				while ((jarEntry = jar.getNextJarEntry()) != null) {
+				while ((jarEntry = jarInStream.getNextJarEntry()) != null) {
 					String name = jarEntry.getName();
-					if (!jEntryList.contains(name))
-						// you dont want all that's in dependencies' jars manifests etc.
-						if (!name.startsWith("META-INF")) {
-							log.info("adding jar entry " + jarEntry.getName());
-							jEntryList.add(name);
+					if (!jEntryList.contains(name)) {
+						jEntryList.add(name);
+						if (!name.equals("META-INF/MANIFEST.MF")) {
 							jarOutStream.putNextEntry(new JarEntry(name));
-							InputStream is = jarInputFile.getInputStream(jarEntry);
+							InputStream entryInStream = jarInputFile.getInputStream(jarEntry);
 
-							byte[] inBuffer = new byte[4096];
-							int bytesRead = 0;
-							while ((bytesRead = is.read(inBuffer)) != -1) {
-								jarOutStream.write(inBuffer, 0, bytesRead);
+							if (services.containsKey(name)) {// get contents from amalgamated string list of service
+																// entry contents
+								List<String> lines = services.get(name);
+								for (String line : lines)
+									jarOutStream.write(line.getBytes(StandardCharsets.UTF_8));
+							} else { // just read the file
+								byte[] inBuffer = new byte[4096];
+								int bytesRead = 0;
+								while ((bytesRead = entryInStream.read(inBuffer)) != -1)
+									jarOutStream.write(inBuffer, 0, bytesRead);
 							}
-							is.close();
+
+							entryInStream.close();
 							jarOutStream.flush();
 							jarOutStream.closeEntry();
 						}
+					}
 				}
 				jarInputFile.close();
-				jar.close();
+				jarInStream.close();
 			}
-
-			// This closes the stream
 			jarOutStream.close();
-			// This does nothing
-			// stream.close();
+			if (!services.isEmpty())
+				System.out.println("------------- SERVICES ---------------");
+			int count = 0;
+			for (Map.Entry<String, List<String>> e : services.entrySet())
+				System.out.println(++count + "\t" + e.getValue().size() + " entries in " + e.getKey());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
 
+	/**
+	 * Append service entries to a list of strings for later adding to the output
+	 * jar.
+	 */
+
+	private static Map<String, List<String>> getAllServices(Set<String> jars) {
+		Map<String, List<String>> result = new HashMap<>();
+		for (String jarFileName : jars) {
+			File file = new File(jarFileName);
+			JarFile jarInputFile;
+			try {
+				jarInputFile = new JarFile(file);
+				JarInputStream jarInStream = new JarInputStream(new FileInputStream(file));
+				JarEntry jarEntry;
+				// source jars contain the same file so ignore to avoid duplication
+				if (!jarFileName.contains("/source/")) { // TODO WINDOWS - may not work!
+					while ((jarEntry = jarInStream.getNextJarEntry()) != null) {
+						String name = jarEntry.getName();
+						if (name.contains("META-INF/services/") && name.contains(".")) {/// TODO WINDOWS - may not work!
+							InputStream entryInStream = jarInputFile.getInputStream(jarEntry);
+							String serviceEntry = IOUtils.toString(entryInStream, StandardCharsets.UTF_8);
+							List<String> list = getServiceList(result, jarEntry.getName());
+							list.add(serviceEntry);
+							entryInStream.close();
+						}
+					}
+				}
+				jarInputFile.close();
+				jarInStream.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return result;
+	}
+
+	private static List<String> getServiceList(Map<String, List<String>> services, String key) {
+		if (services.containsKey(key))
+			return services.get(key);
+		services.put(key, new ArrayList<>());
+		return services.get(key);
 	}
 
 	public void listJarContents(String fileName) {
