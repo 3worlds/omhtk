@@ -902,12 +902,15 @@ public class DynamicList<T> implements List<T>, Deque<T>, Queue<T>, Sizeable, Te
 	@Override
 	public String toString() {
 		StringBuilder result = new StringBuilder("{");
-		for (T item:this)
-			if (item instanceof Textable)
-				result.append(((Textable)item).toShortString()).append(", ");
-			else
-				result.append(item.toString()).append(", ");
-		result.delete(result.length()-2,result.length()).append('}');
+		if (!isEmpty()) {
+			for (T item:this)
+				if (item instanceof Textable)
+					result.append(((Textable)item).toShortString()).append(", ");
+				else
+					result.append(item.toString()).append(", ");
+			result.delete(result.length()-2,result.length());
+		}
+		result.append('}');
 		return result.toString();
 	}
 
