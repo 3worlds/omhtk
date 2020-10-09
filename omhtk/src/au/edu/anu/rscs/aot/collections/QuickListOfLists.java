@@ -29,31 +29,46 @@
  **************************************************************************/
 package au.edu.anu.rscs.aot.collections;
 
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 
+import au.edu.anu.rscs.aot.OmhtkException;
+import fr.ens.biologie.generic.Sizeable;
 import fr.ens.biologie.generic.Textable;
 
 /**
- * <p>An immutable list of list enabling to iterate over the whole set as if it was a single
+ * <p>An immutable list of lists enabling to iterate over the whole set as if it was a single
  * list, with a minimal cost at creation time (hence the 'Quick').
- * Immutable.</p>
+ * Immutable, but the elementary lists added to this one may not be immutable.</p>
  * <p>CAUTION: the contained lists may have changed between two accesses to this one - so
  * use with care !</p>
+ * <p>Methods toArray(...) and containsAll(...) are not implemented and will throw an Exception.</p>
  *
  * @author Jacques Gignoux - 4/6/2012
  *
  * @param <T> the list content type
  */
-public class QuickListOfLists<T> implements Iterable<T>, Textable {
+public class QuickListOfLists<T> implements Collection<T>, Textable, Sizeable {
 
-	private LinkedList<Iterable<T>> lists = new LinkedList<Iterable<T>>();
+	private LinkedList<Collection<T>> lists = new LinkedList<Collection<T>>();
+	private int size = 0;
 
+//	@SafeVarargs
+//	public QuickListOfLists(Iterable<T>...list) {
+//		super();
+//		for (int i=0;i<list.length;i++) {
+//			lists.add(list[i]);
+//		}
+//	}
+	
 	@SafeVarargs
-	public QuickListOfLists(Iterable<T>...list) {
+	public QuickListOfLists(Collection<T>...list) {
 		super();
-		for (int i=0;i<list.length;i++)
+		for (int i=0;i<list.length;i++) {
 			lists.add(list[i]);
+			size += list[i].size();
+		}
 	}
 
 	@Override
@@ -61,7 +76,7 @@ public class QuickListOfLists<T> implements Iterable<T>, Textable {
 		return new AggregatedIterator<T>(lists);
 	}
 
-	public void addList(Iterable<T> list) {
+	public void addList(Collection<T> list) {
 		lists.add(list);
 	}
 
@@ -72,11 +87,11 @@ public class QuickListOfLists<T> implements Iterable<T>, Textable {
 	// All this copied from Shayne's AggregatedIterator
     private class AggregatedIterator<U> implements Iterator<U> {
 
-		private Iterator<Iterable<U>> iterablesIterator;
+		private Iterator<Collection<U>> iterablesIterator;
 
 		private Iterator<U> iterator;
 
-		public AggregatedIterator(Iterable<Iterable<U>> list) {
+		public AggregatedIterator(Collection<Collection<U>> list) {
 			super();
 		    iterablesIterator = list.iterator();
 		    if (iterablesIterator.hasNext()) {
@@ -145,6 +160,65 @@ public class QuickListOfLists<T> implements Iterable<T>, Textable {
 	@Override
 	public String toUniqueString() {
 		return super.toString();
+	}
+
+	@Override
+	public int size() {
+		return size;
+	}
+
+	@Override
+	public boolean isEmpty() {
+		return size==0;
+	}
+
+	@Override
+	public boolean contains(Object o) {
+		for (Collection<T> coll:lists)
+			if (coll.contains(o))
+				return true;
+		return false;
+	}
+
+	@Override
+	public Object[] toArray() {
+		throw new UnsupportedOperationException();
+	}
+
+	@SuppressWarnings("hiding")
+	@Override
+	public <T> T[] toArray(T[] a) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public boolean add(T e) {
+		throw new OmhtkException(getClass().getSimpleName()+" is immutable.");
+	}
+
+	@Override
+	public boolean remove(Object o) {
+		throw new OmhtkException(getClass().getSimpleName()+" is immutable.");
+	}
+
+	@Override
+	public boolean containsAll(Collection<?> c) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public boolean addAll(Collection<? extends T> c) {
+		throw new OmhtkException(getClass().getSimpleName()+" is immutable.");
+	}
+
+	@Override
+	public boolean removeAll(Collection<?> c) {
+		throw new OmhtkException(getClass().getSimpleName()+" is immutable.");
+	}
+
+	@Override
+	public boolean retainAll(Collection<?> c) {
+		throw new OmhtkException(getClass().getSimpleName()+" is immutable.");
 	}
 
 
