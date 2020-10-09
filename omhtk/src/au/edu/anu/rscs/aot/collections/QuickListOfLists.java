@@ -78,6 +78,7 @@ public class QuickListOfLists<T> implements Collection<T>, Textable, Sizeable {
 
 	public void addList(Collection<T> list) {
 		lists.add(list);
+		size += list.size();
 	}
 
 	public void clear() {
@@ -146,12 +147,15 @@ public class QuickListOfLists<T> implements Collection<T>, Textable, Sizeable {
 	@Override
 	public String toString() {
 		StringBuilder result = new StringBuilder("{");
-		for (T item:this)
-			if (item instanceof Textable)
-				result.append(((Textable)item).toShortString()).append(", ");
-			else
-				result.append(item.toString()).append(", ");
-		result.delete(result.length()-2,result.length()).append('}');
+		if (!isEmpty()) {
+			for (T item:this)
+				if (item instanceof Textable)
+					result.append(((Textable)item).toShortString()).append(", ");
+				else
+					result.append(item.toString()).append(", ");
+			result.delete(result.length()-2,result.length());
+		}
+		result.append('}');
 		return result.toString();
 	}
 
