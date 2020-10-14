@@ -2,7 +2,7 @@ package fr.ens.biologie.generic.utils;
 
 /**
  * Functions to compute statistics iteratively. They all return stat(n+1) as a
- * function of xn, n, and stats(n). Optimised for speed. TODO: contingency
+ * function of x, n, and stats(n). Optimised for speed. TODO: contingency
  * tables for Strings
  * <p>
  * This class performs statistics using numbers that regularly come in. The use
@@ -96,8 +96,8 @@ public class Statistics {
 	}
 
 	public Statistics add(String x) {
-		if (s.equals(""))
-			s = x;
+		if ((s==null)||(s.isEmpty()))
+			;
 		else
 			s += sep + x;
 		return this;
