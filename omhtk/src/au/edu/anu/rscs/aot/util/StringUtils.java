@@ -5,16 +5,32 @@
 //contact Shayne Flint at shayne.flint@anu.edu.au to 
 //arrange an appropriate license.
 
-
 package au.edu.anu.rscs.aot.util;
+
+import com.google.common.base.Objects;
+
+import au.edu.anu.rscs.aot.OmhtkException;
 
 /**
  * 
  * @author Shayne Flint - 2007
- * @author Luke Worth	- 2007
+ * @author Luke Worth - 2007
  *
  */
 public class StringUtils {
+
+	public static final String ELLIPSIS = "\u2026";
+
+	public static String abbreviate(String s, int l) {
+		if (l < 0)
+			throw new OmhtkException("Attempt to abbreviate a string to less than 0");
+		if (s == null)
+			throw new OmhtkException("Attempt to abbreviate a null string");
+		
+		if (s.length() <= (l + 1))
+			return s;
+		return s.substring(0, l) + ELLIPSIS;
+	}
 
 	public static String cap(String s) {
 		return Character.toUpperCase(s.charAt(0)) + s.substring(1);
@@ -25,11 +41,11 @@ public class StringUtils {
 	}
 
 	public static String concat(String name1, String separator, String name2) {
-		if (name1.length()==0 || name2.length()==0)
+		if (name1.length() == 0 || name2.length() == 0)
 			return name1 + name2;
-		else if (name1.length()==0)
+		else if (name1.length() == 0)
 			return name2;
-		else if (name2.length()==0)
+		else if (name2.length() == 0)
 			return name1;
 		else
 			return name1 + separator + name2;
@@ -48,7 +64,7 @@ public class StringUtils {
 		if (s.endsWith("ch"))
 			return s + "es";
 		if (s.endsWith("y"))
-			return s.substring(0, s.length()-1) + "ies";
+			return s.substring(0, s.length() - 1) + "ies";
 		if (s.endsWith("o"))
 			return s + "es";
 		else
@@ -62,7 +78,7 @@ public class StringUtils {
 		result = s.replaceAll("]", "\\]");
 		return result;
 	}
-	
+
 	public static String plain(String s) {
 		String result;
 		result = s.replaceAll("\\,", ",");
@@ -70,7 +86,7 @@ public class StringUtils {
 		result = s.replaceAll("\\]", "]");
 		return result;
 	}
-	
+
 	public static String rangeString(int min, int max) {
 		String result = "";
 		if (min == Integer.MIN_VALUE)
@@ -84,9 +100,9 @@ public class StringUtils {
 			result = result + String.valueOf(max);
 		return result;
 	}
-	
+
 	public static boolean isWhite(String str) {
-		for (int i=0; i< str.length(); i++) {
+		for (int i = 0; i < str.length(); i++) {
 			if (!Character.isWhitespace(str.charAt(i)))
 				return false;
 		}
@@ -111,10 +127,9 @@ public class StringUtils {
 		return result;
 	}
 
-
 	// TESTING
 	//
-	
+
 //	public static void main(String[] args) {
 //		assertEquals(StringUtils.cap("hello"), "Hello");
 //		assertEquals(StringUtils.cap("Hello"), "Hello");
