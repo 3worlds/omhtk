@@ -1,6 +1,5 @@
 package au.edu.anu.rscs.aot.util;
 
-import static org.junit.Assert.assertThrows;
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
@@ -18,7 +17,7 @@ class StringUtilsTest {
 		assertEquals(StringUtils.abbreviate(s,5),"hello");
 		assertThrows(OmhtkException.class,()->StringUtils.abbreviate(s,-1));
 		assertThrows(OmhtkException.class,()->StringUtils.abbreviate(null,2));
-		
+
 	}
 
 }
