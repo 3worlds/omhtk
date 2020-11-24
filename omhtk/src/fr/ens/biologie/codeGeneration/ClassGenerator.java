@@ -2,6 +2,7 @@ package fr.ens.biologie.codeGeneration;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -12,14 +13,14 @@ import java.util.Set;
 import fr.ens.biologie.generic.JavaCode;
 
 /**
- *  a simple class generator, i.e. with no inner classes. 
+ *  a simple class generator, i.e. with no inner classes.
  *  This is generic, can generate (almost) any code.
- *  
+ *
  * @author Jacques Gignoux - 19 déc. 2014
  *
  */
 public class ClassGenerator implements JavaCode {
-	
+
 	private class field {
 		public String scope = null;
 		public String type = null;
@@ -38,39 +39,56 @@ public class ClassGenerator implements JavaCode {
 	private Map<String,MethodGenerator> methods = new HashMap<String,MethodGenerator>();
 	private Map<String,MethodGenerator> constructors = new HashMap<String,MethodGenerator>();
 	private List<String> rawMethods = null;
-	
+	private List<String> methodsToOverride = new ArrayList<>();
+
 	private void recordAncestorMethods(Class<?> c) {
 		Method[] lm = c.getDeclaredMethods();
 		for (Method m:lm) {
 			if (!methods.containsKey(m.getName()))
-			if (Modifier.isAbstract(m.getModifiers())) {
+			if (Modifier.isAbstract(m.getModifiers()) ||
+				(methodsToOverride.contains(m.getName()))) {
 				methods.put(m.getName(), new MethodGenerator(m));
 			}
-		}		
+		}
 	}
-	
+
 	private String stripTemplate(String className) {
 		String result = className;
 		if (className.indexOf('<')>-1)
 			result = className.substring(0, className.indexOf('<'));
 		return result;
 	}
-	
-	public ClassGenerator(String packageName, 
+
+	/**
+	 *Constructor. The default behaviour is to generate method bodies only for methods declared
+	 * abstract in the superclass or interfaces. To generate a body for a concrete or default method,
+	 * pass its name in arg methodsToOverride (otherwise methodsToOverride can safely be set to null).
+	 *
+	 * @param packageName the package of the class to create
+	 * @param classComment the class file comment
+	 * @param name the class name
+	 * @param methodsToOverride the list of methods to override if different from abstract methods
+	 * @param superclass the superclass
+	 * @param interfaces the interfaces
+	 */
+	public ClassGenerator(String packageName,
 		String classComment,
-		String name, 
-		String superclass, 
+		String name,
+		Set<String> methodsToOverride,
+		String superclass,
 		String... interfaces) {
 		super();
 		scope = "public";
 		this.packageName = packageName;
 		this.classComment = classComment;
 		this.name = name;
+		if (methodsToOverride!=null)
+			this.methodsToOverride.addAll(methodsToOverride);
 		this.superclass = superclass;
 		for (String s:interfaces)
 			this.interfaces.add(s);
 		if (superclass!=null) {
-			try { recordAncestorMethods(Class.forName(superclass));	} 
+			try { recordAncestorMethods(Class.forName(superclass));	}
 			catch (ClassNotFoundException e) {}
 			imports.add(stripTemplate(superclass));
 			this.superclass = stripPackageFromClassName(superclass);
@@ -83,41 +101,41 @@ public class ClassGenerator implements JavaCode {
 			this.interfaces.add(stripPackageFromClassName(s));
 		}
 	}
-	
+
 	public ClassGenerator setConstructor(String... argTypes) {
 		MethodGenerator c = new MethodGenerator("public",null,name,argTypes);
 		constructors.put("constructor"+String.valueOf(constructors.size()+1),c);
 		return this;
 	}
-	
+
 	public MethodGenerator getConstructor(String key) {
 		return constructors.get(key);
 	}
-	
+
 	private String stripPackageFromClassName(String fullClassName) {
 		String[] sc = fullClassName.split("\\.");
-		return sc[sc.length-1];		
+		return sc[sc.length-1];
 	}
-	
+
 	public ClassGenerator setImport(String imp) {
 		imports.add(imp);
 		return this;
 	}
-	
+
 	/** this method to add 'flat' method code, ie code snippets for private methods, typically */
 	public ClassGenerator setRawMethodCode(List<String> snippet) {
 		rawMethods = snippet;
 		return this;
 	}
-	
+
 	public int nfields() {
 		return fields.size();
 	}
-	
-	public Set<String> fields() {		
+
+	public Set<String> fields() {
 		return fields.keySet();
 	}
-	
+
 	public ClassGenerator setField(String fname, String ftype, String fvalue) {
 		field f = new field();
 		f.scope = "private";
@@ -126,18 +144,18 @@ public class ClassGenerator implements JavaCode {
 		f.defaultValue = fvalue;
 		fields.put(fname, f);
 		return (this);
-	}	
-	
+	}
+
 	// is that one really needed ?
 	public field getField(String fname) {
 		return fields.get(fname);
 	}
-	
+
 	public ClassGenerator setMethod(String mname, MethodGenerator method) {
 		methods.put(mname,method);
 		return this;
 	}
-	
+
 	/**
 	 * This method to enable one to add statements into automatically generated MethodGenerators
 	 * (eg when building the class from a superclass).
@@ -151,11 +169,11 @@ public class ClassGenerator implements JavaCode {
 	public Collection<MethodGenerator> getMethods() {
 		return methods.values();
 	}
-	
+
 	public String asText(String indent) {
 		String result = "";
 		result += "package "+packageName+";\n\n";
-		for (String imp:imports) 
+		for (String imp:imports)
 			result += "import "+imp+";\n";
 		if (imports.size()>0)
 			result += "\n";
@@ -184,19 +202,19 @@ public class ClassGenerator implements JavaCode {
 			result += c.asText(indent);
 		for (MethodGenerator m:methods.values())
 			result += m.asText(indent);
-		if (rawMethods!=null) 
+		if (rawMethods!=null)
 			for (String s:rawMethods)
-				result += s+"\n";	
+				result += s+"\n";
 		result += "}\n"; // 1
 		return result;
 	}
-	
+
 	public String getClassName() {
-		return name;		
+		return name;
 	}
-	
+
 	public String packageName() {
 		return packageName;
 	}
-	
+
 }
