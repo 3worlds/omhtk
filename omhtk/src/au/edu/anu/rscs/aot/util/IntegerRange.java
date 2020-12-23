@@ -138,4 +138,8 @@ public class IntegerRange {
 	public int getLast() {
 		return last;
 	}
+	
+	public boolean contains (IntegerRange r) {
+		return (r.getFirst()>=first && r.getLast()<=last);
+	}
 }
