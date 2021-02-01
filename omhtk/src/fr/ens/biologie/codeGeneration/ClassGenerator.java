@@ -31,6 +31,7 @@ public class ClassGenerator implements JavaCode {
 	private String packageName;
 	private Set<String> imports = new HashSet<String>();
 	private String classComment = null;
+	private boolean isInterface = false;
 	private String scope = "public";
 	private String name;
 	private String superclass = null;
@@ -74,6 +75,7 @@ public class ClassGenerator implements JavaCode {
 	public ClassGenerator(String packageName,
 		String classComment,
 		String name,
+		boolean isInterface, 
 		Set<String> methodsToOverride,
 		String superclass,
 		String... interfaces) {
@@ -82,6 +84,7 @@ public class ClassGenerator implements JavaCode {
 		this.packageName = packageName;
 		this.classComment = classComment;
 		this.name = name;
+		this.isInterface = isInterface;
 		if (methodsToOverride!=null)
 			this.methodsToOverride.addAll(methodsToOverride);
 		this.superclass = superclass;
@@ -103,7 +106,7 @@ public class ClassGenerator implements JavaCode {
 	}
 
 	public ClassGenerator setConstructor(String... argTypes) {
-		MethodGenerator c = new MethodGenerator("public",null,name,argTypes);
+		MethodGenerator c = new MethodGenerator("public",false,null,name,argTypes);
 		constructors.put("constructor"+String.valueOf(constructors.size()+1),c);
 		return this;
 	}
@@ -179,15 +182,21 @@ public class ClassGenerator implements JavaCode {
 			result += "\n";
 		if (classComment!=null)
 			result += classComment+"\n";
-		result += scope+" class "+name;
-		if (superclass!=null) result += " extends "+superclass;
-		if (interfaces.size()>0) {
-			result += " implements";
-			String[] ifs = interfaces.toArray(new String[interfaces.size()]);
-			for (int i=0; i<ifs.length; i++) {
-				if (i<ifs.length-1) result += " "+ifs[i]+", ";
-				else result += " "+ifs[i];
-			}
+		if (isInterface) {
+			result += "interface "+name;
+			if (interfaces.size()>0)
+				result += " extends";
+		}
+		else {
+			result += scope+" class "+name;
+			if (superclass!=null) result += " extends "+superclass;
+			if (interfaces.size()>0)
+				result += " implements";
+		}
+		String[] ifs = interfaces.toArray(new String[interfaces.size()]);
+		for (int i=0; i<ifs.length; i++) {
+			if (i<ifs.length-1) result += " "+ifs[i]+", ";
+			else result += " "+ifs[i];
 		}
 		result += " {\n\n"; // 1
 		for (field f:fields.values()) {

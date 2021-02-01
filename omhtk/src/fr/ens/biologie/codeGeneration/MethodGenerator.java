@@ -25,6 +25,7 @@ public class MethodGenerator implements JavaCode {
 
 	protected String override;
 	protected String scope;
+	protected boolean isAbstract = false;
 	protected String returnType;
 	protected String name;
 	protected String[] argTypes;
@@ -101,9 +102,10 @@ public class MethodGenerator implements JavaCode {
 	 * @param name
 	 * @param argTypes
 	 */
-	public MethodGenerator(String scope, String returnType, String name, String... argTypes) {
+	public MethodGenerator(String scope, boolean isAbstract, String returnType, String name, String... argTypes) {
 		super();
 		this.scope = scope;
+		this.isAbstract = isAbstract;
 		this.returnType = returnType;
 		this.name = name;
 		this.argTypes = argTypes;
@@ -170,28 +172,36 @@ public class MethodGenerator implements JavaCode {
 	public String asText(String indent) {
 		String result = "";
 		if (override!=null)	result += indent + override + "\n";
-		if (returnType==null) // constructors only
+		if (returnType==null) // constructors only (never abstract)
 			result += indent + scope + " " + name + "(";
-		else
-			result += indent + scope + " " + returnType + " " + name + "(";
+		else { // other methods (may be abstract)
+			if (isAbstract)
+				result += indent + scope + " abstract " + returnType + " " + name + "(";
+			else
+				result += indent + scope + " " + returnType + " " + name + "(";
+		}
 		if (argTypes!=null)
 		for (int i=0; i< argTypes.length; i++) {
 			result += argTypes[i]+" "+argNames[i];
 			if (i==argTypes.length-1);
 			else result += ", ";
 		}
-		result += ") {\n";
-		if (insertCodeInsertionComment)
-			result += indent+singleLineComment(startCodeInsertion);
-		for (String s:statements) {
-			result += indent+indent+s+";\n";
+		if (isAbstract) // no body
+			result += ");\n\n";
+		else { // print body
+			result += ") {\n";
+			if (insertCodeInsertionComment)
+				result += indent+singleLineComment(startCodeInsertion);
+			for (String s:statements) {
+				result += indent+indent+s+";\n";
+			}
+			if (returnType==null) ;
+			else if (returnType.equals("void")) ;
+			else result += indent+indent+returnStatement+";\n";
+			if (insertCodeInsertionComment)
+				result += indent+singleLineComment(endCodeInsertion);
+			result += indent+"}\n\n";
 		}
-		if (returnType==null) ;
-		else if (returnType.equals("void")) ;
-		else result += indent+indent+returnStatement+";\n";
-		if (insertCodeInsertionComment)
-			result += indent+singleLineComment(endCodeInsertion);
-		result += indent+"}\n\n";
 		return result;
 	}
 

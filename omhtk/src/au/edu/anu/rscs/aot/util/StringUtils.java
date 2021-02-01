@@ -7,8 +7,6 @@
 
 package au.edu.anu.rscs.aot.util;
 
-import com.google.common.base.Objects;
-
 import au.edu.anu.rscs.aot.OmhtkException;
 
 /**
