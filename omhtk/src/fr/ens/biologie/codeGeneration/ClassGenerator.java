@@ -93,13 +93,17 @@ public class ClassGenerator implements JavaCode {
 		if (superclass!=null) {
 			try { recordAncestorMethods(Class.forName(superclass));	}
 			catch (ClassNotFoundException e) {}
-			imports.add(stripTemplate(superclass));
+			// a class name with no package is assumed to be in the same package, hence no import
+			if (superclass.contains(".")) 
+				imports.add(stripTemplate(superclass));
 			this.superclass = stripPackageFromClassName(superclass);
 		}
 		for (String s:interfaces) {
 			try { recordAncestorMethods(Class.forName(s)); }
 			catch (ClassNotFoundException e) {}
-			imports.add(stripTemplate(s));
+			// an interface name with no package is assumed to be in the same package, hence no import
+			if (s.contains(".")) 
+				imports.add(stripTemplate(s));
 			this.interfaces.remove(s);
 			this.interfaces.add(stripPackageFromClassName(s));
 		}
