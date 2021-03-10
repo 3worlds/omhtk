@@ -59,8 +59,8 @@ public class FileUtilities {
 	public static void deleteFileTree(File dir) throws IOException {
 		Path root = dir.toPath();
 		Files.walk(root).sorted(Comparator.reverseOrder()).map(Path::toFile).forEach(File::delete);
-		if (Files.exists(root))
-			throw new OmhtkException("Failed to delete directory tree: [" + root + "]");
+//		if (Files.exists(root))
+//			throw new OmhtkException("Failed to delete directory tree: [" + root + "]");
 	}
 
 	/* https://dzone.com/articles/comparing-files-in-java */
