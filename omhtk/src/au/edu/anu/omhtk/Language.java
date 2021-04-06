@@ -5,6 +5,19 @@ public class Language {
 	};
 
 	private static final String lang = System.getProperty("user.language");
+//	private static final String lang = "fr";
+	
+	public static String oq = "'";
+	public static String cq = "'";
+	static {
+		if (French()) {
+			oq = "«";
+			cq = "»";
+		} else if (Japanese()) {
+			oq = "「";
+			cq = "」";
+		}
+	}
 
 	public static boolean French() {
 		return lang.equals("fr");
