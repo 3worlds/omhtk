@@ -14,6 +14,6 @@ public interface JavaGenerator {
 
 	/** the procedure that generates the code 
 	 *  returns true if the code compiles, false otherwise */	
-	public 	boolean generateCode();
+	public 	boolean generateCode(boolean reportErrors);
 	
 }
