@@ -32,9 +32,9 @@ package au.edu.anu.rscs.aot;
 import fr.ens.biologie.generic.Textable;
 
 /**
- * @author shayne.flint@anu.edu.au
- *
+ * The {@link java.lang.Exception} class specific to this library.
  * 
+ * @author shayne.flint@anu.edu.au
  * 
  */
 //NB: this was previously AotException
@@ -42,24 +42,38 @@ import fr.ens.biologie.generic.Textable;
 //The general advice for exceptions is to throw early and catch late.
 public class OmhtkException extends RuntimeException {
 
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -8889113181614003738L;
 
+	/**
+	 * Instantiate an exception on an object with a message
+	 * @param item the item which caused the problem
+	 * @param message the error message
+	 */
 	public OmhtkException(Textable item, String message) {
 		super("[on " + item + "]\n[" + message + "]");
 	}
 
+	/**
+	 * Instantiate an exception with a message
+	 * @param message the error message
+	 */
 	public OmhtkException(String message) {
 		super("[" + message + "]");
 	}
 
+	/**
+	 * Exception wrapper.
+	 * @param e the exception to wrap
+	 */
 	public OmhtkException(Exception e) {
 		super(e);
 	}
 
+	/**
+	 * Exception wrapper with additional information
+	 * @param message the error message
+	 * @param e the exception to wrap
+	 */
 	public OmhtkException(String message, Exception e) {
 		super("[" + message + "]\n[original exception: " + e + "]");
 		e.printStackTrace();

@@ -47,15 +47,15 @@ import fr.ens.biologie.generic.Textable;
  * items while in a for loop on the list. It is implemented as a linked list with a clever iterator
  * that skips removed items while looping. Use this class when dealing with highly dynamic lists
  * (where there are many insertions and deletions in the list).</p>
- * <p>This was formerly known as AotList. Code modified from au.edu.anu.rscs.aot.collections.AotList<T> by Shayne Flint.
- * Removed Query, and dependency from AotCollection and AotIterable.</p>
+ * <p>[NB:This was formerly known as AotList. Code modified from au.edu.anu.rscs.aot.collections.AotList<T> by Shayne Flint.
+ * Removed Query, and dependency from AotCollection and AotIterable.]</p>
  * <p>Given the new facilities provided in java 8 lists, this class may be obsolete. For example,
  * to remove items from a list can be done with instructions such as {@code list.sublist(from,to).clear()}.</p>
  *
- * @author Shayne Flint - loooong ago.
- * @author Jacques Gignoux - 30 Nov. 2018
+ * @author Shayne Flint - loooong ago. <br/>
+ *  refactored by Jacques Gignoux - 30 Nov. 2018
  *
- * @param <T>
+ * @param <T> the type of the list items
  */
 // TODO: finish testing - only partly done.
 public class DynamicList<T> implements List<T>, Deque<T>, Queue<T>, Sizeable, Textable {
@@ -553,10 +553,23 @@ public class DynamicList<T> implements List<T>, Deque<T>, Queue<T>, Sizeable, Te
 		return new CorrectingListIterator(true, index);
 	}
 
+	/**
+	 * Returns a list iterator over the elements in this list (in proper sequence), starting at 
+	 * the list top. 
+	 * @param correcting {@code true} for a correctingIterator
+	 * @return an iterator over the list
+	 */
 	public ListIterator<T> checkedListIterator(boolean correcting) {
 		return new CorrectingListIterator(correcting, 0);
 	}
 
+	/**
+	 * Returns a list iterator over the elements in this list (in proper sequence), starting at 
+	 * the specified position in the list. The specified index indicates the first element that 
+	 * would be returned by an initial call to {@link java.util.Iterator#next next}.
+	 * @param correcting true for a correctingIterator
+	 * @return an iterator over the list
+	 */
 	public ListIterator<T> correctingListIterator(int index, boolean correcting) {
 		return new CorrectingListIterator(correcting, index);
 	}
@@ -756,6 +769,7 @@ public class DynamicList<T> implements List<T>, Deque<T>, Queue<T>, Sizeable, Te
 		return new CorrectingDescendingIterator(correcting);
 	}
 
+	
 	private class CorrectingDescendingIterator implements Iterator<T> {
 
 		protected ListNode<T> current = tail;
@@ -834,15 +848,21 @@ public class DynamicList<T> implements List<T>, Deque<T>, Queue<T>, Sizeable, Te
 	}
 
 	/**
-	 * Renamed from sort to sortList to avoid conflict with JDK 1.8 List.sort()
+	 * Sorts this list using a {@link java.util.Comparator Comparator}.
+	 * Renamed from sort to sortList to avoid conflict with JDK 1.8 List.sort().
 	 *
-	 * @param comparator
+	 * @param comparator the comparator to use for sorting
 	 */
 	public void sortList(Comparator<? super T> comparator) {
 		if (this.size() > 0)
 			Collections.sort(this, comparator);
 	}
 
+	/**
+	 * Checks if the list is sorted.
+	 * @param comparator the comparator to use for sorting
+	 * @return {@code true} if the list is in the comparator order, {@code false} otherwise
+	 */
 	public boolean isSorted(Comparator<T> comparator) {
 		Iterator<T> iter = iterator();
 		if (!iter.hasNext()) {
@@ -859,6 +879,11 @@ public class DynamicList<T> implements List<T>, Deque<T>, Queue<T>, Sizeable, Te
 		return true;
 	}
 
+	/**
+	 * Adds an item to the list only if it is not already present.
+	 * @param item the item to add
+	 * @return {@code true} if the item was added, {@code false} otherwise
+	 */
 	public boolean addUnique(T item) {
 		if (this.contains(item))
 			return false;
@@ -866,6 +891,11 @@ public class DynamicList<T> implements List<T>, Deque<T>, Queue<T>, Sizeable, Te
 			return add(item);
 	}
 
+	/**
+	 * Adds all elements of its argument into the list, only if not already present.
+	 * @param list the list of items to add
+	 * @return {@code true} if all items were added, {@code false} otherwise
+	 */
 	public boolean addAllUnique(Iterable<T> list) {
 		boolean result = true;
 		for (T item : list) {

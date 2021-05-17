@@ -42,10 +42,12 @@ import java.util.prefs.Preferences;
 import au.edu.anu.omhtk.stringarrays.StringArrayConversion;
 
 /**
+ * <p>Implementation of the {@link Preferenceable} interface.</p>
  * Author Ian Davies
  *
- * Date Dec 11, 2018
+ * @author Ian Davies - Dec 11, 2018
  */
+//TODO: Ian, please refactor javadoc 
 public class PrefImpl implements Preferenceable {
 	private Preferences prefs;
 	private final String sep = ",";

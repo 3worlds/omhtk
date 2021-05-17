@@ -27,7 +27,6 @@
  *  along with UIT.  If not, see <https://www.gnu.org/licenses/gpl.html>. *
  *                                                                        *
  **************************************************************************/
-
 package au.edu.anu.omhtk.rng;
 
 import java.util.Random;
@@ -58,10 +57,10 @@ import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
- * An instance of this class is used to generate a stream of pseudorandom
- * numbers, similarly to {@link java.util.Random}.
- * <p>
- * The main differences are:
+ * <p>This class is a descendant of the {@link java.util.Random} class.
+ * An instance of this class is used to generate a stream of pseudo-random
+ * numbers.
+ * The main differences are:</p>
  * <ul>
  * <li><a href="http://www.pcg-random.org/">PCG algorithm</a> is used; in
  * particular, this is a port of the
@@ -70,6 +69,8 @@ import java.util.concurrent.atomic.AtomicLong;
  * <li>Instances of Pcg32 are not thread-safe and so it doesn't obey
  * {@link java.util.Random} contract.</li>
  * </ul>
+ * 
+ * @author Ian Davies - Dec 6, 2018
  */
 public class Pcg32 extends Random {
 	/**
@@ -85,14 +86,11 @@ public class Pcg32 extends Random {
 	 * Creates a new random number generator using a {@code long} seed and a
 	 * {@code long} stream number.
 	 * <p>
-	 * The invocation {@code new Pcg32(initState, initSeq)} is equivalent to:
+	 * The invocation {@code new Pcg32(initState,initSeq)} is equivalent to:
 	 * 
 	 * <pre>
-	 * {
-	 * 	&#64;code
-	 * 	Pcg32 rnd = new Pcg32();
-	 * 	rnd.seed(initState, initSeq);
-	 * }
+  Pcg32 rnd = new Pcg32();
+  rnd.seed(initState, initSeq);
 	 * </pre>
 	 *
 	 * @see #seed(long, long)
@@ -111,6 +109,9 @@ public class Pcg32 extends Random {
 		seed();
 	}
 
+	/**
+	 * Set the seed of this pseudo-random number generator.
+	 */
 	@Override
 	 public synchronized void setSeed(long seed) {
 		this.state = seed;
@@ -118,14 +119,15 @@ public class Pcg32 extends Random {
 	}
 
 	/**
-	 * Returns the next pseudorandom, approximately uniformly distributed
+	 * Returns the next pseudo-random, approximately uniformly distributed
 	 * {@code int} value from this random number generator's sequence. The general
-	 * contract of {@code nextInt} is that one {@code int} value is pseudorandomly
+	 * contract of {@code nextInt} is that one {@code int} value is pseudo-randomly
 	 * generated and returned. All 2<font size="-1"><sup>32 </sup></font> possible
 	 * {@code int} values are produced with (approximately) equal probability.
 	 *
 	 * @see java.util.Random#nextInt()
 	 */
+	@Override
 	public synchronized int nextInt() {
 		long oldState = state;
 
@@ -136,16 +138,15 @@ public class Pcg32 extends Random {
 	}
 
 	/**
-	 * Returns the next pseudorandom, approximately uniformly distributed
+	 * Returns the next pseudo-random, approximately uniformly distributed
 	 * {@code int} value between 0 (inclusive) and {@code n} (exclusive).
 	 *
-	 * @see java.util.Random#nextInt(int)
 	 */
+	@Override
 	public int nextInt(int n) {
 		if (n <= 0) {
 			throw new IllegalArgumentException("n must be positive");
 		}
-
 		// the special treatment of powers of 2 as in Random.nextInt(int) shouldn't be
 		// necessary
 		int bits, val;
@@ -157,22 +158,23 @@ public class Pcg32 extends Random {
 	}
 
 	/**
-	 * Returns the next pseudorandom, approximately uniformly distributed
+	 * Returns the next pseudo-random, approximately uniformly distributed
 	 * {@code long} value from this random number generator's sequence. The general
-	 * contract of {@code nextLong} is that one {@code long} value is pseudorandomly
+	 * contract of {@code nextLong} is that one {@code long} value is pseudo-randomly
 	 * generated and returned. All 2<font size="-1"><sup>64 </sup></font> possible
 	 * {@code long} values are produced with (approximately) equal probability.
 	 *
-	 * @see java.util.Random#nextLong()
 	 */
+	@Override
 	public long nextLong() {
 		return (((long) nextInt()) << 32) + ((long) nextInt());
 	}
 
 	/**
-	 * Returns the next pseudorandom, approximately uniformly distributed
+	 * Returns the next pseudo-random, approximately uniformly distributed
 	 * {@code long} value between 0 (inclusive) and {@code n} (exclusive).
 	 */
+	
 	public synchronized long nextLong(long n) {
 		if (n <= 0) {
 			throw new IllegalArgumentException("n must be positive");
@@ -187,28 +189,28 @@ public class Pcg32 extends Random {
 	}
 
 	/**
-	 * Returns the next pseudorandom, approximately uniformly distributed
+	 * Returns the next pseudo-random, approximately uniformly distributed
 	 * {@code boolean} value.
 	 *
-	 * @see java.util.Random#nextBoolean()
 	 */
+	@Override
 	public boolean nextBoolean() {
 		return (nextInt() & 1) != 0;
 	}
 
 	/**
-	 * Returns the next pseudorandom, approximately uniformly distributed
+	 * Returns the next pseudo-random, approximately uniformly distributed
 	 * {@code float} value between 0.0 (inclusive) and 1.0 (exclusive).
 	 *
-	 * @see java.util.Random#nextFloat()
 	 */
+	@Override
 	public float nextFloat() {
 		// TODO see http://mumble.net/~campbell/2014/04/28/uniform-random-float
 		return nextBits(24) / ((float) (1 << 24));
 	}
 
 	/**
-	 * Returns the next pseudorandom, approximately uniformly distributed
+	 * Returns the next pseudo-random, approximately uniformly distributed
 	 * {@code float} value between 0.0 (inclusive) and bound (exclusive).
 	 */
 	public float nextFloat(float bound) {
@@ -216,24 +218,30 @@ public class Pcg32 extends Random {
 	}
 
 	/**
-	 * Returns the next pseudorandom, approximately uniformly distributed
+	 * Returns the next pseudo-random, approximately uniformly distributed
 	 * {@code double} value between 0.0 (inclusive) and 1.0 (exclusive).
 	 *
-	 * @see java.util.Random#nextDouble()
 	 */
+	@Override
 	public double nextDouble() {
 		// TODO see http://mumble.net/~campbell/2014/04/28/uniform-random-float
 		return (((long) (nextBits(26)) << 27) + nextBits(27)) / (double) (1L << 53);
 	}
 
 	/**
-	 * Returns the next pseudorandom, approximately uniformly distributed
+	 * Returns the next pseudo-random, approximately uniformly distributed
 	 * {@code double} value between 0.0 (inclusive) and bound (exclusive).
 	 */
 	public double nextDouble(double bound) {
 		return bound * nextDouble();
 	}
 
+	/**
+	 * Returns ... [TODO: missing description]
+	 * @param bits
+	 * @return
+	 */
+	// TODO: Ian, please document that one
 	public int nextBits(int bits) {
 		return nextInt() >>> (32 - bits);
 	}
@@ -242,12 +250,12 @@ public class Pcg32 extends Random {
 	private boolean haveNextNextGaussian = false;
 
 	/**
-	 * Returns the next pseudorandom, Gaussian ("normally") distributed
+	 * Returns the next pseudo-random, Gaussian ("normally") distributed
 	 * {@code double} value with mean {@code 0.0} and standard deviation {@code 1.0}
 	 * from this random number generator's sequence.
 	 *
-	 * @see java.util.Random#nextGaussian()
 	 */
+	@Override
 	public double nextGaussian() {
 		// See Knuth, ACP, Section 3.4.1 Algorithm C.
 		if (haveNextNextGaussian) {
@@ -268,14 +276,29 @@ public class Pcg32 extends Random {
 	}
 
 	/**
-	 * Returns the next pseudorandom, Gaussian ("normally") distributed
+	 * Returns the next pseudo-random, Gaussian ("normally") distributed
 	 * {@code double} value with given mean and standard deviation from this random
 	 * number generator's sequence.
+	 *
+	 * @param mean the mean of the Gaussian distribution
+	 * @param standardDeviation the standard deviation of the Gaussian distribution
+	 * @return the next pseudorandom, Gaussian ("normally") distributed double value 
+	 *  from this random number generator's sequence
 	 */
 	public double nextGaussian(double mean, double standardDeviation) {
 		return nextGaussian() * standardDeviation + mean;
 	}
 
+	/**
+	 * Initializes the generator with a {@code long} as the state and a 
+	 * {@code long} stream number. The latter must be unique to ensure that multiple generators
+	 * with the same seed will have different sequences.
+	 * [TODO: check and fix description and parameters]
+	 * 
+	 * @param initState an initial state
+	 * @param initSeq an initial stream
+	 */
+	// TODO: Ian please fix javadoc
 	public void seed(long initState, long initSeq) {
 		state = 0;
 		inc = 2 * initSeq + 1;

@@ -30,55 +30,34 @@
  **************************************************************************/
 package au.edu.anu.omhtk.rng;
 
-/**************************************************************************
- *  OMHTK - One More Handy Tool Kit                                       *
- *                                                                        *
- *  Copyright 2018: Shayne FLint, Jacques Gignoux & Ian D. Davies         *
- *       shayne.flint@anu.edu.au                                          *
- *       jacques.gignoux@upmc.fr                                          *
- *       ian.davies@anu.edu.au                                            * 
- *                                                                        *
- *  OMHTK is a bunch of useful, very generic interfaces for designing     *
- *  consistent, plus some other utilities. The kind of things you need    *
- *  in all software projects and keep rebuilding all the time.            *
- *                                                                        *
- **************************************************************************                                       
- *  This file is part of OMHTK (One More Handy Tool Kit).                 *
- *                                                                        *
- *  OMHTK is free software: you can redistribute it and/or modify         *
- *  it under the terms of the GNU General Public License as published by  *
- *  the Free Software Foundation, either version 3 of the License, or     *
- *  (at your option) any later version.                                   *
- *                                                                        *
- *  OMHTK is distributed in the hope that it will be useful,              *
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of        *
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
- *  GNU General Public License for more details.                          *                         
- *                                                                        *
- *  You should have received a copy of the GNU General Public License     *
- *  along with UIT.  If not, see <https://www.gnu.org/licenses/gpl.html>. *
- *                                                                        *
- **************************************************************************/
-
 import au.edu.anu.rscs.aot.OmhtkException;
 
 /**
- * Author Ian Davies
+ * A static list of 1,000 true random integer numbers generated from "atmospheric noise" on 10/07/2018
+ * found <a href="https://www.random.org/integers/">here</a>, to use as seeds for pseudo-random
+ * number generators.
+ * 
+ * @author Ian Davies - Dec 5, 2018
  *
- * Date Dec 5, 2018
  */
 public class RandomSeeds {
-	/*-
-	 *   1,000 seeds from: https://www.random.org/integers/ [1,000,000,000].
-	 *   Generated from "atmospheric noise" on 10/07/2018
-	 */
 
+	/**
+	 * Getter for random numbers contained in this list.
+	 * @param index the index of the number to search for
+	 * @return the index<sup>th</sup> random number
+	 */
 	public static long getSeed(int index) {
 		if (index >= 0 && index < seeds.length)
 			return seeds[index];
 		else
 			throw new OmhtkException("Random seed index out of range (" + index + ") [0.." + (seeds.length - 1) + "] ");
 	}
+	
+	/**
+	 * Size of this list
+	 * @return the number of seeds in this list.
+	 */
 	public static int nSeeds() {
 		return seeds.length;
 	}

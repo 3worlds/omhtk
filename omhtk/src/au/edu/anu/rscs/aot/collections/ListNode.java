@@ -30,11 +30,12 @@
 package au.edu.anu.rscs.aot.collections;
 
 /**
- * A container for items in a List (formerly AotList).
+ * A container for items in a List (formerly AotList). This class is not meant to be used directly,
+ * it's hidden in {@link DynamicList}.
  * 
  * @author Shayne Flint - long ago
  *
- * @param <T>
+ * @param <T> The list element type
  */
 public class ListNode<T> {
 	

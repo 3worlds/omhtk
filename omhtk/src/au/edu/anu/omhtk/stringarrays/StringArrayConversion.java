@@ -32,14 +32,11 @@
 package au.edu.anu.omhtk.stringarrays;
 
 /**
- * Author Ian Davies
- *
- * Date Dec 11, 2018
- */
-
-/**
  * Helper methods, originally for the {@link java.util.prefs.Preferences}
  * system. May be of some general use.
+ * Each method converts a list of numbers to a list of Strings, or reciprocally, as per method name.
+ *
+ * @author Ian Davies - Dec 11, 2018
  */
 public class StringArrayConversion {
 

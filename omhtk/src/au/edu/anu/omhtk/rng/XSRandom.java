@@ -27,19 +27,23 @@
  *  along with UIT.  If not, see <https://www.gnu.org/licenses/gpl.html>. *
  *                                                                        *
  **************************************************************************/
-
 package au.edu.anu.omhtk.rng;
 
 import java.util.Random;
 
 /**
- * Author Ian Davies
- *
- * Date 8 Dec. 2018
+ * <p>Implementation of George Marsaglia's elegant 
+ * <a href="http://www.javamex.com/tutorials/random_numbers/xorshift.shtml">Xorshift</a> 
+ * random generator (2003), 
+ * 30% faster and better quality than the built-in {@link java.util.Random}. 
+ * Code imported from
+ * <a href="http://demesos.blogspot.com/2011/09/replacing-java-random-generator.html"> there</a>.
+ * It generates random numbers using a single seed and just 3 shifts and XOR operations.</p>
+ * <p>This class is a descendant of the {@link java.util.Random} class.
+ * An instance of this class is used to generate a stream of pseudo-random
+ * numbers.</p>
  * 
- * imported from:
- * 
- * http://demesos.blogspot.com/2011/09/replacing-java-random-generator.html
+ * @author Ian Davies - Dec 8, 2018
  */
 
 public class XSRandom extends Random{
@@ -80,7 +84,7 @@ public class XSRandom extends Random{
 	 * above, two instances of the same random class, starting with the same
 	 * seed, produce the same results, if the same methods are called.
 	 * 
-	 * @param s
+	 * @param seed
 	 *            the new seed
 	 */
 	public synchronized void setSeed(long seed) {
@@ -96,10 +100,9 @@ public class XSRandom extends Random{
 	}
 
 	/**
-	 * Implementation of George Marsaglia's elegant Xorshift random generator
-	 * 30% faster and better quality than the built-in java.util.random see also
-	 * see http://www.javamex.com/tutorials/random_numbers/xorshift.shtml
+	 * Generates the next pseudo-random number. 
 	 */
+	@Override
 	protected int next(int nbits) {
 		long x = seed;
 		x ^= (x << 21);

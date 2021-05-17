@@ -42,8 +42,10 @@ import fr.ens.biologie.generic.Textable;
  * list, with a minimal cost at creation time (hence the 'Quick').
  * Immutable, but the elementary lists added to this one may not be immutable.</p>
  * <p>CAUTION: the contained lists may have changed between two accesses to this one - so
- * use with care !</p>
- * <p>Methods toArray(...) and containsAll(...) are not implemented and will throw an Exception.</p>
+ * use with care!</p>
+ * <p>Inherited methods {@link java.util.Collection#toArray() toArray()} and 
+ * {@link java.util.Collection#containsAll containsAll(...)} are not supported and will throw 
+ * an {@link UnsupportedOperationException}.</p>
  *
  * @author Jacques Gignoux - 4/6/2012
  *
@@ -54,14 +56,6 @@ public class QuickListOfLists<T> implements Collection<T>, Textable, Sizeable {
 	private LinkedList<Collection<T>> lists = new LinkedList<Collection<T>>();
 	private int size = 0;
 
-//	@SafeVarargs
-//	public QuickListOfLists(Iterable<T>...list) {
-//		super();
-//		for (int i=0;i<list.length;i++) {
-//			lists.add(list[i]);
-//		}
-//	}
-	
 	@SafeVarargs
 	public QuickListOfLists(Collection<T>...list) {
 		super();
@@ -76,11 +70,16 @@ public class QuickListOfLists<T> implements Collection<T>, Textable, Sizeable {
 		return new AggregatedIterator<T>(lists);
 	}
 
+	/**
+	 * Add a collection to this list.
+	 * @param list the collection to add
+	 */
 	public void addList(Collection<T> list) {
 		lists.add(list);
 		size += list.size();
 	}
 
+	@Override
 	public void clear() {
 		lists.clear();
 	}
@@ -224,6 +223,5 @@ public class QuickListOfLists<T> implements Collection<T>, Textable, Sizeable {
 	public boolean retainAll(Collection<?> c) {
 		throw new OmhtkException(getClass().getSimpleName()+" is immutable.");
 	}
-
 
 }

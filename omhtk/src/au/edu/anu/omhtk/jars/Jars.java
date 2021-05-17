@@ -1,3 +1,33 @@
+/**************************************************************************
+ *  OMHTK - One More Handy Tool Kit                                       *
+ *                                                                        *
+ *  Copyright 2018: Shayne FLint, Jacques Gignoux & Ian D. Davies         *
+ *       shayne.flint@anu.edu.au                                          *
+ *       jacques.gignoux@upmc.fr                                          *
+ *       ian.davies@anu.edu.au                                            * 
+ *                                                                        *
+ *  OMHTK is a bunch of useful, very generic interfaces for designing     *
+ *  consistent, plus some other utilities. The kind of things you need    *
+ *  in all software projects and keep rebuilding all the time.            *
+ *                                                                        *
+ **************************************************************************                                       
+ *  This file is part of OMHTK (One More Handy Tool Kit).                 *
+ *                                                                        *
+ *  OMHTK is free software: you can redistribute it and/or modify         *
+ *  it under the terms of the GNU General Public License as published by  *
+ *  the Free Software Foundation, either version 3 of the License, or     *
+ *  (at your option) any later version.                                   *
+ *                                                                        *
+ *  OMHTK is distributed in the hope that it will be useful,              *
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *  GNU General Public License for more details.                          *                         
+ *                                                                        *
+ *  You should have received a copy of the GNU General Public License     *
+ *  along with OMHTK.
+ *  If not, see <https://www.gnu.org/licenses/gpl.html>.                  *
+ *                                                                        *
+ **************************************************************************/
 package au.edu.anu.omhtk.jars;
 
 import java.io.File;
@@ -34,35 +64,54 @@ import au.edu.anu.rscs.aot.util.Resources;
 import fr.ens.biologie.generic.utils.Logging;
 
 /**
- * A class to package items into a jar with a version number
+ * <p>A class to package items into a 
+ * <a href ="https://docs.oracle.com/javase/tutorial/deployment/jar/index.html">jar</a> file
+ * with a version number. Includes a  
+ * <a href="https://docs.oracle.com/javase/8/docs/technotes/guides/jar/jar.html#JAR_Manifest">
+ * manifest file</a>.</p>
+ * <p>Usage:
+ * <ol>
+ * <li>Define a descendant class setting the proper fields needed by your specific jar packing task.</li>
+ * <li>Create an instance of this class.</li>
+ * <li>Populate the instance with request to add entries to the jar using all the add&lt;something&gt; methods.</li>
+ * <li>Set the main class / application entry point, if any.</li>
+ * <li>Call {@code saveJar(...)} from the instance to create the jar file.</li>
+ * </ol>  
+ * </p>
  * 
- * @author Shayne Flint refactored by Jacques Gignoux 2017 - added merging of
- *         services from multiple jars by Ian Davies 2020.
+ * @author Shayne Flint <br/> 
+ * 		refactored by Jacques Gignoux 2017 <br/> 
+ * 		added merging of services from multiple jars by Ian Davies 2020.
  *
  */
 public abstract class Jars {
 
+	/** The separator character for path names */
 	public static final char separatorChar = '/';
+	/** The separator String for path names */
 	public static final String separator = "" + separatorChar;
-
+	/** The lowest version number*/
 	protected String version = "0.0.0";
+	
 	private static Logger log = Logging.getLogger(Jars.class);
 	private Set<String> classNames = new HashSet<String>();
 	private Set<JarFileRecord> files = new HashSet<JarFileRecord>();
 	private Set<String> jars = new HashSet<String>();
-	// for the manifest:
+	
+	/** Information for the manifest - specification vendor */
 	protected String specVendor = null;
+	/** Information for the manifest - specification title */
 	protected String specTitle = null;
+	/** Information for the manifest - main class name */
 	protected String mainClassName = null;
 	private Set<String> dependsOnJars = new HashSet<String>();
 
 	/**
-	 * <p>
-	 * Testing if the code where the klass argument was found originates from a jar
-	 * - hack found <a
+	 * <p>A method to test if the code where the klass argument was found originates from a jar. 
+	 * [hack found <a
 	 * href=https://stackoverflow.com/questions/482560/can-you-tell-on-runtime-
 	 * if-youre-running-java-from-within-a-jar> there</a>. The test is based on the
-	 * existence of the manifest.
+	 * existence of the manifest].
 	 * </p>
 	 * 
 	 * @param klass the class to search for
@@ -82,14 +131,17 @@ public abstract class Jars {
 		}
 	}
 
+	/** Information for the manifest - specification vendor */
 	public String getSpecVendor() {
 		return specVendor;
 	}
 
+	/** Information for the manifest - specification title */
 	public String getSpecTitle() {
 		return specTitle;
 	}
 
+	/** Information for the manifest - main class name */
 	public String getVersion() {
 		return version;
 	}
@@ -98,44 +150,69 @@ public abstract class Jars {
 //		version = major+"."+minor+"."+micro;
 //	}
 
+	/**
+	 * Add all entries found in a jar to this jar.
+	 * @param jarName the jar to copy entries from
+	 */
 	public void addDependencyOnJar(String jarName) {
 		dependsOnJars.add(jarName);
 	}
 
+	/**
+	 * Add a class to this jar.
+	 * @param className the class to add
+	 */
 	public void addClass(String className) {
 		this.classNames.add(className);
 	}
 
+	/**
+	 * Add all entries found in a package to this jar.
+	 * @param packageName the package which classes are added to this jar
+	 */
 	public void addPackage(String packageName) {
 		for (Class<?> c : JavaUtils.getClassesInPackage(packageName))
 			this.classNames.add(c.getName());
 	}
 
+	/**
+	 * Add all entries found in a package to this jar.
+	 * @param packageName the package which classes are added to this jar.
+	 */
 	public void addPackageTree(String packageName) {
 		for (Class<?> c : JavaUtils.getClassesInPackageTree(packageName))
 			this.classNames.add(c.getName());
 	}
 
+	/**
+	 * Sets the <a href="https://docs.oracle.com/javase/tutorial/deployment/jar/appman.html">entry point</a> of this jar
+	 * @param className the class to use as an entry point - must have a {@code main(...)} method
+	 */
 	public void setMainClass(String className) {
 		this.mainClassName = className;
 	}
 
+	/**
+	 * Add any file (i.e. not only java classes) to this jar.
+	 * @param fileName the name of the file
+	 * @param jarDirectory the directory where the file is
+	 */
 	public void addFile(String fileName, String jarDirectory) {
 		File file = new File(fileName);
 		this.files.add(new JarFileRecord(fileName, jarDirectory + Jars.separator + file.getName()));
 	}
 
 	/**
-	 * Recursive addition of resources in jars (i.e. excluding .java and .class
-	 * files). CAUTION:
-	 * <ul>
-	 * <li>packageName = java name of the package, i.e. with dots as separators</li>
-	 * <li>absolutePackageDirName = absolute packageDirName, i.e. with the root of
-	 * the threeworlds project hierarchy as a prefix</li>
-	 * </ul>
+	 * Recursive addition of (non-java) resources in jars (i.e. excluding .java and .class
+	 * files). Collects all non-java files from the package argument and adds them to this jar.<br/>
+	 * <Strong>CAUTION</strong>: directory names including dots are not supported (e.g. workflow.graffle).
 	 * 
-	 * @param packageName the java package name
+	 * @param packageName the java package name to search for resources, i.e. with dots as separators
 	 */
+	// CAUTION: 
+	// * packageName = java name of the package, i.e. with dots as separators
+	// * absolutePackageDirName = absolute packageDirName, i.e. with the root of the threeworlds 
+	// 		project hierarchy as a prefix
 	public void addResources(String packageName) {
 		log.info("adding resources in jar from package " + packageName);
 		URL root = ClassLoader.getSystemResource("");
@@ -143,6 +220,7 @@ public abstract class Jars {
 		addResources(packageName, absolutePackageDirName);
 	}
 
+	// the recursion for the addResources(String packageName) method
 	private void addResources(String packageName, String absolutePackageDirName) {
 		File dir = new File(absolutePackageDirName);
 		if (dir.isDirectory())
@@ -161,14 +239,24 @@ public abstract class Jars {
 			throw new OmhtkException("Error packing jar: " + packageName + " is not a directory");
 	}
 
-	// this crashes when directory names include dots without being packages (e.g.
-	// workflow.graffle)
+	/**
+	 * Add a single (non-java) resource file to this jar. <br/> 
+	 * <Strong>CAUTION</strong>: directory names including dots are not supported (e.g. workflow.graffle).
+	 * @param resourceName the name of the resource
+	 * @param packageName the java package name to search for the resource, i.e. with dots as separators
+	 */
 	public void addResourceFile(String resourceName, String packageName) {
 		File file = Resources.getFile(resourceName, packageName);
 		this.files.add(new JarFileRecord(file.getPath(),
 				packageName.replace(".", File.separator) + File.separator + resourceName));
 	}
 
+	/**
+	 * Add an external <a href="https://ant.apache.org/ivy/">ivy</a> library to this jar.
+	 * @param org organisation responsible for the library maintenance - see ivy specification for explanation
+	 * @param name library name
+	 * @param version library version - see ivy specification for the version number interpretation
+	 */
 	public void addIvyLibrary(String org, String name, String version) {
 		Environment env = new LocalEnvironment("");
 		String userHome = env.userHome();
@@ -177,26 +265,43 @@ public abstract class Jars {
 		jars.add(jarPath);
 	}
 
+	/**
+	 * Add the content of a jar file to this jar.
+	 * @param jarPath the path to the jar file which entries are to be copied
+	 */
 	public void addJar(String jarPath) {
 		jars.add(jarPath);
 	}
 
-	public void addResourceJar(String jarName, String packageName) {
-		File file = Resources.getFile(jarName, packageName);
+	/**
+	 * Add a resource file to this jar.
+	 * @param resourceName the name of the resource file to search  
+	 * @param packageName the package name containing the resource
+	 */
+	// CAUTION: jars cannot be searched for file names - this must be wrong!
+	public void addResourceJar(String resourceName, String packageName) {
+		File file = Resources.getFile(resourceName, packageName);
 		jars.add(file.getAbsolutePath());
 	}
 
+	// local class to store the file and java name of a jar entry
 	private class JarFileRecord {
 		String fileName;
 		String jarName;
 
 		public JarFileRecord(String fileName, String jarName) {
-//			System.out.println("Read: "+fileName+"\n as: "+jarName+"\n");
 			this.fileName = fileName;
 			this.jarName = jarName;
 		}
 	}
 
+	/**
+	 * Save this jar instance as a jar file. Uses all the information stored in this class instance
+	 * after calls to {@code add...(...)} methods and manifest settings to write the jar file. 
+	 * Also packs jar <a href="https://docs.oracle.com/javase/8/docs/technotes/guides/jar/jar.html#Service_Provider">services</a>
+	 * found in included jars.
+	 * @param jarFile the name of the jar file to create
+	 */
 	// NB refactored by JG to prevent duplicate jar entries.
 	public void saveJar(File jarFile) {
 		final int BUFFER_SIZE = 10240;
@@ -323,11 +428,10 @@ public abstract class Jars {
 		}
 	}
 
-	/**
+	/*
 	 * Append service entries to a list of strings for later adding to the output
 	 * jar.
 	 */
-
 	private static Map<String, List<String>> getAllServices(Set<String> jars) {
 		Map<String, List<String>> result = new HashMap<>();
 		for (String jarFileName : jars) {
@@ -367,6 +471,10 @@ public abstract class Jars {
 		return services.get(key);
 	}
 
+	/**
+	 * Utility to list the content of a jar file.
+	 * @param fileName the jar file to list.
+	 */
 	public void listJarContents(String fileName) {
 		File file = new File(fileName);
 		FileInputStream stream;

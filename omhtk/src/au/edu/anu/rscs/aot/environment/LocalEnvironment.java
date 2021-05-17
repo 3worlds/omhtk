@@ -46,11 +46,11 @@ import au.edu.anu.rscs.aot.util.ExecutionResults;
 import fr.ens.biologie.generic.utils.Logging;
 
 /**
+ * An {@link Environment} representing the local computer where the application is running. 
+ * The concept of 'current working directory' is managed here - not by the host OS (because 
+ * Java can't do it)
  * 
  * @author Shayne Flint - before 27/2/2012
- *
- * <p>NOTE (JG - 2018): I've replaced the aot logging system by java logging classes for simplicity.</p>
- *
  */
 // NOT TESTED
 public class LocalEnvironment extends Environment {
@@ -61,6 +61,11 @@ public class LocalEnvironment extends Environment {
 
 	public String hostName = "Unknown Host";
 
+	/**
+	 * The local environment is local, i.e. it runs the current application in a working directory.
+	 * 
+	 * @param rootDir
+	 */
 	public LocalEnvironment(String rootDir) {
 		dirStack.push(userHome());
 		
@@ -82,10 +87,6 @@ public class LocalEnvironment extends Environment {
 			hostName = "Unknown Host";
 		}
 	}
-
-	// The concept of 'current working directory' is managed here - not by the
-	// host OS (because Java can't do it)
-	//
 
 	private Stack<String> dirStack = new Stack<String>();
 
@@ -143,13 +144,6 @@ public class LocalEnvironment extends Environment {
 		} catch (IOException e) {
 			throw new OmhtkException("LocalEnvironment.copyFile", e);
 		}
-//		String command = "";
-//		if (osName().contains("Window"))
-//			command = "cmd /c copy ";
-//		else
-//			command = "cp ";
-//		command += makeAbsolutePath(source) + " " + makeAbsolutePath(target);
-//		run(command);
 	}
 
 	@Override
@@ -178,6 +172,7 @@ public class LocalEnvironment extends Environment {
 		file.deleteOnExit();
 	}
 
+	/** CAUTION: this method is disabled (does nothing) */
 	@Override
 	public void rmTree(String path) {
 //		log.entering("LocalEnvironment", "rmTree");  
@@ -260,11 +255,10 @@ public class LocalEnvironment extends Environment {
 			if (workingDirectory == null) {
 				proc = Runtime.getRuntime().exec(command);
 			} else
-				proc = Runtime.getRuntime().exec(command, null,
-						new File(workingDirectory));
+				proc = Runtime.getRuntime().exec(command, null,new File(workingDirectory));
 
 			BufferedReader stdInput = new BufferedReader(new InputStreamReader(
-					proc.getInputStream()));
+				proc.getInputStream()));
 			String line;
 			while ((line = stdInput.readLine()) != null) {
 				System.out.println(line);
@@ -273,7 +267,7 @@ public class LocalEnvironment extends Environment {
 			stdInput.close();
 
 			BufferedReader stdError = new BufferedReader(new InputStreamReader(
-					proc.getErrorStream()));
+				proc.getErrorStream()));
 			while ((line = stdError.readLine()) != null) {
 				results.add("[errorStream] " + line);
 			}
