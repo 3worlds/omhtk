@@ -29,23 +29,24 @@
  **************************************************************************/
 package au.edu.anu.rscs.aot.init;
 
+import fr.ens.biologie.generic.Initialisable;
+
 /**
- * A class to store error messages from initialisation.
+ * <p>A class to store error messages that occurred during a late (=after instantiation) initialisation.
+ * Works in conjunction with {@link Initialiser}.</p>
  * @author Jacques Gignoux - 7 mai 2019
  *
  */
 public class InitialiseMessage {
-
-	/** the error raised by the initialise() method */
+	
 	private Exception exc = null;
-	/** the object which caused the error - NB it may be an archetype node (if there was an error in the archetype file) */
 	private Object target = null;
 	
 	/**
+	 * Constructor
 	 * 
-	 * @param check
-	 * @param failed
-	 * @param onNode
+	 * @param item the object on which initialisation failed
+	 * @param failed the error raised by the initialisation method call
 	 */
 	public InitialiseMessage(Object item, Exception failed) {
 		super();
@@ -53,10 +54,12 @@ public class InitialiseMessage {
 		exc = failed;
 	}
 
+	/** The error raised by the initialisation method call */
 	public Exception getException() {
 		return exc;
 	}
 
+	/** The object which caused the error. Usually, an {@link Initialisable} instance.*/
 	public Object getTarget() {
 		return target;
 	}

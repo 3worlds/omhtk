@@ -30,12 +30,19 @@
 package fr.ens.biologie.generic;
 
 /**
- * an interface for things that can display themselves graphically in a separate window (for dbugging, mainly)
+ * An interface for things that can display themselves graphically in a separate window 
+ * (for debugging, mainly).
+ * 
  * @author Jacques Gignoux - 28/11/2017
  *
  */
 public interface Showable {
 	
+	/**
+	 * Displays this object graphically in a new window, whatever this means.
+	 * 
+	 * @param header the window header
+	 */
 	public void show(String header);
 
 }

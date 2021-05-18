@@ -30,9 +30,10 @@
 package fr.ens.biologie.generic;
 
 /**
- * An interface to put version numbers on objects. Assumes a major.minor.micro format
+ * An interface to put version numbers on objects. Assumes a major.minor.micro format.
+ * Methods are self-explained getters and setters.
  * 
- * @author Jacques Gignoux - 11/5/218
+ * @author Jacques Gignoux - 11/5/2018
  *
  */
 public interface Versionable {
@@ -73,15 +74,15 @@ public interface Versionable {
 	}
 
 	default public void setMajor(int major) {
-		setMajor(major);
+		setMajor(Integer.toString(major));
 	}
 
 	default public void setMinor(int minor) {
-		setMinor(minor);
+		setMinor(Integer.toString(minor));
 	}
 
 	default public void setMicro(int micro) {
-		setMicro(micro);
+		setMicro(Integer.toString(micro));
 	}
 
 }

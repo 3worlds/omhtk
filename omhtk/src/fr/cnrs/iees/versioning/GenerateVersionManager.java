@@ -43,7 +43,7 @@ import java.util.Set;
  * <p>A little helper to generate identical VersionManager.java files in a set of libraries.</p>
  * 
  * <p>Note: VersionManager depends on a VersionSettings.java file which is different for every
- * library as it lists the dependencies, library name, basically all library-dependent
+ * library (= java project) as it lists the dependencies, library name, basically all library-dependent
  * parameters needed for VersionManager.java to run. This package also provides a template
  * for VersionSettings.java, but this is not copied by default as it must be edited by the 
  * user.</p>
@@ -95,6 +95,15 @@ public class GenerateVersionManager {
 		System.out.println(" Done");
 	}
 	
+	/**
+	 * Copies template files for {@code VersionManager} and {@code VersionSettings} into one or more
+	 *  java projects.
+	 * <p>The project directories must be passed on the command line, as Strings separated by white space.
+	 * If no argument is passed, it uses default directories listed in the file <em>VersionManagerDirectories.txt</em>.
+	 * If this file is not found in the same package as this class, it fails with an error message.</p>
+	 *  
+	 * @param args valid java project directories
+	 */
 	public static void main(String[] args) {
 		// command-line arguments must be valid library names (eg omhtk, omugi, aot, etc...)
 		if (args.length>0) { 

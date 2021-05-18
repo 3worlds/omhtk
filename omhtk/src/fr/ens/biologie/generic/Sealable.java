@@ -31,10 +31,11 @@ package fr.ens.biologie.generic;
 
 
 /**
- * This interface for objects that can be modified for a certain time, and then be sealed so that no
- * future change is permitted. Typically, property lists at init time and runtime.
- * 
- * To use in conjunction with other PropertyList interfaces
+ * <p>This interface is for objects that can be modified for a certain time, and then be sealed so that no
+ * future change is permitted.</p>
+ * <p>The typical use case is for objects that cannot be used until some late initialisation (i.e.
+ * after instantiation) is performed. It can be quite powerful when used in conjunction with the
+ * {@link Initialisable} interface.</p> 
  * 
  *  @author J. Gignoux - 13 févr. 2017
  *
@@ -42,14 +43,15 @@ package fr.ens.biologie.generic;
 public interface Sealable {
 	
 	/**
-	 * seals this instance so that no further change in content or structure (depends on implementation)
-	 * can be made until instance disposal
+	 * Seals this instance so that no further change in content or structure (depends on implementation)
+	 * can be made until instance disposal. Implementations should make sure that further calls to this
+	 * method after the first one have no effect.
 	 * @return this instance for agile programming
 	 */
 	public Sealable seal();
 	
 	/**
-	 * 
+	 * Whether this instance is sealed or not.
 	 * @return true if this instance is sealed (=protected from further changes, whatever this means)
 	 */
 	public boolean isSealed();

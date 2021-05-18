@@ -30,7 +30,7 @@
 package fr.ens.biologie.generic;
 
 /**
- * An interface for objects which have a size
+ * An interface for objects which have a size.
  * @author Shayne Flint 
  *
  */

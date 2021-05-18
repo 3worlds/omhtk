@@ -30,6 +30,22 @@
 package fr.ens.biologie.generic;
 
 /**
+ * <p>An interface for objects that require initialisation (whatever this means) after instantiation.</p>
+ * <p>In big applications, the initialisation of objects is often a complex procedure where many 
+ * different classes must be instantiated in a precise order, and sometimes with reciprocal
+ * dependencies that impose some more initialisation after instantiation. This interface defines two
+ * methods that help this process:</p>
+ * <ul>
+ * <li>{@link Initialisable#initialise() initialise()} performs all the operations required before
+ * any instance of this interface can be considered 'ready'.</li>
+ * <li>{@link Initialisable#initRank() initRank()} returns a rank that insures that the initialisations
+ * are made in the proper order.</li>
+ * </ul>
+ * <p>This interface is meant to be used with the {@link au.edu.anu.rscs.aot.init.Initialiser Initialiser}
+ * class. {@code Initialiser} is constructed with a list of {@code Initialisable} instances.
+ * Then, a call to {@code Initialiser.initialise()} will call the {@code initialise()} method
+ * of all {@code Initialisable} instances in turn, in order of increasing {@code initRank()}.</p>
+ * 
  * 
  * @author Jacques Gignoux - 7 mai 2019
  *
@@ -37,8 +53,8 @@ package fr.ens.biologie.generic;
 public interface Initialisable {
 
 	/**
-	 * An object which can be initialise must have this method, which will be called
-	 * by initialisers.
+	 * Initialises this instance after construction, whatever this means.
+	 * 
 	 * @throws Exception 
 	 */
 	public void initialise() throws Exception;

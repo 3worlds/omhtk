@@ -32,8 +32,8 @@ package fr.ens.biologie.generic;
 /**
  * <p>An interface for objects that can be reset to an initial state after having been brought
  * into a different state.
- * It assumes the object has a life cycle of the type "<em>initial state</em> -&gt; <em>running</em>
- *  -&gt; <em>final state</em>" </p>
+ * It assumes the object has a life cycle of the type "<em>initial state</em> → <em>running</em>
+ *  → <em>final state</em>" </p>
  *  
  * @author Jacques Gignoux - 2 juin 2012<br/><br/>
  *

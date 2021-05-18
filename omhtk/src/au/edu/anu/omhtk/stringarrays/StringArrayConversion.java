@@ -32,7 +32,7 @@
 package au.edu.anu.omhtk.stringarrays;
 
 /**
- * Helper methods, originally for the {@link java.util.prefs.Preferences}
+ * {@code String[]} ↔ {@code Number[]} converters. Helper methods, originally for the {@link java.util.prefs.Preferences}
  * system. May be of some general use.
  * Each method converts a list of numbers to a list of Strings, or reciprocally, as per method name.
  *

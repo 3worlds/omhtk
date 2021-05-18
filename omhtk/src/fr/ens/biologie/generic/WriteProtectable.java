@@ -30,9 +30,9 @@
 package fr.ens.biologie.generic;
 
 /**
- * This interface for objects that can be write protected/enabled.
+ * An interface for objects that can be write protected / write enabled.
  * 
- * similar to {@linkplain Sealable} except the seal is reversible
+ * It is similar to {@linkplain Sealable} except the seal is reversible
  * 
  *  @author J. Gignoux - 13 févr. 2017
  *
@@ -40,19 +40,19 @@ package fr.ens.biologie.generic;
 public interface WriteProtectable {
 	
 	/**
-	 * 
-	 * @return true if data is write-protected, false if writing is permitted
+	 * Whether this instance is writeable.
+	 * @return {@code true} if data is write-protected, {@code false} if writing is permitted
 	 */
 	public boolean isReadOnly();
 	
 	/**
-	 * enables data writing in this instance
+	 * Enables data writing in this instance.
 	 * @return this instance for agile programming
 	 */
 	public WriteProtectable writeEnable();
 	
 	/**
-	 * disables data writing in this instance
+	 * Disables data writing in this instance.
 	 * @return this instance for agile programming
 	 */
 	public WriteProtectable writeDisable();

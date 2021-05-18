@@ -13,8 +13,8 @@ import fr.ens.biologie.generic.JavaCode;
 import static fr.ens.biologie.codeGeneration.Comments.*;
 
 /**
- * A simple method code generator - does not handle exceptions, generic types nor annotations.
- * <p>3Worlds: component threeWorlds</p>
+ * A simple method code generator: it does not handle exceptions, generic types nor annotations.
+ * 
  * @author Jacques Gignoux - 19 déc. 2014
  *
  * TODO: allow to rename the arguments to more handy user friendly ones (for methods

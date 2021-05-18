@@ -33,12 +33,12 @@ import au.edu.anu.rscs.aot.OmhtkException;
 
 /**
  * <p>An interface for objects that can be saved as text (in text files or Strings) and later
- * re-loaded with a (static) valueOf() method.</p>
+ * re-loaded with a (static) {@code valueOf()} method.</p>
  *
  * <p>NOTE: classes implementing this interface <strong>must</strong> implement a
  * {@code static public void valueOf(String)} method
  * returning an instance built from its argument. Don't forget that this method
- * can only be implemented in the class it is going to instantiate (ie no inheritance).</p>
+ * can only be implemented in the class it is going to instantiate (i.e. no inheritance).</p>
  *
  * @author Jacques Gignoux - 8 nov. 2018
  *
@@ -49,21 +49,37 @@ public interface SaveableAsText {
 	/** item separators */
 	public static char[] ITEM_SEPARATORS =
 		{',',';',':','.',' ','\t','\n','|','+','=','-','/','\\','_','\"','\''};
+	/** item separator {@code ,} */
 	public static char COMMA = 		ITEM_SEPARATORS[0];
+	/** item separator {@code ;} */
 	public static char SEMICOLON = 	ITEM_SEPARATORS[1];
+	/** item separator {@code :} */
 	public static char COLON = 		ITEM_SEPARATORS[2];
+	/** item separator {@code .} */
 	public static char DOT = 		ITEM_SEPARATORS[3];
+	/** item separator ' ' */
 	public static char BLANK = 		ITEM_SEPARATORS[4];
+	/** item separator {@code \t} */
 	public static char TAB = 		ITEM_SEPARATORS[5];
+	/** item separator {@code \n} */
 	public static char LINEBREAK = 	ITEM_SEPARATORS[6];
+	/** item separator {@code |} */
 	public static char VBAR = 		ITEM_SEPARATORS[7];
+	/** item separator {@code +} */
 	public static char PLUS = 		ITEM_SEPARATORS[8];
+	/** item separator {@code =} */
 	public static char EQUAL = 		ITEM_SEPARATORS[9];
+	/** item separator {@code -} */
 	public static char MINUS = 		ITEM_SEPARATORS[10];
+	/** item separator {@code /} */
 	public static char SLASH = 		ITEM_SEPARATORS[11];
+	/** item separator {@code \} */
 	public static char BACKSLASH = 	ITEM_SEPARATORS[12];
+	/** item separator {@code _} */
 	public static char UNDERSCORE =	ITEM_SEPARATORS[13];
+	/** item separator {@code "} */
 	public static char DOUBLEQUOTE= ITEM_SEPARATORS[14];
+	/** item separator {@code '} */
 	public static char SINGLEQUOTE= ITEM_SEPARATORS[15];
 	//IDD - can't use as block delim for quotes because they're the same char
 
@@ -71,23 +87,37 @@ public interface SaveableAsText {
 	public static char[][] BLOCK_DELIMITERS =
 		{{'{','}'},{'[',']'},{'(',')'},{'<','>'}};
 	/** indexes to the above */
+	/** index of an opening block delimiter */
 	public static int BLOCK_OPEN = 0;
+	/** index of a closing block delimiter */
 	public static int BLOCK_CLOSE = 1;
+	/** block delimiters {} */
 	public static char[] BRACES = 				BLOCK_DELIMITERS[0];
+	/** block delimiters [] */
 	public static char[] SQUARE_BRACKETS = 		BLOCK_DELIMITERS[1];
+	/** block delimiters () */
 	public static char[] BRACKETS = 			BLOCK_DELIMITERS[2];
+	/** block delimiters &lt;&gt; */
 	public static char[] TRIANGULAR_BRACKETS = 	BLOCK_DELIMITERS[3];
 
 	/** string delimiters (come in pairs) */
 	public static char[][] STRING_DELIMITERS =
 		{{'\"','\"'},{'\'','\''},{'«','»'},{'“','”'},{'‘','’'},{'„','“'}};
+	/** index of an opening string delimiter */
 	public static int STRING_OPEN = 0;
+	/** index of a closing string delimiter */
 	public static int STRING_CLOSE = 1;
+	/** string delimiters " " */
 	public static char[] DOUBLE_QUOTES = 		STRING_DELIMITERS[0];
+	/** string delimiters ' ' */
 	public static char[] SINGLE_QUOTES = 		STRING_DELIMITERS[1];
+	/** string delimiters « » */
 	public static char[] FRENCH_QUOTES = 		STRING_DELIMITERS[2];
+	/** string delimiters “ ” */
 	public static char[] AMERICAN_QUOTES = 		STRING_DELIMITERS[3];
+	/** string delimiters ‘ ’ */
 	public static char[] ENGLISH_QUOTES = 		STRING_DELIMITERS[4];
+	/** string delimiters „ “ */
 	public static char[] GERMAN_QUOTES = 		STRING_DELIMITERS[5];
 
 	/**
@@ -108,6 +138,7 @@ public interface SaveableAsText {
 	 * The detailed semantics of block delimiters and item separators may vary with implementations
 	 * The important thing to bear in mind when writing such methods is that the generated
 	 * String must enable one to reconstruct the object from it.</p>
+	 * <p>The default implementation throws an Exception (i.e., it must be overriden).</p>
 	 *
 	 * @param blockDelimiters an array of pairs of block delimiters
 	 * (the second dimension of the array must be 2, with item 0 being the opening
@@ -123,6 +154,8 @@ public interface SaveableAsText {
 
 	/**
 	 * As {@code toSaveableString(char[][],char[])}, but with no block delimiters.
+	 * <p>The default implementation calls {@link SaveableAsText#toSaveableString(char[][],char[]) toSaveableString(char[][],char[])} 
+	 * with {@code null} blockDelimiters.</p>
 	 * @param itemSeparators an array of separators between repeated items
 	 * @return the object as a string that allows to reconstruct it with a {@code valueOf(...)}
 	 * method
@@ -133,6 +166,8 @@ public interface SaveableAsText {
 
 	/**
 	 * As {@code toSaveableString(char[][],char[])}, but with no separators
+	 * <p>The default implementation calls {@link SaveableAsText#toSaveableString(char[][],char[]) toSaveableString(char[][],char[])} 
+	 * with {@code null} itemSeparators.</p>
 	 * @param blockDelimiters an array of pairs of block delimiters
 	 * (the second dimension of the array must be 2, with item 0 being the opening
 	 * block delimiter (e.g. '[') and the item 1 being the closing block delimiter
@@ -147,6 +182,9 @@ public interface SaveableAsText {
 	/**
 	 * As {@code toSaveableString(char[][],char[])}, but with no separators
 	 * nor delimiters.
+	 * <p>The default implementation calls {@link SaveableAsText#toSaveableString(char[][],char[]) toSaveableString(char[][],char[])} 
+	 * with {@code null} blockDelimiters and itemSeparators. Overwrite it if you
+	 * want to use standard default delimiters and separators.</p>
 	 * @return the object as a string that allows to reconstruct it with a {@code valueOf(...)}
 	 * method
 	 */
@@ -158,8 +196,8 @@ public interface SaveableAsText {
 	 * As {@code toSaveableString(char[][],char[])}, but with only one pair of block
 	 * delimiters and one item separator
 	 * @param blockDelimiters an array of 2 chars with item 0 being the opening
-	 * block delimiter (e.g. '<') and the item 1 being the closing block delimiter
-	 * (e.g. '>').
+	 * block delimiter (e.g. '&lt;') and the item 1 being the closing block delimiter
+	 * (e.g. '&gt;').
 	 * @param itemSeparator a separator between repeated items
 	 * @return the object as a string that allows to reconstruct it with a {@code valueOf(...)}
 	 * method
@@ -185,18 +223,21 @@ public interface SaveableAsText {
 		char[][] bd = new char[1][2];
 		bd[0][0] = startBlockDelimiter;
 		bd[0][1] = endBlockDelimiter;
-		return toSaveableString(bd,null);
+		char[] is = new char[1];
+		is[0] = itemSeparator;
+		return toSaveableString(bd,is);
 	}
 
 	/**
 	 * As {@code toSaveableString(char[][],char[])}, but with only one pair of block
 	 * delimiters and no item separator
+	 * <p>The default implementation calls {@link SaveableAsText#toSaveableString(char[][],char[]) toSaveableString(char[][],char[])} 
+	 * with {@code null} itemSeparators.</p>
 	 * @param startBlockDelimiter the opening block delimiter
 	 * @param endBlockDelimiter the closing block delimiter
 	 * @return the object as a string that allows to reconstruct it with a {@code valueOf(...)}
 	 * method
 	 */
-
 	public default String toSaveableString(char startBlockDelimiter, char endBlockDelimiter) {
 		char[][] bd = new char[1][2];
 		bd[0][0] = startBlockDelimiter;
@@ -207,11 +248,12 @@ public interface SaveableAsText {
 	/**
 	 * As {@code toSaveableString(char[][],char[])}, but with no block
 	 * delimiters and one item separator
+	 * <p>The default implementation calls {@link SaveableAsText#toSaveableString(char[][],char[]) toSaveableString(char[][],char[])} 
+	 * with {@code null} blockDelimiters.</p>
 	 * @param itemSeparator the item separator
 	 * @return the object as a string that allows to reconstruct it with a {@code valueOf(...)}
 	 * method
 	 */
-
 	public default String toSaveableString(char itemSeparator) {
 		char[] is = new char[1];
 		is[0] = itemSeparator;

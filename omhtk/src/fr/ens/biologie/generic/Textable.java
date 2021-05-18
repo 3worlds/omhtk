@@ -32,8 +32,12 @@ package fr.ens.biologie.generic;
 import au.edu.anu.rscs.aot.OmhtkException;
 
 /**
- * <p>For relatively complex objects that can return information with various levels of detail.
- * Taken from former Aot Node methods.</p>
+ * <p>An interface for relatively complex objects that can return information with various 
+ * levels of detail.</p>
+ * <p>This interface should <strong>not</strong> be used to save objects as text. For
+ * this task, the {@link SaveableAsText} interface is better adapted.</p>
+ * <p>These methods complement the {@code Object.toString()} method that is used in eclipse
+ * for debugging code.</p>
  * 
  * @author gignoux - 25 août 2017
  *
@@ -46,9 +50,8 @@ public interface Textable {
 	 * content. Or if the object has a unique ID (e.g. graph elements), it should
 	 * use it.
 	 * 
-	 * @return
+	 * @return a String uniquely characterising this instance
 	 */
-//	public String toSimpleString(); // bad name
 	public default String toUniqueString() {
 		// Typically, this method shoud return Object.toString(), which returns the
 		// object reference. But this cannot be made the default behaviour in
@@ -57,21 +60,22 @@ public interface Textable {
 	}
 
 	/**
-	 * Displays the object as simply as possible, with no guarantee that another 
-	 * object will not return the same string. <br/>
-	 * The returned description must fit on one single, short (~20 character), line
-	 * of text.
-	 * @return
+	 * <p>Displays the object as simply as possible, with no guarantee that another 
+	 * object will not return the same string. </p>
+	 * <p>The returned description must fit on one single, short (~20 character), line
+	 * of text.</p>
+	 * @return a short String describing this instance
 	 */
 	public default String toShortString() {
 		return toString();
 	}
 
 	/**
-	 * Displays the object with all the detailed of its content, for screen or console
-	 * display purpose.
-	 * (ex. for AOT Nodes: show all properties + list of edge ids)
-	 * @return
+	 * <p>Displays the object with all - or at least a lot of - the detailed of its content, for screen or console
+	 * display purpose.</p>
+	 * <p>The returned description should not contain line breaks.</p>
+	 * 
+	 * @return a long String describing this instance.
 	 */
 //	public String toLongString(); // bad name
 	public default String toDetailedString() {

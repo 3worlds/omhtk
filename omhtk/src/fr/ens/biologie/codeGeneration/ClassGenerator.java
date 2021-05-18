@@ -13,10 +13,22 @@ import java.util.Set;
 import fr.ens.biologie.generic.JavaCode;
 
 /**
- *  a simple class generator, i.e. with no inner classes.
- *  This is generic, can generate (almost) any code.
+ *  <p>A simple java class generator.
+ *  It can generate almost any standard class code, as long as there are no inner classes.</p>
+ *  <p>Usage:</p>
+ *  <ol>
+ *  <li>Get an instance of this class. This will require some basic information about the class
+ *  to generate (e.g. superclass, package, methods to override...).</li>
+ *  <li>Adapt the generator to your needs by adding methods, constructors, fields, etc., using
+ *  methods defined here.</li>
+ *  <li>When all this is finished, call {@link ClassGenerator#asText(String) asText()} to generate a String that can be 
+ *  saved as a java source file.</li>
+ *  </ol>
+ *  <p>You should then check that the generated code, saved as a source file, properly compiles
+ *  using a {@link JavaCompiler}</p>
  *
  * @author Jacques Gignoux - 19 déc. 2014
+ * @see MethodGenerator
  *
  */
 public class ClassGenerator implements JavaCode {
@@ -62,12 +74,13 @@ public class ClassGenerator implements JavaCode {
 
 	/**
 	 *Constructor. The default behaviour is to generate method bodies only for methods declared
-	 * abstract in the superclass or interfaces. To generate a body for a concrete or default method,
+	 * {@code abstract} in the superclass or interfaces. To generate a body for a concrete or default method,
 	 * pass its name in arg methodsToOverride (otherwise methodsToOverride can safely be set to null).
 	 *
 	 * @param packageName the package of the class to create
 	 * @param classComment the class file comment
 	 * @param name the class name
+	 * @param isInterface {@code true} if the class to generate is an interface
 	 * @param methodsToOverride the list of methods to override if different from abstract methods
 	 * @param superclass the superclass
 	 * @param interfaces the interfaces
@@ -109,40 +122,84 @@ public class ClassGenerator implements JavaCode {
 		}
 	}
 
+	/**
+	 * Declares a new constructor with its argument types.
+	 * @param argTypes argument types. Must be valid type names (i.e. java types or your own classes)
+	 * @return this class for agile programming
+	 */
 	public ClassGenerator setConstructor(String... argTypes) {
 		MethodGenerator c = new MethodGenerator("public",false,null,name,argTypes);
 		constructors.put("constructor"+String.valueOf(constructors.size()+1),c);
 		return this;
 	}
 
+	/**
+	 * Retrieves a declared constructor by its key. NB constructor keys are Strings of the form
+	 * "constructor1", "constructor2", etc. where the number is the order in which they were declared
+	 * (i.e. 1 is the first constructor you added).
+	 * @param key the constructor key
+	 * @return the constructor generator
+	 */
 	public MethodGenerator getConstructor(String key) {
 		return constructors.get(key);
 	}
 
+	/**
+	 * Remove the package from a class name.
+	 * @param fullClassName the fully qualified class name
+	 * @return just the class name (last word of fullClassName)
+	 */
 	private String stripPackageFromClassName(String fullClassName) {
 		String[] sc = fullClassName.split("\\.");
 		return sc[sc.length-1];
 	}
 
+	/**
+	 * Declares a new import.
+	 * @param imp a fully qualified class name to import or more generally any valid java text 
+	 * that can fit between "import " and ";" in a java import statement.
+	 * @return this class for agile programming
+	 */
 	public ClassGenerator setImport(String imp) {
 		imports.add(imp);
 		return this;
 	}
 
-	/** this method to add 'flat' method code, ie code snippets for private methods, typically */
+	/**
+	 * Inserts raw code lines. These lines will be inserted verbatim in the class, with no indentation.
+	 * You can use this to implement private methods, typically, or code copied from external sources.
+	 * 
+	 * @param snippet the lines to insert
+	 * @return this class for agile programming
+	 */
 	public ClassGenerator setRawMethodCode(List<String> snippet) {
 		rawMethods = snippet;
 		return this;
 	}
 
+	/**
+	 * The number of fields declared in this class
+	 * @return the number of fields
+	 */
 	public int nfields() {
 		return fields.size();
 	}
 
+	/**
+	 * The names of the fields declared in this class.
+	 * @return the fields declared in this class
+	 */
 	public Set<String> fields() {
 		return fields.keySet();
 	}
 
+	/**
+	 * Declare a new field. By default, all fields are private and not static.
+	 * @param fname the field name
+	 * @param ftype the field type (a valid java class - don't forget the import if needed)
+	 * @param fvalue the default value of the field, if any
+	 * @return this class for agile programming
+	 */
 	public ClassGenerator setField(String fname, String ftype, String fvalue) {
 		field f = new field();
 		f.scope = "private";
@@ -153,30 +210,47 @@ public class ClassGenerator implements JavaCode {
 		return (this);
 	}
 
+	/**
+	 * Get a declared field by its name. Isn't that a stupid method? Well, you can use it to check
+	 * the spelling of your field name...
+	 * @param fname the name of the field
+	 * @return the name of the field
+	 */
 	// is that one really needed ?
 	public field getField(String fname) {
 		return fields.get(fname);
 	}
 
+	/**
+	 * Declare a new method by adding a new {@code MethodGenerator} instance to this class.
+	 * @param mname the method key (usually, its name)
+	 * @param method the {@code MethodGenerator} instance
+	 * @return this class for agile programming
+	 */
 	public ClassGenerator setMethod(String mname, MethodGenerator method) {
 		methods.put(mname,method);
 		return this;
 	}
 
 	/**
-	 * This method to enable one to add statements into automatically generated MethodGenerators
-	 * (eg when building the class from a superclass).
-	 * @param mname
-	 * @return
+	 * Get a declared method. This enables one to add statements into automatically generated 
+	 * methods (e.g. when building the class from a superclass).
+	 * @param mname the method key
+	 * @return the method generator
 	 */
 	public MethodGenerator getMethod(String mname) {
 		return methods.get(mname);
 	}
 
+	/**
+	 * Get all the methods declared in this class.
+	 * @return a collection of method generators
+	 */
 	public Collection<MethodGenerator> getMethods() {
 		return methods.values();
 	}
 
+	@Override
 	public String asText(String indent) {
 		String result = "";
 		result += "package "+packageName+";\n\n";
@@ -222,10 +296,18 @@ public class ClassGenerator implements JavaCode {
 		return result;
 	}
 
+	/**
+	 * The name of the class represented by this generator.
+	 * @return the generated class simple name
+	 */
 	public String getClassName() {
 		return name;
 	}
 
+	/**
+	 * The package of the class represented by this generator.
+	 * @return the generated class package name
+	 */
 	public String packageName() {
 		return packageName;
 	}

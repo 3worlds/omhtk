@@ -37,8 +37,15 @@ import java.util.TreeMap;
 import fr.ens.biologie.generic.Initialisable;
 
 /**
- * A new version of Shayne's initialiser - much, much simpler.
- * @author Jacques Gignoux - 7 mai 2019
+ * <p>A class used to initialise a series of objects that require late initialisation, i.e. after
+ * instantiation. It is meant to work in conjunction with the {@link Initialisable} interface.</p>
+ * <p>This class is instantiated with a list of {@code Initialisable} to process. Then,
+ * a call to {@code Initialiser.initialise()} will call the {@code initialise()} method
+ * of all {@code Initialisable} instances in turn, in order of increasing {@code initRank()}.
+ * </p>
+ * 
+ * @author Shayne Flint - looong ago<br/> 
+ * heavily refactored by Jacques Gignoux - 7 mai 2019
  *
  */
 public class Initialiser {
@@ -47,8 +54,8 @@ public class Initialiser {
 	private List<InitialiseMessage> initFailList = new LinkedList<>();
 
 	/**
-	 * Constructor takes a list of Initialisable objects
-	 * @param initList the list of objects ot initialise
+	 * This constructor takes a list of {@code Initialisable} objects
+	 * @param initList the list of objects to initialise
 	 */
 	public Initialiser(Iterable<Initialisable> initList) {
 		super();
@@ -78,7 +85,8 @@ public class Initialiser {
 	}
 	
 	/**
-	 * Returns the problems which occured during the initialisation process.
+	 * Returns the problems which occured during the initialisation process. Errors are stored in
+	 * {@link InitialiseMessage} instances.
 	 * @return null if no error, the error list otherwise
 	 */
 	public Iterable<InitialiseMessage> errorList() {

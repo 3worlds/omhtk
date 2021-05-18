@@ -57,7 +57,11 @@ import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
- * <p>This class is a descendant of the {@link java.util.Random} class.
+ * <p>Implementation of a <em>permuted congruential generator</em> (PCG). This family of pseudo-random
+ * number generators includes some that are "simultaneously extremely fast, extremely statistically 
+ * good, and extremely space efficient" (<a href="https://www.pcg-random.org/pdf/hmc-cs-2014-0905.pdf">O'Neill, 2014</a>).
+ * Here, we use the PCG32 algorithm.</p>
+ * <p>This class is a descendant of the {@link java.util.Random Random} class.
  * An instance of this class is used to generate a stream of pseudo-random
  * numbers.
  * The main differences are:</p>
@@ -66,7 +70,7 @@ import java.util.concurrent.atomic.AtomicLong;
  * particular, this is a port of the
  * <a href="https://github.com/imneme/pcg-c-basic/">minimal C
  * implementation</a>.</li>
- * <li>Instances of Pcg32 are not thread-safe and so it doesn't obey
+ * <li>Instances of Pcg32 are not thread-safe and so it doesn't obey the
  * {@link java.util.Random} contract.</li>
  * </ul>
  * 

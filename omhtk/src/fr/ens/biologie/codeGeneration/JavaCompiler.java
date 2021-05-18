@@ -17,10 +17,11 @@ import au.edu.anu.rscs.aot.OmhtkException;
 import fr.ens.biologie.generic.utils.Logging;
 
 /**
- * Compiles a .java file to a .class file
+ * A class to compile a {@code .java} file to a {@code .class} file.
+ * <p>Usage: (1) get an instance, (2) call one of the compileCode(...) methods. It can
+ * compile a single java file or all the files found in a root directory.</p>
  * 
- * @author Shayne Flint, modified by Jacques Gignoux - 10 sept. 2014 not meant
- *         to have descendants
+ * @author Shayne Flint, <br/>modified by Jacques Gignoux - 10 sept. 2014
  *
  */
 public final class JavaCompiler {
@@ -29,13 +30,13 @@ public final class JavaCompiler {
 	/** the java compiler */
 	private javax.tools.JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
 
-	/** the directory where the compiler is called from (sourcepath) */
-
 	/**
-	 * compiles one .java file into a .class file
+	 * Compile one {@code .java} file into a {@code .class} file. Display
+	 * compile errors in the console if any.
 	 * 
 	 * @param classFile    the java file to compile
 	 * @param compilerRoot the root directory for compilation
+	 * @return error messages, if any
 	 */
 	public final String compileCode(File classFile, File compilerRoot) {
 		log.info("Compiling " + classFile.getName() + " ...");
@@ -53,35 +54,7 @@ public final class JavaCompiler {
 			return null;
 	}
 	
-	/**
-	 * Compiles all .java files found in the compiler root
-	 * 
-	 * @param compilerRoot the root directory for compilation
-	 * @return error messages, if any
-	 */
-	public final String compileCode(File compilerRoot) {
-		log.info("Compiling all java files in " + compilerRoot.getName() + " ...");
-		String result = compileClass(compilerRoot);
-		if ((result != null) && (!result.isEmpty())) {
-			log.severe("********************************************************************");
-			log.severe("There were compiling errors in " + compilerRoot.getName() + ":");
-			log.severe(result);
-			log.severe("********************************************************************");
-		}
-		log.info("done.");
-		if ((result != null) && (!result.isEmpty()))
-			return result;
-		else
-			return null;
-	}
-
-	/**
-	 * This method compiles one .java file into one .class file.
-	 * 
-	 * @param classFile the .java file to compile
-	 * @param sourceDir the source directory (containing .java file)
-	 * @param targetDir the target directory (where to put .class file)
-	 */
+	// helper for the previous method
 	private final String compileClass(File classFile, File sourceDir) {
 		String result = null;
 		// Must have a compiler available!
@@ -110,8 +83,31 @@ public final class JavaCompiler {
 		}
 		return result;
 	}
-	
 		
+	/**
+	 * Compile all {@code .java} files found in the compiler root. Display
+	 * compile errors in the console if any.
+	 * 
+	 * @param compilerRoot the root directory for compilation
+	 * @return error messages, if any
+	 */
+	public final String compileCode(File compilerRoot) {
+		log.info("Compiling all java files in " + compilerRoot.getName() + " ...");
+		String result = compileClass(compilerRoot);
+		if ((result != null) && (!result.isEmpty())) {
+			log.severe("********************************************************************");
+			log.severe("There were compiling errors in " + compilerRoot.getName() + ":");
+			log.severe(result);
+			log.severe("********************************************************************");
+		}
+		log.info("done.");
+		if ((result != null) && (!result.isEmpty()))
+			return result;
+		else
+			return null;
+	}
+
+	// helper for the previous method
 	private final String compileClass(File sourceDir) {
 		String result = null;
 		// Must have a compiler available!
@@ -146,6 +142,5 @@ public final class JavaCompiler {
 		}
 		return result;
 	}
-
 
 }

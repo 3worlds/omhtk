@@ -92,7 +92,7 @@ public class FileUtilities {
 	 * Constructs a OS-independent path from its arguments. Has no effect on the file system, i.e. this
 	 * is just String manipulation. Ignores empty and {@code null} Strings in its arguments.
 	 * 
-	 * @param pathElements a list of path elements (i.e. OS-compatible names)
+	 * @param pathElement a list of path elements (i.e. OS-compatible names)
 	 * @return the full path name
 	 */
 	public static String makePath(String... pathElement) {
