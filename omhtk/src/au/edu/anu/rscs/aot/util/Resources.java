@@ -197,9 +197,9 @@ public class Resources {
 	}
 
 	/**
-	 * returns a name in the form: 	au.edu.anu.twcore.archetype.tw.3wA-Experiment.ugt
-	 * as a name in the form:		au/edu/anu/twcore/archetype/tw/3wA-Experiment.ugt
-	 * which can be directly used as a resource name in the above methods
+	 * returns a name in the form: 	au.edu.anu.twcore.archetype.tw.3wA-Experiment.ugt<br/>
+	 * as a name in the form:		au/edu/anu/twcore/archetype/tw/3wA-Experiment.ugt<br/>
+	 * which can be directly used as a resource name in the other methods of this class.
 	 * @param name
 	 * @return
 	 */

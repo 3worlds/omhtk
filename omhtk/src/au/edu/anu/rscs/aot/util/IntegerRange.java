@@ -32,10 +32,11 @@ package au.edu.anu.rscs.aot.util;
 import au.edu.anu.rscs.aot.OmhtkException;
 
 /**
- * A property type for multiplicities (i.e. accepts the '*' notation for 'any
- * number').
+ * <p>A class to represent ranges of integer numbers. Fully compatible with 
+ * <a href="https://www.uml-diagrams.org/multiplicity.html">UML multiplicities</a>, in particular
+ *  accepts the '*' notation for 'any number'.</p>
  * 
- * @author Shayne Flint - 2012?
+ * @author Shayne Flint - 2012
  *
  */
 // Tested OK with version 0.0.5 on 4/4/2019
@@ -44,12 +45,29 @@ public class IntegerRange {
 	private int first = 0;
 	private int last = Integer.MAX_VALUE;
 
+	/**
+	 * Constructor from two numbers. Throws an Exception if first &gt; last.
+	 * @param first the lowest end of the range
+	 * @param last the upper end of the range
+	 */
 	public IntegerRange(int first, int last) {
 		this.first = first;
 		this.last = last;
 		check();
 	}
 
+	/**
+	 * Constructor from a String.
+	 *  <p>Examples of valid String formats:<br/>
+	 *  1..1<br/>
+	 *  1..*<br/>
+	 *  0..1<br/>
+	 *  0..*<br/>
+	 *  5..12<br/>
+	 *  </p>
+	 *  
+	 * @param str a String representing an integer range.
+	 */
 	public IntegerRange(String str) {
 		int idx = str.indexOf("..");
 		if (idx > 0 && (str.length() - idx) > 2) {
@@ -96,15 +114,32 @@ public class IntegerRange {
 			throw new OmhtkException("Invalid integer range: " + first + " must <= " + last);
 	}
 
+	/**
+	 * Checks that a value is within the range.
+	 * 
+	 * @param value the value to test
+	 * @return {@code true} if the value is ≥ range minimum and ≤ range maximum.
+	 */
 	public boolean inRange(int value) {
 		return (value >= first) && (value <= last);
 	}
 
+	/**
+	 * Checks that a value is within the range. Throws an Exception if the value is ≥ range 
+	 * minimum and ≤ range maximum.
+	 * 
+	 * @param value the value to test
+	 */
 	public void check(int value) {
 		if (!inRange(value))
 			throw new OmhtkException(value + " is not in integer range " + first + ".." + last);
 	}
 
+	/**
+	 * Creates an instance of {@code IntegerRange} from a String.
+	 * @param str the string to read
+	 * @return the new instance
+	 */
 	public static IntegerRange valueOf(String str) {
 		return new IntegerRange(str);
 	}
@@ -117,28 +152,54 @@ public class IntegerRange {
 		return String.valueOf(i);
 	}
 
+	@Override
 	public String toString() {
 		return integerString(first) + ".." + integerString(last);
 	}
 
+	/**
+	 * Reset the range lower end.
+	 * 
+	 * @param first the new lower end.
+	 * @return this instance for agile programming
+	 */
 	public IntegerRange setFirst(int first) {
 		this.first = first;
 		return this;
 	}
 
+	/**
+	 * The range lower end.
+	 * @return
+	 */
 	public int getFirst() {
 		return first;
 	}
 
+	/**
+	 * Reset the range upper end.
+	 * 
+	 * @param last the new upper end.
+	 * @return this instance for agile programming
+	 */
 	public IntegerRange setLast(int last) {
 		this.last = last;
 		return this;
 	}
 
+	/**
+	 * The range upper end.
+	 * @return
+	 */
 	public int getLast() {
 		return last;
 	}
 	
+	/**
+	 * Checks if a range is contained in this one.
+	 * @param r the IntegerRange to test
+	 * @return {@code true} if {@code r} is fully contained in this instance range.
+	 */
 	public boolean contains (IntegerRange r) {
 		return (r.getFirst()>=first && r.getLast()<=last);
 	}

@@ -30,6 +30,8 @@
 package au.edu.anu.rscs.aot.util;
 
 /**
+ * Static method to handle exceptions. Useful when you want to redirect Exception error messages
+ * to your own output.
  * 
  * @author Shayne Flint - before 27/2/2012
  *
@@ -37,6 +39,13 @@ package au.edu.anu.rscs.aot.util;
 // NOT TESTED
 public class ExceptionString {
 
+	/**
+	 * Get an Exception stack trace into a String (instead of sending it to the console as in
+	 * {@link java.lang.Exception#printStackTrace() Exception.printStackTrace()}).
+	 * 
+	 * @param e the exception to gobble
+	 * @return the stack trace of the exception
+	 */
 	public static String exceptionString(Exception e) {
 		String result = e.toString();
 		for (StackTraceElement ste : e.getStackTrace()) {

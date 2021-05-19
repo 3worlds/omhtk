@@ -171,14 +171,14 @@ class UidTest {
 	}
 
 	/**
-	 * Test method for {@link au.edu.anu.rscs.aot.util.Uid#toLongString()}.
+	 * Test method for {@link au.edu.anu.rscs.aot.util.Uid#toDetailedString()}.
 	 */
 	@Test
 	void testToLongString() {
-		show("testToLongString",uid1.toLongString());
-		show("testToLongString",uid2.toLongString());
-		assertEquals(uid1.toLongString(),"MAC Address: 06:87:f6:b2:d8:8a, Time: 2015/06/04 00:54:04.858, Count: 0");
-		assertEquals(uid2.toLongString(),"MAC Address: 00:00:00:00:00:00, Time: 1970/01/01 00:00:00.000, Count: 0");
+		show("testToLongString",uid1.toDetailedString());
+		show("testToLongString",uid2.toDetailedString());
+		assertEquals(uid1.toDetailedString(),"MAC Address: 06:87:f6:b2:d8:8a, Time: 2015/06/04 00:54:04.858, Count: 0");
+		assertEquals(uid2.toDetailedString(),"MAC Address: 00:00:00:00:00:00, Time: 1970/01/01 00:00:00.000, Count: 0");
 	}
 
 	/**

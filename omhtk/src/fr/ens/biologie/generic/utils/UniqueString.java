@@ -32,13 +32,23 @@ package fr.ens.biologie.generic.utils;
 import java.util.Set;
 
 /**
- * A Scope for unique Ids
+ * A factory for unique Strings. 
  * 
  * @author Ian Davies - 28 jan. 2019
  *
  */
 public class UniqueString {
 
+	/**
+	 * Create a String unique within a set of existing Strings (= scope). The first argument
+	 * is a String the user wants to be unique within the scope. The second argument is the scope.
+	 * If the String is already present in the scope, this method returns the String suffixed
+	 * with increasing numbers.
+	 * 
+	 * @param proposedString the String one wants to be unique
+	 * @param set the scope, i.e. the set of already existing Strings
+	 * @return either proposedString, or proposedString suffixed by an increasing number
+	 */
 	public static String makeString(String proposedString, Set<String> set) {
 		if (!set.contains(proposedString))
 			return proposedString;

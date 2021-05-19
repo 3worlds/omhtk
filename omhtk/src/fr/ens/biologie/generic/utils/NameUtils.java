@@ -1,7 +1,7 @@
 package fr.ens.biologie.generic.utils;
 
 /**
- * Utility methods to make java-compatible names from strings
+ * Utility methods to make java-compatible names from Strings.
  * 
  * @author Jacques Gignoux - 15/2/2012
  *
@@ -11,7 +11,7 @@ package fr.ens.biologie.generic.utils;
 public class NameUtils {
     
     /**
-     * returns a String with uppercase words from a string with separators
+     * Return a String with uppercase words from a String with separators.
      * @param s
      * @return
      */
@@ -29,7 +29,7 @@ public class NameUtils {
     }
 
     /**
-     * returns a string with an initial uppercase
+     * Return a String with an initial uppercase.
      * @param s
      * @return
      */
@@ -43,7 +43,7 @@ public class NameUtils {
     }
 
     /**
-     * returns a string where separators are replaced by underscores
+     * Return a String where separators are replaced by underscores
      * @param s
      * @return
      */
@@ -62,8 +62,8 @@ public class NameUtils {
     }
     
     /**
-     * makes a valid java variable name from a string by stripping off all non
-     * valid characters
+     * Makes a valid java variable name from a string by replacing all non
+     * valid characters with "X".
      * @param s
      * @return
      */

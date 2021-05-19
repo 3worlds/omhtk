@@ -30,13 +30,21 @@
 package au.edu.anu.rscs.aot.util;
 
 /**
- * Static methods to format number ranges as Strings.
+ * Static methods to format number ranges as Strings. "Infinite" numbers are replaced by a String, 
+ * e.g. "MinInteger", "MaxDouble", etc...
  * 
  * @author Shayne Flint - 4/4/2012
  *
  */
 public class NumberRange {
 
+	/**
+	 * Return a range of integers, e.g. 1..57.
+	 * 
+	 * @param min the lower end of the range
+	 * @param max the upper end of the range
+	 * @return a formatted String
+	 */
 	public static String range(int min, int max) {
 		String result = "";
 		if (min == Integer.MIN_VALUE)
@@ -51,7 +59,13 @@ public class NumberRange {
 		return result;
 	}
 
-
+	/**
+	 * Return a range of longs, e.g. 153711321244687..5768914546187981434687
+	 * 
+	 * @param min the lower end of the range
+	 * @param max the upper end of the range
+	 * @return a formatted String
+	 */
 	public static String range(long min, long max) {
 		String result = "";
 		if (min == Long.MIN_VALUE)
@@ -66,6 +80,13 @@ public class NumberRange {
 		return result;
 	}
 
+	/**
+	 * Return a range of floats, e.g. 1.0..57.87
+	 * 
+	 * @param min the lower end of the range
+	 * @param max the upper end of the range
+	 * @return a formatted String
+	 */
 	public static String range(float min, float max) {
 		String result = "";
 		if (min == Float.MIN_VALUE)
@@ -80,6 +101,13 @@ public class NumberRange {
 		return result;
 	}
 
+	/**
+	 * Return a range of doubles, e.g. 1.15..57.00
+	 * 
+	 * @param min the lower end of the range
+	 * @param max the upper end of the range
+	 * @return a formatted String
+	 */
 	public static String range(double min, double max) {
 		String result = "";
 		if (min == Double.MIN_VALUE)

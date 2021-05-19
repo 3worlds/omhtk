@@ -56,6 +56,11 @@ import au.edu.anu.rscs.aot.OmhtkException;
 public class FileUtilities {
 
 	/* deletes all files and directories include the root. */
+	/**
+	 * Delete all files and directories including the root directory.
+	 * @param dir the root of the directory tree to delete
+	 * @throws IOException
+	 */
 	public static void deleteFileTree(File dir) throws IOException {
 		Path root = dir.toPath();
 		Files.walk(root).sorted(Comparator.reverseOrder()).map(Path::toFile).forEach(File::delete);
@@ -63,7 +68,15 @@ public class FileUtilities {
 //			throw new OmhtkException("Failed to delete directory tree: [" + root + "]");
 	}
 
-	/* https://dzone.com/articles/comparing-files-in-java */
+	/**
+	 * Test if two streams are identical. Efficient and wuick, based on this 
+	 * <a href="https://dzone.com/articles/comparing-files-in-java">post</a>.
+	 * 
+	 * @param fis1
+	 * @param fis2
+	 * @return
+	 * @throws IOException
+	 */
 	public static boolean identicalStreams(BufferedInputStream fis1, BufferedInputStream fis2) throws IOException {
 		int b1 = 0, b2 = 0;
 		while (b1 != -1 && b2 != -1) {
@@ -78,6 +91,11 @@ public class FileUtilities {
 			return true;
 	}
 
+	/**
+	 * Copy a file to a target destination, erasing the target file it it exists.
+	 * @param src the source file
+	 * @param dst the target destination file
+	 */
 	public static void copyFileReplace(File src, File dst) {
 		try {
 			if (!dst.getParentFile().exists())
@@ -89,7 +107,7 @@ public class FileUtilities {
 	}
 
 	/**
-	 * Constructs a OS-independent path from its arguments. Has no effect on the file system, i.e. this
+	 * Construct a OS-independent path from its arguments. Has no effect on the file system, i.e. this
 	 * is just String manipulation. Ignores empty and {@code null} Strings in its arguments.
 	 * 
 	 * @param pathElement a list of path elements (i.e. OS-compatible names)
@@ -107,10 +125,22 @@ public class FileUtilities {
 		return result;
 	}
 
+	/**
+	 * Construct a OS-independent path from its arguments. Has no effect on the file system, i.e. this
+	 * is just String manipulation. Ignores empty and {@code null} Strings in its arguments.
+	 * 
+	 * @param pathElements a list of path elements (i.e. OS-compatible names)
+	 * @return the {@link java.io.File File} handle to the path
+	 */
 	public static File makeFile(String... pathElements) {
 		return new File(makePath(pathElements));
 	}
 
+	/**
+	 * Print a (text) file to the console.
+	 * 
+	 * @param file the file to print
+	 */
 	public static void catFile(File file) {
 		try {
 			BufferedReader in = new BufferedReader(new FileReader(file));
@@ -124,6 +154,11 @@ public class FileUtilities {
 		}
 	}
 
+	/**
+	 * Print a (text) file reader to the console.
+	 * 
+	 * @param reader the file {@link java.io.Reader Reader}
+	 */
 	public static void catReader(Reader reader) { // was AotReader
 		try {
 			BufferedReader in = new BufferedReader(reader);
@@ -137,6 +172,11 @@ public class FileUtilities {
 		}
 	}
 
+	/**
+	 * Create a path in the file system from its arguments.
+	 * 
+	 * @param pathElements a list of path elements (i.e. OS-compatible names)
+	 */
 	public static void createPath(String... pathElements) {
 		String path = makePath(pathElements);
 		if (path.length() > 0) {
@@ -147,6 +187,12 @@ public class FileUtilities {
 		}
 	}
 
+	/**
+	 * Create a file and write it to the file system.
+	 * 
+	 * @param file the file to create
+	 * @param lines the lines to write to the file.
+	 */
 	public static void createFile(File file, Object... lines) {
 		try {
 			String dir = file.getParent();
@@ -156,10 +202,17 @@ public class FileUtilities {
 				out.println(line);
 			out.close();
 		} catch (Exception e) {
-			throw new OmhtkException("FileUtils.makeFile(): " + file, e);
+			throw new OmhtkException("FileUtils.createFile(): " + file, e);
 		}
 	}
 
+	/**
+	 * Read a text file from the file system.
+	 * 
+	 * @param file the file to read
+	 * @return the content of the file as an array of Strings
+	 * @throws IOException
+	 */
 	public static String[] readFile(File file) throws IOException {
 		List<String> lines = Files.readAllLines(Paths.get(file.getAbsolutePath()), Charset.defaultCharset());
 		String[] result = lines.toArray(new String[lines.size()]);

@@ -21,8 +21,8 @@ import fr.ens.biologie.generic.utils.Logging;
 
 /**
  * Utilities to handle java specific files, e.g. jar files.
- * @author Shayne Flint - long ago 
- * 		refactored Jacques Gignoux - 12 août 2019
+ * @author Shayne Flint - 2012 <br/>
+ * 		refactored by Jacques Gignoux - 12 août 2019
  *
  */
 // Tested ok with version 0.1.9, except getting classes from jars.
@@ -47,10 +47,26 @@ public class JavaUtils {
 	// Based on http://forum.java.sun.com/thread.jspa?threadID=341935&tstart=30
 	//
 
+	/**
+	 * Get all classes contained in a package. Handles local classes, files, and jar entries transparently.
+	 * Implementation from a java.sun.com forum, now lost since oracle overtook sun.
+	 * 
+	 * @param packageName the package to search (dot-delimited hierarchical String)
+	 * @return a list of {@link java.lang.Class Class} objects.
+	 */
 	public static DynamicList<Class<?>> getClassesInPackage(String packageName) {
 		return getClassesInPackage(packageName, false);
 	}
 
+	/**
+	 * Get all classes contained in a package and all its sub-packages. Handles 
+	 * local classes, files, and jar entries transparently.
+	 * Implementation from a java.sun.com forum,
+	 * now lost since oracle overtook sun.
+	 * 
+	 * @param packageName the package to search (dot-delimited hierarchical String)
+	 * @return a list of {@link java.lang.Class Class} objects.
+	 */
 	public static DynamicList<Class<?>> getClassesInPackageTree(String packageName) {
 		return getClassesInPackage(packageName, true);
 	}
@@ -86,7 +102,6 @@ public class JavaUtils {
 				}
 	        }
 		} catch (Exception e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		return classList;
@@ -154,14 +169,23 @@ public class JavaUtils {
 		}
 	}
 
-	// get  list of all classes on the class path
-	//
+	/**
+	 * get  list of all classes on the class path. 
+	 * doesnt work because some classes dont load simply. forget this. Bad idea.
+	 * @return
+	 */
+	@Deprecated
 	public static List<Class<?>> getClassList() {
 		return getClassList(getClassNameList());
 	}
 
-	// doesnt work because some classes dont load simply.
-	// forget this. Bad idea.
+	/**
+	 * doesnt work because some classes dont load simply. forget this. Bad idea.
+	 * 
+	 * @param classNameList
+	 * @return
+	 */
+	@Deprecated
 	public static List<Class<?>> getClassList(List<String> classNameList) {
 		List<Class<?>> result = new LinkedList<Class<?>>();
 		for (String className : classNameList)
@@ -178,7 +202,7 @@ public class JavaUtils {
 	/**
 	 * Returns all the classes found on the class path. 
 	 * Use with caution, returns a huge mess.
-	 * @return
+	 * @return a list of class names
 	 */
 	public static List<String> getClassNameList() {
 		List<String> result = new LinkedList<String>();
@@ -195,6 +219,7 @@ public class JavaUtils {
 		return result;
 	}
 
+	// helper for getClassNameList()
 	private static List<String> getClasses(File root, File file) {
 		List<String> result = new LinkedList<String>();
 		if (file.isDirectory()) {
@@ -234,6 +259,12 @@ public class JavaUtils {
 		return name.replace(File.separator,  ".");
 	}
 
+	/**
+	 * Get the file matching a class. Uses the application {@link java.lang.ClassLoader ClassLoader}
+	 * to get the information.
+	 * @param theClass the class to look for
+	 * @return the file handle to the argument {@code .class} file
+	 */
 	public static File fileForClass(Class<?> theClass) {
 //		String resourceName = theClass.getName().replaceAll("\\.", "/") + ".class";
 		//		System.out.println(resourceName);
@@ -241,13 +272,22 @@ public class JavaUtils {
 		//		System.out.println(theClass);
 		return new File(theURL.getPath());
 	}
-
+	
+	/**
+	 * Get the file matching a class name. Uses the application {@link java.lang.ClassLoader ClassLoader}
+	 * to get the information.
+	 * @param className the class name to look for
+	 * @return the file handle to the argument {@code .class} file
+	 */
 	public static File fileForClass(String className) {
 		URL theURL = Resources.getURL(className.replaceAll("\\.", Jars.separator) + ".class");
 		return new File(theURL.getPath());
 	}
 
-
+	/**
+	 * Pauses the current thread for a given amount of time.
+	 * @param ms time in milliseconds
+	 */
 	public static void sleep(long ms) {
 		try {
 			TimeUnit.MILLISECONDS.sleep(ms);

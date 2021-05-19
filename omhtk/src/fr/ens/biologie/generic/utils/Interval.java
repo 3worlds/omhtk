@@ -3,7 +3,11 @@ package fr.ens.biologie.generic.utils;
 import au.edu.anu.rscs.aot.OmhtkException;
 
 /**
- * A (simple) class for mathematical intervals.
+ * A (simple) class for mathematical intervals. Handles closed, open, half-open and half-closed
+ * intervals; and infinite values.
+ * <p>Immutable. Comes with method to compare interval, check overlap, etc.</p>
+ * <p>The constructor for this class is private. To get an instance, use the static methods
+ * provided here.</p>
  * 
  * @author Jacques Gignoux - 12 juin 2019
  *
@@ -26,67 +30,89 @@ public class Interval {
 		this.openSup = openSup;
 	}
 	
-	/** by default, intervals are closed. Returns the closed interval [inf,sup]  */
+	/** Instantiate a new closed interval [inf,sup]  */
 	public static Interval newInstance(double inf, double sup) {
 		return new Interval(inf,sup,false,false);
 	}
 	
-	/** returns the closed interval [inf,sup] */
+	/** Instantiate a new closed interval [inf,sup] */
 	public static Interval closed(double inf, double sup) {
 		return new Interval(inf,sup,false,false);
 	}
 
-	/** returns the open interval ]inf,sup[ */
+	/** Instantiate a new open interval ]inf,sup[ */
 	public static Interval open(double inf, double sup) {
 		return new Interval(inf,sup,true,true);
 	}
 
-	/** returns the half open interval ]inf,sup] */
+	/** Instantiate a new half open interval ]inf,sup] */
 	public static Interval halfOpenInf(double inf, double sup) {
 		return new Interval(inf,sup,true,false);
 	}
 
-	/** returns the half open interval [inf,sup[ */
+	/** Instantiate a new half open interval [inf,sup[ */
 	public static Interval halfOpenSup(double inf, double sup) {
 		return new Interval(inf,sup,false,true);
 	}
 	
-	/** returns the half closed interval ]-∞,sup] */
+	/** Instantiate a new half closed interval ]-∞,sup] */
 	public static Interval toNegInf(double sup) {
 		return new Interval(Double.NEGATIVE_INFINITY,sup,true,false);
 	}
 
-	/** returns the half closed interval [inf,+∞[ */
+	/** Instantiate a new half closed interval [inf,+∞[ */
 	public static Interval toPosInf(double inf) {
 		return new Interval(inf,Double.POSITIVE_INFINITY,false,true);
 	}
 
-	/** returns the open interval ]-∞,sup[ */
+	/** Instantiate a new open interval ]-∞,sup[ */
 	public static Interval openToNegInf(double sup) {
 		return new Interval(Double.NEGATIVE_INFINITY,sup,true,true);
 	}
 
-	/** returns the open interval ]inf,+∞[ */
+	/** Instantiate a new open interval ]inf,+∞[ */
 	public static Interval openToPosInf(double inf) {
 		return new Interval(inf,Double.POSITIVE_INFINITY,true,true);
 	}
 
+	/**
+	 * The interval upper end.
+	 * @return
+	 */
 	public double sup() {
 		return sup;
 	}
 
+	/**
+	 * The interval lower end.
+	 * @return
+	 */
 	public double inf() {
 		return inf;
 	}
 
+	/**
+	 * Whether the interval is open at its lower end (]x,y] or ]x,y[).
+	 * @return
+	 */
 	public boolean halfOpenInf() {
 		return openInf;
 	}
 	
+	/**
+	 * Whether the interval is open at its upper end ([x,y[ or ]x,y[).
+	 * @return
+	 */
 	public boolean halfOpenSup() {
 		return openSup;
 	}
 	
+	/**
+	 * Test if the interval contains a value. Does not use double equality in order to give a
+	 * reliable result.
+	 * @param x the number to check
+	 * @return {@code true} if x is contained in this interval
+	 */
 	public boolean contains(double x) {
 		boolean cdsup = x<sup;
 		boolean cdinf = x>inf;
@@ -120,6 +146,21 @@ public class Interval {
 		return sb.toString();
 	}
 	
+	/**
+	 * Construct an interval from a String representation produced with {@code toString()}.
+	 * <p>Valid Strings for input are:</p>
+	 * <ul>
+	 * <li>[x,y], [x,y[, ]x,y] or ]x,y[, where x and y are {@code double} numbers</li>
+	 * <li>]-Inf,y], ]-Inf,y[, ]-∞,y] or ]-∞,y] where y is a {@code double} number</li>
+	 * <li>[x,+Inf[, ]x,+Inf[, [x,+∞[ or ]x,+∞[ where x is a {@code double} number</li>
+	 * <li>]-Inf,+Inf[, ]-Inf,+∞[, ]-∞,+Inf[ or ]-∞,+∞[</li>
+	 * </ul>
+	 * <p>Any other String will raise an Exception. Do not forget to trim blank space before calling
+	 * this method.</p>
+	 * 
+	 * @param interval a String representing an interval
+	 * @return an interval instance
+	 */
 	public static Interval valueOf(String interval) {
 		boolean openInf = false;
 		boolean openSup = false;
@@ -182,8 +223,13 @@ public class Interval {
 			return contains(i.inf) || contains(i.sup);
 	}
 	
-	/** returns true if two intervals are exactly contiguous to each other, eg [0,2[ and [2,3],
-	 *  [0,2] and ]2,3] will return true, but [0,2[ and ]2,3], [0,2] and [2,3], will return false */
+	/**
+	 * Test if two intervals are exactly contiguous to each other, eg [0,2[ and [2,3],
+	 *  [0,2] and ]2,3] will return true, but [0,2[ and ]2,3], [0,2] and [2,3], will return false.
+	 *  
+	 * @param i the interval to compare with this instance
+	 * @return {@code true} if both intervals are contiguous 
+	 */
 	public boolean contiguousTo(Interval i) {
 		if (inf==i.sup) 
 			return openInf ^ i.openSup;
@@ -192,7 +238,7 @@ public class Interval {
 		return false;
 	}
 	
-	/** returns the union of two overlapping intervals (null if non overlapping) */
+	/** Compute the union of two overlapping intervals (null if non overlapping). */
 	public Interval union(Interval i) {
 		if (overlaps(i)||contiguousTo(i)) {
 			double min = Math.min(inf,i.inf);
@@ -216,6 +262,11 @@ public class Interval {
 		return null;
 	}
 	
+	/**
+	 * Compute the intersection of two intervals (null if non overlapping).
+	 * @param i
+	 * @return
+	 */
 	public Interval intersection(Interval i) {
 		if (overlaps(i)) {
 			double min = Math.max(inf,i.inf);

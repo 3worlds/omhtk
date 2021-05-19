@@ -3,7 +3,6 @@ package au.edu.anu.rscs.aot.util;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -61,16 +60,16 @@ class JavaUtilsTest {
 //		assertTrue(l.size()>0);
 	}
 
-	@Test
-	final void testGetClassListListOfString() {
-		List<String> list = new ArrayList<>();
-		list.add("au.edu.anu.rscs.aot.util.JavaUtils");
-		list.add("java.lang.Object");
-		List<Class<?>> result = JavaUtils.getClassList(list);
-		assertNotNull(result);
-		for (Class<?> c:result)
-			show("testGetClassListListOfString",c.getName());
-	}
+//	@Test
+//	final void testGetClassListListOfString() {
+//		List<String> list = new ArrayList<>();
+//		list.add("au.edu.anu.rscs.aot.util.JavaUtils");
+//		list.add("java.lang.Object");
+//		List<Class<?>> result = JavaUtils.getClassList(list);
+//		assertNotNull(result);
+//		for (Class<?> c:result)
+//			show("testGetClassListListOfString",c.getName());
+//	}
 
 	@Test
 	final void testGetClassNameList() {

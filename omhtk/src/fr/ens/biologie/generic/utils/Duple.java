@@ -31,29 +31,44 @@
 package fr.ens.biologie.generic.utils;
 
 /**
- * A kind of clone of javafx.util.Pair which is not available in OpenJDK but in Oracle JDK only.
- * cf bug #11 for details on why I implemented this class
+ * A class holding a pair (in the mathematical sense, ie ordered) of objects of possibly different classes. 
+ * It's a kind of clone of javafx.util.Pair which is not available in OpenJDK but in Oracle JDK only.
+ * Immutable.
  * 
  * @author Jacques Gignoux - 18 avr. 2019
  *
- * @param <F>
- * @param <S>
+ * @param <F> The class of the first pair member
+ * @param <S> The class of the second pair member
+ * @see Tuple
  */
 public class Duple<F,S> {
 	
 	private F first;
 	private S second;
 	
+	/**
+	 * 
+	 * @param f the first member 
+	 * @param s the second member
+	 */
 	public Duple(F f, S s) {
 		super();
 		first = f;
 		second = s;
 	}
 	
+	/**
+	 * The first member.
+	 * @return
+	 */
 	public F getFirst() {
 		return first;
 	}
 	
+	/**
+	 * The second member.
+	 * @return
+	 */
 	public S getSecond() {
 		return second;
 	}
