@@ -299,7 +299,7 @@ public class MethodGenerator implements JavaCode {
 			else 
 				result += indent+indent+returnStatement+";\n";
 			if (insertCodeInsertionComment)
-				result += indent+singleLineComment(endCodeInsertion);
+				result += indent+singleLineComment(finishCodeInsertion);
 			result += indent+"}\n\n";
 		}
 		return result;

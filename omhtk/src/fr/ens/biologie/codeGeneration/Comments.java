@@ -47,15 +47,25 @@ public class Comments {
 	public static String[] editableCode = 
 		{"CAUTION: Edit this template but do not change class declaration."};
 
-	/** A code insertion comment - sart of insertion zone */
-	public static final String beginCodeInsert = "Code insert Begin";
-	/** A code insertion comment - sart of insertion zone */
-	public static String[] startCodeInsertion = {"---- "+beginCodeInsert+ "-->"};
+	/** A code insertion comment - start of insertion zone */
+	public static final String codeInsertBegin = "Code insert Begin";
+	public static final String[] startCodeInsertion = {"---- "+codeInsertBegin+ "-->"};
 
 	/** A code insertion comment - end of insertion zone */
-	public static final String endCodeInsert = "Code insert End";
-	/** A code insertion comment - end of insertion zone */
-	public static String[] endCodeInsertion = {"---- "+endCodeInsert+ "----<"};
+	public static final String codeInsertEnd = "Code insert End";
+	public static final String[] finishCodeInsertion = {"---- "+codeInsertEnd+ "----<"};
+	
+	/** The import insertion comment - start of insertion zone */
+	public static final String importInsertBegin = "Import insert Begin";
+	public static final String[] startImportInsertion= {"---- "+importInsertBegin+ "-->"};
+	
+	/** The import insertion comment - finish of insertion zone */
+	public static final String importInsertEnd = "Import insert End";
+	public static final String[] finishImportInsertion= {"---- "+importInsertEnd+ "----<"};
+	
+	
+	
+	
 
 	/** A comment separating line */
 	public static String[] separatingLine = {// 80 chars
