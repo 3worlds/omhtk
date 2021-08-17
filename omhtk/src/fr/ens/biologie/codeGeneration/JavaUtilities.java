@@ -38,7 +38,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import au.edu.anu.rscs.aot.OmhtkException;
-import au.edu.anu.rscs.aot.util.FileUtilities;
 
 /**
  * @author Ian Davies
