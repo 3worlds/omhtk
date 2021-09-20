@@ -61,7 +61,7 @@ class InitialiserTest {
 			Initialisable i = (Initialisable) msg.getTarget();
 			assertTrue(i.initRank()>=lastRank);
 			lastRank = i.initRank();
-			System.out.println(i.initRank());
+			//System.out.println(i.initRank());
 		}
 		
 	}
