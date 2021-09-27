@@ -2,10 +2,6 @@
 
 'One More Handy ToolKit'
 
-see the javadoc https://www.eclipse.org/downloads/[here]
+see the link:./omhtk/javadoc/index.html[javadoc]
 
-//<<configuration-ecosystem-structure.adoc#truesetting-decriptor-values,`initFunction`>>
-
-link:./omhtk/javadoc/index.html[here]
-
-https://gitlab.iscpif.fr/threeworlds/omhtk/bidon.html[there]
+TODO: find a way to display the above as formatted html and not a raw file
