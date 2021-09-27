@@ -1,4 +1,5 @@
-The OMHTK library
+= The OMHTK library
+
 'One More Handy ToolKit'
 
-see the javadoc here
+see the javadoc https://www.eclipse.org/downloads/[here]
