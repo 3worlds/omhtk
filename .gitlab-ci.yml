@@ -1,18 +1,10 @@
-# This file is a template, and might need editing before it works on your project.
-# Full project: https://gitlab.com/pages/hugo
-image: dettmering/hugo-build
-
 pages:
   script:
-  - hugo
+  - mkdir .public
+  - cp -r * .public
+  - mv .public public
   artifacts:
     paths:
     - public
   only:
-  - master
-
-test:
-  script:
-  - hugo
-  except:
   - master
