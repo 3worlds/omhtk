@@ -8,4 +8,4 @@ see the javadoc https://www.eclipse.org/downloads/[here]
 
 link:./omhtk/javadoc/index.html[here]
 
-https://gitlab.iscpif.fr/threeworlds/omhtk/index.html[there]
+https://gitlab.iscpif.fr/threeworlds/omhtk/allpackages-index.html[there]
