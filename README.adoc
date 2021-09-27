@@ -6,4 +6,4 @@ see the javadoc https://www.eclipse.org/downloads/[here]
 
 //<<configuration-ecosystem-structure.adoc#truesetting-decriptor-values,`initFunction`>>
 
-link:./javadoc/index.html[here]
+link:./omhtk/javadoc/index.html[here]
