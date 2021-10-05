@@ -30,6 +30,12 @@
  **************************************************************************/
 package au.edu.anu.omhtk;
 
+/**
+ * A list of supported languages.
+ * 
+ * @author Ian Davies - 5 April 2021
+ *
+ */
 public class Language {
 	private Language() {
 	};
