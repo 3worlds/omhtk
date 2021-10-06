@@ -1,14 +1,15 @@
 /**************************************************************************
  *  OMHTK - One More Handy Tool Kit                                       *
  *                                                                        *
- *  Copyright 2018: Shayne FLint, Jacques Gignoux & Ian D. Davies         *
+ *  Copyright 2021: Shayne R. Flint, Jacques Gignoux & Ian D. Davies      *
  *       shayne.flint@anu.edu.au                                          *
  *       jacques.gignoux@upmc.fr                                          *
  *       ian.davies@anu.edu.au                                            * 
  *                                                                        *
  *  OMHTK is a bunch of useful, very generic interfaces for designing     *
- *  consistent, plus some other utilities. The kind of things you need    *
- *  in all software projects and keep rebuilding all the time.            *
+ *  consistent class hierarchies, plus some other utilities. The kind of  *
+ *  things you need in all software projects and keep rebuilding all the  * 
+ *  time.                                                                 *
  *                                                                        *
  **************************************************************************                                       
  *  This file is part of OMHTK (One More Handy Tool Kit).                 *
@@ -24,7 +25,8 @@
  *  GNU General Public License for more details.                          *                         
  *                                                                        *
  *  You should have received a copy of the GNU General Public License     *
- *  along with UIT.  If not, see <https://www.gnu.org/licenses/gpl.html>. *
+ *  along with OMHTK.
+ *  If not, see <https://www.gnu.org/licenses/gpl.html>.                  *
  *                                                                        *
  **************************************************************************/
 package au.edu.anu.rscs.aot;
