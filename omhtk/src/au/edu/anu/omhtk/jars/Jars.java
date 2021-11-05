@@ -31,6 +31,7 @@
  **************************************************************************/
 package au.edu.anu.omhtk.jars;
 
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -65,24 +66,29 @@ import au.edu.anu.rscs.aot.util.Resources;
 import fr.ens.biologie.generic.utils.Logging;
 
 /**
- * <p>A class to package items into a 
- * <a href ="https://docs.oracle.com/javase/tutorial/deployment/jar/index.html">jar</a> file
- * with a version number. Includes a  
- * <a href="https://docs.oracle.com/javase/8/docs/technotes/guides/jar/jar.html#JAR_Manifest">
- * manifest file</a>.</p>
- * <p>Usage:
+ * <p>
+ * A class to package items into a <a href
+ * ="https://docs.oracle.com/javase/tutorial/deployment/jar/index.html">jar</a>
+ * file with a version number. Includes a <a href=
+ * "https://docs.oracle.com/javase/8/docs/technotes/guides/jar/jar.html#JAR_Manifest">
+ * manifest file</a>.
+ * </p>
+ * <p>
+ * Usage:
  * <ol>
- * <li>Define a descendant class setting the proper fields needed by your specific jar packing task.</li>
+ * <li>Define a descendant class setting the proper fields needed by your
+ * specific jar packing task.</li>
  * <li>Create an instance of this class.</li>
- * <li>Populate the instance with request to add entries to the jar using all the add&lt;something&gt; methods.</li>
+ * <li>Populate the instance with request to add entries to the jar using all
+ * the add&lt;something&gt; methods.</li>
  * <li>Set the main class / application entry point, if any.</li>
  * <li>Call {@code saveJar(...)} from the instance to create the jar file.</li>
- * </ol>  
+ * </ol>
  * </p>
  * 
- * @author Shayne Flint <br/> 
- * 		refactored by Jacques Gignoux 2017 <br/> 
- * 		added merging of services from multiple jars by Ian Davies 2020.
+ * @author Shayne Flint <br/>
+ *         refactored by Jacques Gignoux 2017 <br/>
+ *         added merging of services from multiple jars by Ian Davies 2020.
  *
  */
 public abstract class Jars {
@@ -91,14 +97,14 @@ public abstract class Jars {
 	public static final char separatorChar = '/';
 	/** The separator String for path names */
 	public static final String separator = "" + separatorChar;
-	/** The lowest version number*/
+	/** The lowest version number */
 	protected String version = "0.0.0";
-	
+
 	private static Logger log = Logging.getLogger(Jars.class);
 	private Set<String> classNames = new HashSet<String>();
 	private Set<JarFileRecord> files = new HashSet<JarFileRecord>();
 	private Set<String> jars = new HashSet<String>();
-	
+
 	/** Information for the manifest - specification vendor */
 	protected String specVendor = null;
 	/** Information for the manifest - specification title */
@@ -108,8 +114,9 @@ public abstract class Jars {
 	private Set<String> dependsOnJars = new HashSet<String>();
 
 	/**
-	 * <p>A method to test if the code where the klass argument was found originates from a jar. 
-	 * [hack found <a
+	 * <p>
+	 * A method to test if the code where the klass argument was found originates
+	 * from a jar. [hack found <a
 	 * href=https://stackoverflow.com/questions/482560/can-you-tell-on-runtime-
 	 * if-youre-running-java-from-within-a-jar> there</a>. The test is based on the
 	 * existence of the manifest].
@@ -153,6 +160,7 @@ public abstract class Jars {
 
 	/**
 	 * Add all entries found in a jar to this jar.
+	 * 
 	 * @param jarName the jar to copy entries from
 	 */
 	public void addDependencyOnJar(String jarName) {
@@ -161,6 +169,7 @@ public abstract class Jars {
 
 	/**
 	 * Add a class to this jar.
+	 * 
 	 * @param className the class to add
 	 */
 	public void addClass(String className) {
@@ -169,6 +178,7 @@ public abstract class Jars {
 
 	/**
 	 * Add all entries found in a package to this jar.
+	 * 
 	 * @param packageName the package which classes are added to this jar
 	 */
 	public void addPackage(String packageName) {
@@ -178,6 +188,7 @@ public abstract class Jars {
 
 	/**
 	 * Add all entries found in a package to this jar.
+	 * 
 	 * @param packageName the package which classes are added to this jar.
 	 */
 	public void addPackageTree(String packageName) {
@@ -186,8 +197,12 @@ public abstract class Jars {
 	}
 
 	/**
-	 * Sets the <a href="https://docs.oracle.com/javase/tutorial/deployment/jar/appman.html">entry point</a> of this jar
-	 * @param className the class to use as an entry point - must have a {@code main(...)} method
+	 * Sets the <a href=
+	 * "https://docs.oracle.com/javase/tutorial/deployment/jar/appman.html">entry
+	 * point</a> of this jar
+	 * 
+	 * @param className the class to use as an entry point - must have a
+	 *                  {@code main(...)} method
 	 */
 	public void setMainClass(String className) {
 		this.mainClassName = className;
@@ -195,7 +210,8 @@ public abstract class Jars {
 
 	/**
 	 * Add any file (i.e. not only java classes) to this jar.
-	 * @param fileName the name of the file
+	 * 
+	 * @param fileName     the name of the file
 	 * @param jarDirectory the directory where the file is
 	 */
 	public void addFile(String fileName, String jarDirectory) {
@@ -204,16 +220,20 @@ public abstract class Jars {
 	}
 
 	/**
-	 * Recursive addition of (non-java) resources in jars (i.e. excluding .java and .class
-	 * files). Collects all non-java files from the package argument and adds them to this jar.<br/>
-	 * <Strong>CAUTION</strong>: directory names including dots are not supported (e.g. workflow.graffle).
+	 * Recursive addition of (non-java) resources in jars (i.e. excluding .java and
+	 * .class files). Collects all non-java files from the package argument and adds
+	 * them to this jar.<br/>
+	 * <Strong>CAUTION</strong>: directory names including dots are not supported
+	 * (e.g. workflow.graffle).
 	 * 
-	 * @param packageName the java package name to search for resources, i.e. with dots as separators
+	 * @param packageName the java package name to search for resources, i.e. with
+	 *                    dots as separators
 	 */
-	// CAUTION: 
+	// CAUTION:
 	// * packageName = java name of the package, i.e. with dots as separators
-	// * absolutePackageDirName = absolute packageDirName, i.e. with the root of the threeworlds 
-	// 		project hierarchy as a prefix
+	// * absolutePackageDirName = absolute packageDirName, i.e. with the root of the
+	// threeworlds
+	// project hierarchy as a prefix
 	public void addResources(String packageName) {
 		log.info("adding resources in jar from package " + packageName);
 		URL root = ClassLoader.getSystemResource("");
@@ -241,10 +261,13 @@ public abstract class Jars {
 	}
 
 	/**
-	 * Add a single (non-java) resource file to this jar. <br/> 
-	 * <Strong>CAUTION</strong>: directory names including dots are not supported (e.g. workflow.graffle).
+	 * Add a single (non-java) resource file to this jar. <br/>
+	 * <Strong>CAUTION</strong>: directory names including dots are not supported
+	 * (e.g. workflow.graffle).
+	 * 
 	 * @param resourceName the name of the resource
-	 * @param packageName the java package name to search for the resource, i.e. with dots as separators
+	 * @param packageName  the java package name to search for the resource, i.e.
+	 *                     with dots as separators
 	 */
 	public void addResourceFile(String resourceName, String packageName) {
 		File file = Resources.getFile(resourceName, packageName);
@@ -253,10 +276,14 @@ public abstract class Jars {
 	}
 
 	/**
-	 * Add an external <a href="https://ant.apache.org/ivy/">ivy</a> library to this jar.
-	 * @param org organisation responsible for the library maintenance - see ivy specification for explanation
-	 * @param name library name
-	 * @param version library version - see ivy specification for the version number interpretation
+	 * Add an external <a href="https://ant.apache.org/ivy/">ivy</a> library to this
+	 * jar.
+	 * 
+	 * @param org     organisation responsible for the library maintenance - see ivy
+	 *                specification for explanation
+	 * @param name    library name
+	 * @param version library version - see ivy specification for the version number
+	 *                interpretation
 	 */
 	public void addIvyLibrary(String org, String name, String version) {
 		Environment env = new LocalEnvironment("");
@@ -268,6 +295,7 @@ public abstract class Jars {
 
 	/**
 	 * Add the content of a jar file to this jar.
+	 * 
 	 * @param jarPath the path to the jar file which entries are to be copied
 	 */
 	public void addJar(String jarPath) {
@@ -276,8 +304,9 @@ public abstract class Jars {
 
 	/**
 	 * Add a resource file to this jar.
-	 * @param resourceName the name of the resource file to search  
-	 * @param packageName the package name containing the resource
+	 * 
+	 * @param resourceName the name of the resource file to search
+	 * @param packageName  the package name containing the resource
 	 */
 	// CAUTION: jars cannot be searched for file names - this must be wrong!
 	public void addResourceJar(String resourceName, String packageName) {
@@ -297,10 +326,12 @@ public abstract class Jars {
 	}
 
 	/**
-	 * Save this jar instance as a jar file. Uses all the information stored in this class instance
-	 * after calls to {@code add...(...)} methods and manifest settings to write the jar file. 
-	 * Also packs jar <a href="https://docs.oracle.com/javase/8/docs/technotes/guides/jar/jar.html#Service_Provider">services</a>
+	 * Save this jar instance as a jar file. Uses all the information stored in this
+	 * class instance after calls to {@code add...(...)} methods and manifest
+	 * settings to write the jar file. Also packs jar <a href=
+	 * "https://docs.oracle.com/javase/8/docs/technotes/guides/jar/jar.html#Service_Provider">services</a>
 	 * found in included jars.
+	 * 
 	 * @param jarFile the name of the jar file to create
 	 */
 	// NB refactored by JG to prevent duplicate jar entries.
@@ -334,7 +365,7 @@ public abstract class Jars {
 			// JarOutputStream out = new JarOutputStream(stream, manifest);
 			JarOutputStream jarOutStream = new JarOutputStream(new FileOutputStream(jarFile), manifest);
 			Set<String> jEntryList = new HashSet<>();
-
+	
 			for (String className : classNames) {
 				log.info("adding class " + className);
 				File classFile = JavaUtils.fileForClass(className);
@@ -344,15 +375,16 @@ public abstract class Jars {
 				jarEntry.setCompressedSize(-1);
 				jEntryList.add(jarEntry.getName());
 				jarOutStream.putNextEntry(jarEntry);
-				FileInputStream in = new FileInputStream(classFile);
+				BufferedInputStream bis = new BufferedInputStream(new FileInputStream(classFile));
 				while (true) {
-					int nRead = in.read(buffer, 0, buffer.length);
+					int nRead = bis.read(buffer, 0, buffer.length);
 					if (nRead <= 0)
 						break;
 					jarOutStream.write(buffer, 0, nRead);
 				}
+				bis.close();
 				jarOutStream.closeEntry();
-				in.close();
+
 			}
 
 			for (JarFileRecord jfr : files) {
@@ -474,6 +506,7 @@ public abstract class Jars {
 
 	/**
 	 * Utility to list the content of a jar file.
+	 * 
 	 * @param fileName the jar file to list.
 	 */
 	public void listJarContents(String fileName) {
