@@ -46,7 +46,7 @@ package fr.ens.biologie.generic;
 public interface DataContainer extends Cloneable {
 
 	/** creates a new instance of this container with the same content */
-//	public DataContainer clone();
+	public DataContainer clone();
 	
 	/** sets the content of this container to zero, whatever this means for the content type. */
 	public DataContainer clear();
