@@ -92,6 +92,7 @@ public class XSRandom extends Random{
 	public synchronized void setSeed(long seed) {
 		this.seed = seed;
 		super.setSeed(seed);
+		nextInt();
 	}
 
 	/**

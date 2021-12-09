@@ -122,6 +122,7 @@ public class Pcg32 extends Random {
 	 public synchronized void setSeed(long seed) {
 		this.state = seed;
 		this.inc = 1;
+		nextInt();
 	}
 
 	/**
