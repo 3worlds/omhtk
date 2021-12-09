@@ -12,18 +12,23 @@ class Pcg32Test {
 	void test() {
 		Random r = new Pcg32();
 		Long seed = 1234L;
+		int n = 1000;
+		double[] d1 = new double[n];
 		r.setSeed(seed);
-		double d1 = r.nextDouble();
-		double d2 = r.nextDouble();
-		double d3 = r.nextDouble();
+		for (int i = 0;i<n;i++)
+			d1[i] = r.nextDouble();
 		r.setSeed(seed);
-		double d4 = r.nextDouble();
-		double d5 = r.nextDouble();
-		double d6 = r.nextDouble();
-		assertTrue(d1==d4);
-		assertTrue(d2==d5);
-		assertTrue(d3==d6);
+		for (int i = 0;i<n;i++)
+			assertTrue(d1[i]== r.nextDouble());
 		
+		seed = 123456789L;	
+		r.setSeed(seed);
+		for (int i = 0;i<n;i++)
+			d1[i] = r.nextDouble();
+		r.setSeed(seed);
+		for (int i = 0;i<n;i++)
+			assertTrue(d1[i]== r.nextDouble());
+
 	}
 
 }
