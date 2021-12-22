@@ -76,6 +76,8 @@ public class CodeGenerationUtils {
 		else if (type.equals("Boolean")) return "boolean";
 		else if (type.equals("Long")) return "long";
 		else if (type.equals("Char")) return "char";
+		else if (type.equals("Short")) return "short";
+		else if (type.equals("Byte")) return "byte";
 		return type;
 	}
 
@@ -93,6 +95,8 @@ public class CodeGenerationUtils {
 		else if (type.equals("double")) return "0.0d";
 		else if (type.equals("boolean")) return "false";
 		else if (type.equals("char")) return "\'\\0\'";
+		else if (type.equals("short")) return "0";
+		else if (type.equals("byte")) return "0";
 		else if (type.equals("String")) return "\"\"";
 		else return "null";
 	}
