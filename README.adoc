@@ -19,5 +19,3 @@ Contains classes for:
 * integer range, number ranges, string manipulation (again!) file manipulation, date and time...
 
 see the link:https://3worlds.github.io/omhtk/omhtk/javadoc/index.html[javadoc]
-
-TODO: find a way to display the above as formatted html and not a raw file
