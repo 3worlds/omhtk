@@ -31,16 +31,13 @@
  **************************************************************************/
 package au.edu.anu.omhtk.preferences;
 
-/**
- * Java has a preferences API {@link java.util.prefs.Preferences} . Therefore, I
- * hope we no longer need the graph-dependent implementation for preference saving.
- * However, the Java system only deals with primitives and so this code is an
- * interface to a preference helper class for 3Worlds to implement array handling.
- * 
- * @author Ian Davies - Dec 11, 2018
- */
 // TODO: Ian, please refactor javadoc and comment every entry below.
 public interface Preferenceable {
+	/**
+	 * Set an int value for this unique key
+	 * @param key unique within the file.
+	 * @param value
+	 */
 	public void putInt(String key, int value);
 	public void putInts(String key, int... values);
 	public void putLong(String key, long value);

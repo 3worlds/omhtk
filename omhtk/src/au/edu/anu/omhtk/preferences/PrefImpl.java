@@ -72,7 +72,7 @@ public class PrefImpl implements Preferenceable {
 	 */
 	protected PrefImpl(File file) {
 		// file /a/b/c creates node children a -> b -> c
-		this.prefs = Preferences.userRoot().node(file.getAbsolutePath());
+		this.prefs = Preferences.userRoot().node("tmpBackingStore");
 		try {
 			// Ignore the backingstore: we want to see the file for checking and possible
 			// editing
