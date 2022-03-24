@@ -52,7 +52,7 @@ import java.util.zip.ZipInputStream;
     /**
      * Extracts a zip file specified by the inStream to a directory specified by
      * destDirectory (will be created if does not exists)
-     * @param instream
+     * @param inStream
      * @param destDirectory
      * @throws IOException
      */

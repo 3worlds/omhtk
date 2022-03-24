@@ -129,7 +129,7 @@ public class Pcg32 extends Random {
 	 * Returns the next pseudo-random, approximately uniformly distributed
 	 * {@code int} value from this random number generator's sequence. The general
 	 * contract of {@code nextInt} is that one {@code int} value is pseudo-randomly
-	 * generated and returned. All 2<font size="-1"><sup>32 </sup></font> possible
+	 * generated and returned. All 2<font-size="-1"><sup>32 </sup></font> possible
 	 * {@code int} values are produced with (approximately) equal probability.
 	 *
 	 * @see java.util.Random#nextInt()
@@ -168,7 +168,7 @@ public class Pcg32 extends Random {
 	 * Returns the next pseudo-random, approximately uniformly distributed
 	 * {@code long} value from this random number generator's sequence. The general
 	 * contract of {@code nextLong} is that one {@code long} value is pseudo-randomly
-	 * generated and returned. All 2<font size="-1"><sup>64 </sup></font> possible
+	 * generated and returned. All 2<font-size ="-1"><sup>64 </sup></font> possible
 	 * {@code long} values are produced with (approximately) equal probability.
 	 *
 	 */

@@ -74,7 +74,7 @@ public class StringUtils {
 	/**
 	 * Uncapitalise the first character of a String.
 	 * @param s the String
-	 * @returnthe String with lowercase initial
+	 * @return String with lowercase initial
 	 */
 	public static String uncap(String s) {
 		return Character.toLowerCase(s.charAt(0)) + s.substring(1);

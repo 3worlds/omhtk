@@ -75,7 +75,7 @@ public class XSRandom extends Random{
 	/**
 	 * Returns the current state of the seed, can be used to clone the object
 	 * 
-	 * @returns the current seed
+	 * @returns seed 
 	 */
 	public synchronized long getSeed() {
 		return seed;
