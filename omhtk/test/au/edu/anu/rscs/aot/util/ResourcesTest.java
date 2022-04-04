@@ -49,12 +49,13 @@ class ResourcesTest {
 	String nonExistantFile = "OtherTestFile.txt";
 	
 	private void show(String method,String text) {
-		System.out.println(method+": "+text);
+//		System.out.println(method+": "+text);
 	}
 	
 	@Test
 	final void testGetURLString() {
 		URL url = Resources.getURL(textFile,pkg);
+		assertTrue(new File(url.getFile()).exists());
 		show("testGetURLString",url.toString());
 	}
 

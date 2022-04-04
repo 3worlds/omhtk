@@ -30,6 +30,8 @@
  **************************************************************************/
 package fr.ens.biologie.generic.utils;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 //import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
@@ -50,26 +52,26 @@ class NameUtilsTest {
 	
 	@Test
 	final void testWordUpperCaseName() {
-		show("testWordUpperCaseName",NameUtils.wordUpperCaseName(s));
-		show("testWordUpperCaseName",NameUtils.wordUpperCaseName(s2));
+		assertEquals("1BlaBlaBlaZZ22",NameUtils.wordUpperCaseName(s));
+		assertEquals("thisIsAStupidString",NameUtils.wordUpperCaseName(s2));
 	}
 
 	@Test
 	final void testInitialUpperCase() {
-		show("testInitialUpperCase",NameUtils.initialUpperCase(s));
-		show("testInitialUpperCase",NameUtils.initialUpperCase(s2));
+		assertEquals("1	bla bla bla °à	+^ZZ 22",NameUtils.initialUpperCase(s));
+		assertEquals("This is a stupid String.",NameUtils.initialUpperCase(s2));
 	}
 
 	@Test
 	final void testWordUnderscoreName() {
-		show("testWordUnderscoreName",NameUtils.wordUnderscoreName(s));
-		show("testWordUnderscoreName",NameUtils.wordUnderscoreName(s2));
+		assertEquals("1_bla_bla_bla_ZZ_22",NameUtils.wordUnderscoreName(s));
+		assertEquals("this_is_a_stupid_String",NameUtils.wordUnderscoreName(s2));
 	}
 
 	@Test
 	final void testValidJavaName() {
-		show("testValidJavaName",NameUtils.validJavaName(s));
-		show("testValidJavaName",NameUtils.validJavaName(s2));
+		assertEquals("_1XblaXblaXblaXXXXXXZZX22",NameUtils.validJavaName(s));
+		assertEquals("thisXisXaXstupidXStringX",NameUtils.validJavaName(s2));
 	}
 
 }

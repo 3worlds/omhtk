@@ -36,7 +36,7 @@ import org.junit.jupiter.api.Test;
 
 import au.edu.anu.rscs.aot.OmhtkException;
 
-class StringUtilsTest {
+class StringUtilsAbbreviateTest {
 
 	@Test
 	void test() {
