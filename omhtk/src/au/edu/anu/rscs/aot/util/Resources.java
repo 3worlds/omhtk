@@ -37,6 +37,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -147,6 +148,8 @@ public class Resources {
 		String line = "";
 		try {
 			while ((line = reader.readLine()) != null) {
+				byte[] bytes = line.getBytes(StandardCharsets.UTF_8 );
+				line = new String(bytes,StandardCharsets.UTF_8);
 				text.add(line);
 			}
 		} catch (IOException e) {
