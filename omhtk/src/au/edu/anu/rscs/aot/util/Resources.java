@@ -148,8 +148,8 @@ public class Resources {
 		String line = "";
 		try {
 			while ((line = reader.readLine()) != null) {
-				byte[] bytes = line.getBytes(StandardCharsets.UTF_8 );
-				line = new String(bytes,StandardCharsets.UTF_8);
+//				byte[] bytes = line.getBytes(StandardCharsets.UTF_8 );
+//				line = new String(bytes,StandardCharsets.UTF_8);
 				text.add(line);
 			}
 		} catch (IOException e) {
@@ -168,7 +168,7 @@ public class Resources {
 		InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream(name);
 		if (in==null)
 			throw new OmhtkException("Resource '"+name+"' not found");
-		BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+		BufferedReader reader = new BufferedReader(new InputStreamReader(in,StandardCharsets.UTF_8));
 		return readText(reader,name);
 	}
 
@@ -183,7 +183,7 @@ public class Resources {
 		InputStream in = associatedWithClass.getResourceAsStream(name);
 		if (in==null)
 			throw new OmhtkException("Resource '"+name+"' not found");
-		BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+		BufferedReader reader = new BufferedReader(new InputStreamReader(in,StandardCharsets.UTF_8));
 		return readText(reader,name);
 	}
 	

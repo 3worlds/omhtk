@@ -36,6 +36,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.LinkedList;
 import java.util.Stack;
 import java.util.logging.Logger;
@@ -260,7 +261,7 @@ public class LocalEnvironment extends Environment {
 				proc = Runtime.getRuntime().exec(command, null,new File(workingDirectory));
 
 			BufferedReader stdInput = new BufferedReader(new InputStreamReader(
-				proc.getInputStream()));
+				proc.getInputStream(),StandardCharsets.UTF_8));
 			String line;
 			while ((line = stdInput.readLine()) != null) {
 				System.out.println(line);
@@ -269,7 +270,7 @@ public class LocalEnvironment extends Environment {
 			stdInput.close();
 
 			BufferedReader stdError = new BufferedReader(new InputStreamReader(
-				proc.getErrorStream()));
+				proc.getErrorStream(),StandardCharsets.UTF_8));
 			while ((line = stdError.readLine()) != null) {
 				results.add("[errorStream] " + line);
 			}
