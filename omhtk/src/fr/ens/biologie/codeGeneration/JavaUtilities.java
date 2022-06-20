@@ -33,6 +33,7 @@ package fr.ens.biologie.codeGeneration;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
@@ -53,7 +54,7 @@ public class JavaUtilities {
 	public static void updatePackgeEntry(File f, String oldElement, String newElement) throws IOException {
 		if (!f.getName().contains(".java"))
 			throw new OmhtkException("Cannot change package name in non-java files. [" + f.getAbsolutePath() + "]");
-		List<String> lines = Files.readAllLines(f.toPath());
+		List<String> lines = Files.readAllLines(f.toPath(),StandardCharsets.UTF_8);
 		List<String> newLines = new ArrayList<>();
 		for (String line : lines) {
 			if (line.contains("package") && line.contains(oldElement) && line.endsWith(";")) {

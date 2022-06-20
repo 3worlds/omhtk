@@ -46,9 +46,9 @@ class NameUtilsTest {
 	private String s = "1	bla bla bla °à\t+^ZZ 22";
 	private String s2 = "this is a stupid String.";
 	
-	private void show(String method,String text) {
-		System.out.println(method+": "+text);
-	}
+//	private void show(String method,String text) {
+//		System.out.println(method+": "+text);
+//	}
 	
 	@Test
 	final void testWordUpperCaseName() {
