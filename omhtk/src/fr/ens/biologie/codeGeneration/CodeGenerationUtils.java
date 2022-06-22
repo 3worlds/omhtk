@@ -32,8 +32,9 @@
 package fr.ens.biologie.codeGeneration;
 
 import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
 
 import fr.ens.biologie.generic.JavaCode;
 
@@ -54,10 +55,10 @@ public class CodeGenerationUtils {
 		file.getParentFile().mkdirs();
 		PrintStream classFile;
 		try {
-			classFile = new PrintStream(file);
+			classFile = new PrintStream(file,StandardCharsets.UTF_8);
 			classFile.println(jc.asText("\t"));
 			classFile.close();
-		} catch (FileNotFoundException e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
