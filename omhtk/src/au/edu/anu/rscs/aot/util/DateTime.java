@@ -62,15 +62,17 @@ public class DateTime {
 
 	/**
 	 * Constructor using the argument as a time.
-	 * @param time
+	 * 
+	 * @param time The time to clone.
 	 */
 	public DateTime(long time) {
 		this.date = new Date(time);
 	}
 
 	/**
-	 * Constructor using the argument as a time.
-	 * @param date
+	 * Constructor using the argument as a date.
+	 * 
+	 * @param date The date to clone.
 	 */
 	public DateTime(Date date) {
 		this.date = date;
@@ -78,13 +80,14 @@ public class DateTime {
 
 	/**
 	 * Constructor using the arguments to build a time. Self-explained arguments.
-	 * @param year
-	 * @param month
-	 * @param day
-	 * @param hour
-	 * @param minute
-	 * @param second
-	 * @param millis
+	 * 
+	 * @param year   The year
+	 * @param month  The month
+	 * @param day    The day
+	 * @param hour   The hour
+	 * @param minute The minute
+	 * @param second The second
+	 * @param millis The milliseconds
 	 */
 	public DateTime(int year, int month, int day, int hour, int minute, int second, int millis) {
 		Calendar cal = new GregorianCalendar(year, month, day, hour, minute, second);
@@ -94,25 +97,15 @@ public class DateTime {
 
 	/**
 	 * Constructor using a String argument.
-	 * @param dateStr
+	 * 
+	 * @param dateStr A date string arg that can be parsed by a java DateFormat.
 	 */
 	public DateTime(String dateStr) {
-		DateFormat[] formats = {
-				DateFormat.getDateInstance(),
-				DateFormat.getDateInstance(DateFormat.SHORT),
-				DateFormat.getDateInstance(DateFormat.MEDIUM),
-				DateFormat.getDateInstance(DateFormat.LONG),
-				DateFormat.getDateInstance(DateFormat.FULL),
-				format("yyyy/MM/dd HH:mm:ss"),
-				format("HH:mm:ss"),
-				format("HH:mm"),
-				format("HH"),
-				format("yyyy/MM/dd"),
-				format("dd/MM/yy"),
-				format("dd/MM/yyyy hh:mm:ss"),
-				format("dd/MM/yy hh:mm:ss"),
-				format("dd/MM/yyyy"),
-				format("dd/MM/yy")};
+		DateFormat[] formats = { DateFormat.getDateInstance(), DateFormat.getDateInstance(DateFormat.SHORT),
+				DateFormat.getDateInstance(DateFormat.MEDIUM), DateFormat.getDateInstance(DateFormat.LONG),
+				DateFormat.getDateInstance(DateFormat.FULL), format("yyyy/MM/dd HH:mm:ss"), format("HH:mm:ss"),
+				format("HH:mm"), format("HH"), format("yyyy/MM/dd"), format("dd/MM/yy"), format("dd/MM/yyyy hh:mm:ss"),
+				format("dd/MM/yy hh:mm:ss"), format("dd/MM/yyyy"), format("dd/MM/yy") };
 		for (DateFormat fmt : formats) {
 			try {
 				fmt.setLenient(false);
@@ -127,49 +120,42 @@ public class DateTime {
 	}
 
 	/**
-	 * The date.
-	 * @return
+	 * @return The date.
 	 */
 	public Date getDate() {
-		return date;	
+		return date;
 	}
 
 	/**
-	 * The time in milliseconds since 1st of January 1970, 00:00:00 GMT.
-	 * @return
+	 * @return The time in milliseconds since 1st of January 1970, 00:00:00 GMT.
 	 */
 	public long getTime() {
-		return date.getTime();	
+		return date.getTime();
 	}
 
-
 	/**
-	 * The date in "yyyy/MM/dd" format.
-	 * @return
+	 * @return The date in "yyyy/MM/dd" format.
 	 */
 	public String dateString() {
 		return format("yyyy/MM/dd").format(date);
 	}
 
 	/**
-	 * The date, with time in "HH:mm:ss.SSS" format.
-	 * @return
+	 * @return The date, with time in "HH:mm:ss.SSS" format.
 	 */
 	public String timeString() {
 		return format("HH:mm:ss.SSS").format(date);
 	}
 
 	/**
-	 * The date, with time in milliseconds.
-	 * @return
+	 * @return The date, with time in milliseconds.
 	 */
 	public String milliSecondsString() {
 		return format("S").format(date);
 	}
 
 	/**
-	 * The date as a "date time" format.
-	 * @return
+	 * @return The date as a "date time" format.
 	 */
 	public String dateTimeString() {
 		return dateString() + " " + timeString();
@@ -179,18 +165,18 @@ public class DateTime {
 	 * The date in custom format.
 	 * 
 	 * @param fmt the format to use for time
-	 * @return
+	 * @return The date in custom format.
 	 */
 	public String dateTimeString(String fmt) {
 		return format(fmt).format(date);
 	}
 
 	/**
-	 * The date in a file name compatible format, ie a String that can be used in a file name.
-	 * @return
+	 * @return The date in a file name compatible format, ie a String that can be
+	 *         used in a file name.
 	 */
 	public String dateTimeFileName() {
-		return String.format("%016X",  date.getTime());
+		return String.format("%016X", date.getTime());
 	}
 
 	@Override
@@ -205,11 +191,10 @@ public class DateTime {
 		result.setTimeZone(zone);
 		return result;
 	}
-	
-	
+
 	// TESTING
 	//
-	
+
 //	public static void main(String[] args) {
 //		DateTime dt = new DateTime();
 //		System.out.println(dt.dateTimeString()); 

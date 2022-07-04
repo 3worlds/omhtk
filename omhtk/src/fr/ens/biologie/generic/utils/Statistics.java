@@ -40,11 +40,11 @@ import java.util.TreeMap;
  * Functions to compute statistics iteratively. They all return stat(n+1) as a
  * function of x, n, and stats(n). Optimised for speed.
  * <p>
- * This class performs statistics using values that regularly come in. It assumes the values
- * come from a single variable which values evolve over time. It would be badly wrong to
- * use only one instance of this class to track both an integer and a double variable, since
- * all values would be mixed in a single distribution. The use
- * pattern is as follows:
+ * This class performs statistics using values that regularly come in. It
+ * assumes the values come from a single variable which values evolve over time.
+ * It would be badly wrong to use only one instance of this class to track both
+ * an integer and a double variable, since all values would be mixed in a single
+ * distribution. The use pattern is as follows:
  * 
  * <pre>
  * stats = new Statistics();
@@ -55,12 +55,15 @@ import java.util.TreeMap;
  * stats.n();       // returns 3 (number of observations)
  * stats.reset();   // prepares for a new series of numbers
  * </pre>
+ * 
+ * <p>
+ * CAUTION: successive additions of observations (calls to an {@code add(...)}
+ * method) must keep the data type consistent, i.e. it would be nonsense to add
+ * observations that represent different kinds of variables, objects, etc. All
+ * observations are supposed to come from a single source. The <em>meaning</em>
+ * and <em>consistency</em> of the computations cannot be checked in this class
+ * and is left to the user.
  * </p>
- * <p>CAUTION: successive additions of observations (calls to an {@code add(...)} method)
- * must keep the data type consistent, i.e. it would be nonsense to add observations that 
- * represent different kinds of variables, objects, etc. All observations are supposed to
- * come from a single source. The <em>meaning</em> and <em>consistency</em> of the computations cannot be 
- * checked in this class and is left to the user.</p>
  * 
  * @author Jacques Gignoux - 21 juin 2017
  *
@@ -75,10 +78,13 @@ public class Statistics {
 	private int n = 0;
 	private double min;
 	private double max;
-	private SortedMap<String,Integer> stringDistribution;
-	private SortedMap<Long,Integer> intDistribution;
-	private SortedMap<Double,Integer> doubleDistribution;
+	private SortedMap<String, Integer> stringDistribution;
+	private SortedMap<Long, Integer> intDistribution;
+	private SortedMap<Double, Integer> doubleDistribution;
 
+	/**
+	 * Basic constructor.
+	 */
 	public Statistics() {
 		super();
 		stringDistribution = new TreeMap<>();
@@ -87,14 +93,15 @@ public class Statistics {
 		reset();
 	}
 
-	/** Useless as just calls the default constructor*/
-	@Deprecated
-	public Statistics(String separator) {
-		super();
-	}
-	
+//	/** Useless as just calls the default constructor*/
+//	@Deprecated
+//	public Statistics(String separator) {
+//		super();
+//	}
+
 	/**
 	 * Clear this instance from all former data.
+	 * 
 	 * @return this instance for agile programming
 	 */
 	public Statistics reset() {
@@ -112,17 +119,18 @@ public class Statistics {
 	}
 
 	/**
-	 * Addition of an observation (booleans, coded as 1 for {@code true} and 0 for {@code false})
+	 * Addition of an observation (booleans, coded as 1 for {@code true} and 0 for
+	 * {@code false})
 	 * 
 	 * @param x the new observation
 	 * @return this instance for agile programming
 	 */
 	public Statistics add(boolean x) {
-		long i = x?1:0;
-		if (intDistribution.get(i)==null)
-			intDistribution.put(i,1);
+		long i = x ? 1 : 0;
+		if (intDistribution.get(i) == null)
+			intDistribution.put(i, 1);
 		else
-			intDistribution.put(i,intDistribution.get(i)+1);
+			intDistribution.put(i, intDistribution.get(i) + 1);
 		return update(i);
 	}
 
@@ -133,13 +141,13 @@ public class Statistics {
 	 * @return this instance for agile programming
 	 */
 	public Statistics add(double x) {
-		if (doubleDistribution.get(x)==null)
-			doubleDistribution.put(x,1);
+		if (doubleDistribution.get(x) == null)
+			doubleDistribution.put(x, 1);
 		else
-			doubleDistribution.put(x,doubleDistribution.get(x)+1);
+			doubleDistribution.put(x, doubleDistribution.get(x) + 1);
 		return update(x);
 	}
-	
+
 	// compute the stats for everything except strings.
 	private Statistics update(double x) {
 		if (n == 0) {
@@ -147,10 +155,9 @@ public class Statistics {
 			sum = 0;
 			var = 0;
 			ss = 0;
-			min = Double.POSITIVE_INFINITY; 
+			min = Double.POSITIVE_INFINITY;
 			max = Double.NEGATIVE_INFINITY;
-		}
-		else if (n == 1) {
+		} else if (n == 1) {
 			mu = (mu + x) / 2;
 			var = x - mu;
 			var *= var;
@@ -167,7 +174,7 @@ public class Statistics {
 		n++;
 		return this;
 	}
-	
+
 	/**
 	 * Addition of an observation (integer numbers)
 	 * 
@@ -175,52 +182,57 @@ public class Statistics {
 	 * @return this instance for agile programming
 	 */
 	public Statistics add(long x) {
-		if (intDistribution.get(x)==null)
-			intDistribution.put(x,1);
+		if (intDistribution.get(x) == null)
+			intDistribution.put(x, 1);
 		else
-			intDistribution.put(x,intDistribution.get(x)+1);
+			intDistribution.put(x, intDistribution.get(x) + 1);
 		return update(x);
 	}
 
 	/**
-	 * Addition of an observation (String). NB: only very limited statisics exist for Strings: 
-	 * number of observations and frequency distribution.
+	 * Addition of an observation (String). NB: only very limited statisics exist
+	 * for Strings: number of observations and frequency distribution.
 	 * 
 	 * @param x the new observation
 	 * @return this instance for agile programming
 	 */
 	public Statistics add(String x) {
-		if ((x==null)||(x.isEmpty()))
+		if ((x == null) || (x.isEmpty()))
 			;
 		else {
-			if (stringDistribution.get(x)==null)
+			if (stringDistribution.get(x) == null)
 				stringDistribution.put(x, 1);
 			else
-				stringDistribution.put(x,stringDistribution.get(x)+1);
+				stringDistribution.put(x, stringDistribution.get(x) + 1);
 			n++;
 		}
 		return this;
 	}
-	
+
 	/**
 	 * The number of observations since last call to {@code reset()}.
-	 * @return
+	 * 
+	 * @return Number of observations.
 	 */
 	public int n() {
 		return n;
 	}
 
 	/**
-	 * The average of all numeric values received since last call to {@code reset()}.
-	 * @return
+	 * The average of all numeric values received since last call to
+	 * {@code reset()}.
+	 * 
+	 * @return average of numeric observations.
 	 */
 	public double average() {
 		return mu;
 	}
 
 	/**
-	 * The variance of all numeric values received since last call to {@code reset()}.
-	 * @return
+	 * The variance of all numeric values received since last call to
+	 * {@code reset()}.
+	 * 
+	 * @return Variance of numeric observations.
 	 */
 	public double variance() {
 		return var;
@@ -228,52 +240,62 @@ public class Statistics {
 
 	/**
 	 * The sum of all numeric values received since last call to {@code reset()}.
-	 * @return
+	 * 
+	 * @return sum of numeric observations.
 	 */
 	public double sum() {
 		return sum;
 	}
 
 	/**
-	 * The minimum of all numeric values received since last call to {@code reset()}.
-	 * @return
+	 * The minimum of all numeric values received since last call to
+	 * {@code reset()}.
+	 * 
+	 * @return Minimum of observations.
 	 */
 	public double min() {
 		return min;
 	}
-	
+
 	/**
-	 * The maximum of all numeric values received since last call to {@code reset()}.
-	 * @return
+	 * The maximum of all numeric values received since last call to
+	 * {@code reset()}.
+	 * 
+	 * @return Maximum of observations.
 	 */
 	public double max() {
 		return max;
 	}
 
 	/**
-	 * The frequency distribution of all String values received since last call to {@code reset()}.
+	 * The frequency distribution of all String values received since last call to
+	 * {@code reset()}.
+	 * 
 	 * @return a map of counts per String value
 	 */
-	public Map<String,Integer> stringFrequencies() {
+	public Map<String, Integer> stringFrequencies() {
 		return Collections.unmodifiableMap(stringDistribution);
 	}
-	
+
 	/**
-	 * The frequency distribution of all integer values received since last call to {@code reset()}.
+	 * The frequency distribution of all integer values received since last call to
+	 * {@code reset()}.
+	 * 
 	 * @return a map of counts per integer value
 	 */
-	public SortedMap<Long,Integer> intFrequencies() {
+	public SortedMap<Long, Integer> intFrequencies() {
 		return Collections.unmodifiableSortedMap(intDistribution);
 	}
 
 	/**
-	 * The frequency distribution of all floating point values received since last call to {@code reset()}.
-	 * CAUTION: to make sure integer constant values representing a floating point number 
-	 * are treated as floating points, do not
+	 * The frequency distribution of all floating point values received since last
+	 * call to {@code reset()}. CAUTION: to make sure integer constant values
+	 * representing a floating point number are treated as floating points, do not
 	 * forget to multiply them by 1.0, otherwise they will be counted as integers.
+	 * 
 	 * @return a map of counts per floating point value
 	 */
-	public SortedMap<Double,Integer> doubleFrequencies() {
+	public SortedMap<Double, Integer> doubleFrequencies() {
 		return Collections.unmodifiableSortedMap(doubleDistribution);
 	}
 

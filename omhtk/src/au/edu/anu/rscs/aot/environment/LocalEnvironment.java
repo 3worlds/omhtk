@@ -49,9 +49,9 @@ import au.edu.anu.rscs.aot.util.ExecutionResults;
 import fr.ens.biologie.generic.utils.Logging;
 
 /**
- * An {@link Environment} representing the local computer where the application is running. 
- * The concept of 'current working directory' is managed here - not by the host OS (because 
- * Java can't do it)
+ * An {@link Environment} representing the local computer where the application
+ * is running. The concept of 'current working directory' is managed here - not
+ * by the host OS (because Java can't do it)
  * 
  * @author Shayne Flint - before 27/2/2012
  */
@@ -60,18 +60,25 @@ public class LocalEnvironment extends Environment {
 
 	private static Logger log = Logging.getLogger(LocalEnvironment.class);
 
+	/**
+	 * The local environment instance.
+	 */
 	public static LocalEnvironment env = new LocalEnvironment("local");
 
+	/**
+	 * The local host.
+	 */
 	public String hostName = "Unknown Host";
 
 	/**
-	 * The local environment is local, i.e. it runs the current application in a working directory.
+	 * The local environment is local, i.e. it runs the current application in a
+	 * working directory.
 	 * 
-	 * @param rootDir
+	 * @param rootDir The root directory of this environment.
 	 */
 	public LocalEnvironment(String rootDir) {
 		dirStack.push(userHome());
-		
+
 		File aotDir = new File(userHome() + File.separator + rootDir);
 		if (!aotDir.exists()) {
 			aotDir.mkdirs();
@@ -81,8 +88,7 @@ public class LocalEnvironment extends Environment {
 			Runtime run = Runtime.getRuntime();
 			Process proc;
 			proc = run.exec("hostname");
-			BufferedInputStream in = new BufferedInputStream(
-					proc.getInputStream());
+			BufferedInputStream in = new BufferedInputStream(proc.getInputStream());
 			byte[] bytes = new byte[256];
 			in.read(bytes);
 			hostName = new String(bytes).trim();
@@ -95,7 +101,7 @@ public class LocalEnvironment extends Environment {
 
 	@Override
 	public void chDir(String path) {
-		log.entering("LocalEnvironment", "chDir");  
+		log.entering("LocalEnvironment", "chDir");
 		log.fine(path);
 		dirStack.pop();
 		pushDir(path);
@@ -103,20 +109,20 @@ public class LocalEnvironment extends Environment {
 
 	@Override
 	public void pushDir(String newDir) {
-		log.entering("LocalEnvironment", "pushDir");  
+		log.entering("LocalEnvironment", "pushDir");
 		log.fine(newDir);
 		dirStack.push(newDir);
 	}
 
 	@Override
 	public void pushHome() {
-		log.entering("LocalEnvironment", "pushHome");  
+		log.entering("LocalEnvironment", "pushHome");
 		dirStack.push(userHome());
 	}
 
 	@Override
 	public void popDir() {
-		log.entering("LocalEnvironment", "popDir");  
+		log.entering("LocalEnvironment", "popDir");
 		if (dirStack.size() > 1)
 			dirStack.pop();
 		else
@@ -125,7 +131,7 @@ public class LocalEnvironment extends Environment {
 
 	@Override
 	public String cwd() {
-		log.entering("LocalEnvironment", "cwd");  
+		log.entering("LocalEnvironment", "cwd");
 		log.fine(dirStack.peek());
 		return dirStack.peek();
 	}
@@ -164,7 +170,7 @@ public class LocalEnvironment extends Environment {
 
 	@Override
 	public void rmFile(String path) {
-		log.entering("LocalEnvironment", "rmFile");  
+		log.entering("LocalEnvironment", "rmFile");
 		log.fine(path);
 		makeFile(path).delete();
 	}
@@ -189,7 +195,7 @@ public class LocalEnvironment extends Environment {
 
 	@Override
 	public void mkDirs(String path) {
-		log.entering("LocalEnvironment", "mkDirs");  
+		log.entering("LocalEnvironment", "mkDirs");
 		log.fine(path);
 		makeFile(path).mkdirs();
 	}
@@ -258,10 +264,10 @@ public class LocalEnvironment extends Environment {
 			if (workingDirectory == null) {
 				proc = Runtime.getRuntime().exec(command);
 			} else
-				proc = Runtime.getRuntime().exec(command, null,new File(workingDirectory));
+				proc = Runtime.getRuntime().exec(command, null, new File(workingDirectory));
 
-			BufferedReader stdInput = new BufferedReader(new InputStreamReader(
-				proc.getInputStream(),StandardCharsets.UTF_8));
+			BufferedReader stdInput = new BufferedReader(
+					new InputStreamReader(proc.getInputStream(), StandardCharsets.UTF_8));
 			String line;
 			while ((line = stdInput.readLine()) != null) {
 				System.out.println(line);
@@ -269,8 +275,8 @@ public class LocalEnvironment extends Environment {
 			}
 			stdInput.close();
 
-			BufferedReader stdError = new BufferedReader(new InputStreamReader(
-				proc.getErrorStream(),StandardCharsets.UTF_8));
+			BufferedReader stdError = new BufferedReader(
+					new InputStreamReader(proc.getErrorStream(), StandardCharsets.UTF_8));
 			while ((line = stdError.readLine()) != null) {
 				results.add("[errorStream] " + line);
 			}
@@ -278,14 +284,12 @@ public class LocalEnvironment extends Environment {
 
 			int exitCode = proc.waitFor();
 			proc.destroy();
-			log.exiting("LocalEnvironment", "execute");  
+			log.exiting("LocalEnvironment", "execute");
 			log.fine("'" + command + "', exited with code " + exitCode);
 
 			return new ExecutionResults(command, exitCode, results);
 		} catch (Exception e) {
-			return new ExecutionResults(command,
-					ExecutionResults.ABNORMAL_EXIT,
-					ExceptionString.exceptionString(e));
+			return new ExecutionResults(command, ExecutionResults.ABNORMAL_EXIT, ExceptionString.exceptionString(e));
 		}
 	}
 

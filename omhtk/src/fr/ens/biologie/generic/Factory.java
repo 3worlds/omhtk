@@ -45,8 +45,8 @@ import java.util.List;
  *
  * @param <T> the type of the returned instance
 
- * @see {@link Singleton}
- * @see {@link LimitedEdition} 
+ * @see Singleton
+ * @see LimitedEdition 
  */
 public interface Factory<T> {
 	

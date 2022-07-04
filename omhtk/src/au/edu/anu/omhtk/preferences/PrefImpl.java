@@ -42,43 +42,39 @@ import java.util.prefs.Preferences;
 import au.edu.anu.omhtk.stringarrays.StringArrayConversion;
 
 /**
- * <p>Implementation of the {@link Preferenceable} interface.</p>
- * Author Ian Davies
- *
+ * 
+ * This implementation of {@link IPreferences} is a wrapper class for
+ * {@link java.util.prefs.Preferences}. This class loads the node from file, if
+ * present, and writes to file on flush()
+ * 
+ * It also contains methods to get/put primitive arrays by conversion to String.
+ * 
+ * Keys and values have a maximum size imposed by
+ * {@link java.util.prefs.Preferences} 80 and 8182 respectivly. If this is
+ * exceeded there will be problems.
+ * 
  * @author Ian Davies - Dec 11, 2018
  */
-//TODO: Ian, please refactor javadoc 
-public class PrefImpl implements Preferenceable {
+
+public class PrefImpl implements IPreferences {
 	private Preferences prefs;
 	private final String sep = ",";
 	private File file;
 
 	/**
-	 * A wrapper class for {@link java.util.prefs.Preferences}. This impl loads the
-	 * node from file, if present, and writes to file on flush()
-	 * 
-	 * It also contains methods to get/put primitive arrays by conversion to String.
-	 * 
-	 * Keys and values have a maximum size imposed by
-	 * {@link java.util.prefs.Preferences}. If this is exceeded there will be
-	 * problems.
-	 * 
-	 * Keys: 80
-	 * 
-	 * Values: 8192
+	 * This constructor creates and clears a java preferences node.
 	 * 
 	 * @param file file name for local storage of the preferences (and for node
 	 *             hierarchy in backingstore)
 	 */
-	protected PrefImpl(File file) {
-		// file /a/b/c creates node children a -> b -> c
+	public PrefImpl(File file) {
+		// NB: file /a/b/c creates node tree a -> b -> c
 		this.prefs = Preferences.userRoot().node("tmpBackingStore");
 		try {
 			// Ignore the backingstore: we want to see the file for checking and possible
 			// editing
 			prefs.clear();
 		} catch (BackingStoreException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 
@@ -102,8 +98,6 @@ public class PrefImpl implements Preferenceable {
 	public void putInts(String key, int... values) {
 		prefs.put(key, String.join(sep, StringArrayConversion.IntsAsStrings(values)));
 	}
-	
-	
 
 	@Override
 	public void putLong(String key, long value) {
@@ -261,8 +255,8 @@ public class PrefImpl implements Preferenceable {
 
 	@Override
 	public Enum<?> getEnum(String key, Enum<?> def) {
-		String value =  getString(key,def.name());
-		return Enum.valueOf(def.getDeclaringClass(),value);
+		String value = getString(key, def.name());
+		return Enum.valueOf(def.getDeclaringClass(), value);
 	}
 
 }

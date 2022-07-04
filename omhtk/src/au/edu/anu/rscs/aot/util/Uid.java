@@ -44,16 +44,21 @@ import fr.ens.biologie.generic.Textable;
  * Guaranteed universally unique identifers. The identifier is constructed from:
  * <ol>
  * <li>the host computer mac address - these are worldwide unique;</li>
- * <li>the current time in milliseconds (i.e. at the time of constructor call) - very likely
- * to be different unless successive calls to the constructor are done during the same millisecond
- * on the same computer;</li>
- * <li>a count (as a {@code short} integer) in case constructor calls are done during the same millisecond.</li>
+ * <li>the current time in milliseconds (i.e. at the time of constructor call) -
+ * very likely to be different unless successive calls to the constructor are
+ * done during the same millisecond on the same computer;</li>
+ * <li>a count (as a {@code short} integer) in case constructor calls are done
+ * during the same millisecond.</li>
  * </ol>
- * <p>When exported as a String, a Uid instance looks like:<br/>
+ * <p>
+ * When exported as a String, a Uid instance looks like:<br/>
  * D89EF3043496-00000167D04FC89F-0002<br/>
- * where the first part represents the mac address, the second the time stamp, and the third the count.
+ * where the first part represents the mac address, the second the time stamp,
+ * and the third the count.
  * </p>
- * <p>Not very user friendly, but guaranteed unique.</p>
+ * <p>
+ * Not very user friendly, but guaranteed unique.
+ * </p>
  * 
  * @author Shayne Flint - long before 2012
  */
@@ -65,10 +70,19 @@ public class Uid implements Serializable, Comparable<Uid>, Textable {
 	static byte[] macAddress; // this is causing trouble because the bloody java bytes are signed!
 	static short count;
 	static long lastUidTime;
-	public static int UID_LENGTH = 6 + 2 + 8; // was 16
+	//public static int UID_LENGTH = 6 + 2 + 8; // was 16
 
+	/**
+	 * The mac addrees component of this Uid.
+	 */
 	private byte[] mac = new byte[6];
+	/**
+	 * The 'time' component of this Uid.
+	 */
 	private long time;
+	/**
+	 * The 'count' component of this Uid.
+	 */
 	private short cnt;
 
 	static {
@@ -102,12 +116,12 @@ public class Uid implements Serializable, Comparable<Uid>, Textable {
 	}
 
 	/**
-	 * Constructor to use when rebuilding a UID instance from a message. Do NOT
-	 * use in any other circumstance as you will lose the guarantee of uniqueness.
-	 *  
-	 * @param macAddr the mac address read from the message
+	 * Constructor to use when rebuilding a UID instance from a message. Do NOT use
+	 * in any other circumstance as you will lose the guarantee of uniqueness.
+	 * 
+	 * @param macAddr   the mac address read from the message
 	 * @param timeStamp the time stamp read from the message
-	 * @param count the count read from the message
+	 * @param count     the count read from the message
 	 */
 	public Uid(byte[] macAddr, long timeStamp, short count) {
 		this.mac = macAddr;
@@ -118,15 +132,20 @@ public class Uid implements Serializable, Comparable<Uid>, Textable {
 	/**
 	 * Constructor to use when rebuilding a UID instance from a text file. Do NOT
 	 * use in any other circumstance as you will lose the guarantee of uniqueness.
-	 * <p>Some Strings have a special meaning:</p>
+	 * <p>
+	 * Some Strings have a special meaning:
+	 * </p>
 	 * <ul>
 	 * <li>"randomUid" will generate a new UID through the default constructor</li>
-	 * <li>"nullUid" or "null" or a {@code null} String will generate a null UID 
+	 * <li>"nullUid" or "null" or a {@code null} String will generate a null UID
 	 * (000000000000-0000000000000000-0000)</li>
 	 * </ul>
-	 * <p>An invalid UID String will raise an Exception. Valid UID Strings must contain
-	 * 12 hexadecimal digits (the mac address), a minus sign "-", 16 hexadecimal digits
-	 * (the time stamp), a minus sign "-", and 4 hexadecimal digits (the count). </p>
+	 * <p>
+	 * An invalid UID String will raise an Exception. Valid UID Strings must contain
+	 * 12 hexadecimal digits (the mac address), a minus sign "-", 16 hexadecimal
+	 * digits (the time stamp), a minus sign "-", and 4 hexadecimal digits (the
+	 * count).
+	 * </p>
 	 * 
 	 * @param uidStr the Uid as saved with {@link Uid#toString() toString()}.
 	 */
@@ -153,12 +172,13 @@ public class Uid implements Serializable, Comparable<Uid>, Textable {
 
 	/**
 	 * Set the mac address from its components.
-	 * @param a
-	 * @param b
-	 * @param c
-	 * @param d
-	 * @param e
-	 * @param f
+	 * 
+	 * @param a First octet.
+	 * @param b Second octet.
+	 * @param c Third octet.
+	 * @param d Forth octet.
+	 * @param e Fifth octet.
+	 * @param f Sixth octet.
 	 */
 	public void setMacAddress(int a, int b, int c, int d, int e, int f) {
 		mac[0] = (byte) a;
@@ -171,6 +191,7 @@ public class Uid implements Serializable, Comparable<Uid>, Textable {
 
 	/**
 	 * Get the mac address of this UID.
+	 * 
 	 * @return the mac address
 	 */
 	public byte[] getMacAddress() {
@@ -181,6 +202,7 @@ public class Uid implements Serializable, Comparable<Uid>, Textable {
 	// unsigned bytes
 	/**
 	 * Get the mac address of this UID.
+	 * 
 	 * @return the mac address as a {@code long}
 	 */
 	public long getMacAddressAsLong() {
@@ -223,7 +245,7 @@ public class Uid implements Serializable, Comparable<Uid>, Textable {
 
 	private void newUid() {
 		mac = macAddress;
-		//long time = new DateTime().getTime();
+		// long time = new DateTime().getTime();
 		long time = System.currentTimeMillis();
 		if (time > lastUidTime) {
 			lastUidTime = time;
@@ -270,8 +292,7 @@ public class Uid implements Serializable, Comparable<Uid>, Textable {
 	 * Creates a file name suffixed by this Uid. Useful to create unique file or
 	 * directory names.
 	 * 
-	 * @param prefix
-	 *            the beginning of the file name
+	 * @param prefix the beginning of the file name
 	 * @return the file name (e.g. myPrefix0687F6B2D88A-0000014DBC0F8B3A-0000)
 	 */
 	public String fileName(String prefix) {
@@ -279,11 +300,10 @@ public class Uid implements Serializable, Comparable<Uid>, Textable {
 	}
 
 	/**
-	 * Creates a file with a name suffixed by this Uid. Useful to create unique file or
-	 * directory names.
+	 * Creates a file with a name suffixed by this Uid. Useful to create unique file
+	 * or directory names.
 	 * 
-	 * @param prefix
-	 *            the beginning of the file name
+	 * @param prefix the beginning of the file name
 	 * @return the file (e.g. myPrefix0687F6B2D88A-0000014DBC0F8B3A-0000)
 	 */
 	public File file(String prefix) {
@@ -301,17 +321,18 @@ public class Uid implements Serializable, Comparable<Uid>, Textable {
 		return "MAC Address: " + toString(getMacAddress()) + ", Time: " + new DateTime(date).dateTimeString()
 				+ ", Count: " + getCount();
 	}
-	
+
 	@Override
 	public String toUniqueString() {
 		return toHexString();
 	}
 
 	/**
-	 * Construct the String representation of this UID. NB: used by {@code toString()},
-	 * {@code toShortString()} and
-	 * {@code toUniqueString()}, which all return the same result.
-	 * @return
+	 * Construct the String representation of this UID. NB: used by
+	 * {@code toString()}, {@code toShortString()} and {@code toUniqueString()},
+	 * which all return the same result.
+	 * 
+	 * @return The string representation of this UID.
 	 */
 	public String toHexString() {
 		String result = "";
@@ -338,9 +359,7 @@ public class Uid implements Serializable, Comparable<Uid>, Textable {
 	}
 
 	/**
-	 * Creates a null UID (000000000000-0000000000000000-0000).
-	 * 
-	 * @return
+	 * @return a null UID (000000000000-0000000000000000-0000)
 	 */
 	public static Uid nullUid() {
 		return new Uid("nullUid");

@@ -42,9 +42,7 @@ import org.junit.jupiter.api.Test;
 import fr.ens.biologie.generic.Initialisable;
 
 /**
- * @author Ian Davies
- *
- * @date 27 Aug 2019
+ * @author Ian Davies - 27 Aug 2019
  */
 class InitialiserTest {
 

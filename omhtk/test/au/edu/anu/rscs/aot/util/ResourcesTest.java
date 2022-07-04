@@ -118,6 +118,7 @@ class ResourcesTest {
 
 	@Test
 	final void testGetPackagedFileName() {
+		// THis is crazy non-os independent crap!
 		String s = Resources.getPackagedFileName("au.edu.anu.twcore.archetype.tw.3wA-Experiment.ugt");
 		show("testGetPackagedFileName",s);
 		assertEquals(s,"au/edu/anu/twcore/archetype/tw/3wA-Experiment.ugt");

@@ -32,21 +32,32 @@
 package fr.ens.biologie.generic;
 
 /**
- * <p>An interface for objects that require initialisation (whatever this means) after instantiation.</p>
- * <p>In big applications, the initialisation of objects is often a complex procedure where many 
- * different classes must be instantiated in a precise order, and sometimes with reciprocal
- * dependencies that impose some more initialisation after instantiation. This interface defines two
- * methods that help this process:</p>
+ * <p>
+ * An interface for objects that require initialisation (whatever this means)
+ * after instantiation.
+ * </p>
+ * <p>
+ * In big applications, the initialisation of objects is often a complex
+ * procedure where many different classes must be instantiated in a precise
+ * order, and sometimes with reciprocal dependencies that impose some more
+ * initialisation after instantiation. This interface defines two methods that
+ * help this process:
+ * </p>
  * <ul>
- * <li>{@link Initialisable#initialise() initialise()} performs all the operations required before
- * any instance of this interface can be considered 'ready'.</li>
- * <li>{@link Initialisable#initRank() initRank()} returns a rank that insures that the initialisations
- * are made in the proper order.</li>
+ * <li>{@link Initialisable#initialise() initialise()} performs all the
+ * operations required before any instance of this interface can be considered
+ * 'ready'.</li>
+ * <li>{@link Initialisable#initRank() initRank()} returns a rank that insures
+ * that the initialisations are made in the proper order.</li>
  * </ul>
- * <p>This interface is meant to be used with the {@link au.edu.anu.rscs.aot.init.Initialiser Initialiser}
- * class. {@code Initialiser} is constructed with a list of {@code Initialisable} instances.
- * Then, a call to {@code Initialiser.initialise()} will call the {@code initialise()} method
- * of all {@code Initialisable} instances in turn, in order of increasing {@code initRank()}.</p>
+ * <p>
+ * This interface is meant to be used with the
+ * {@link au.edu.anu.rscs.aot.init.Initialiser Initialiser} class.
+ * {@code Initialiser} is constructed with a list of {@code Initialisable}
+ * instances. Then, a call to {@code Initialiser.initialise()} will call the
+ * {@code initialise()} method of all {@code Initialisable} instances in turn,
+ * in order of increasing {@code initRank()}.
+ * </p>
  * 
  * 
  * @author Jacques Gignoux - 7 mai 2019
@@ -55,20 +66,25 @@ package fr.ens.biologie.generic;
 public interface Initialisable {
 
 	/**
-	 * Initialises this instance after construction, whatever this means.
+	 * Initialises this instance after construction. Often, classes require other
+	 * classes to be initialized before they themselves can proceed. These
+	 * associated classes will be initialized at the first attempt by a class to use
+	 * them. Thus, initialization occurs in a cascading chain.
 	 * 
-	 * @throws Exception 
+	 * @throws Exception If initialization fails or one its associated classes in
+	 *                   the cascading chain fails to initialize.
 	 */
 	public void initialise() throws Exception;
-	
+
 	/**
-	 * This is used to decide in which order objects must be initialised. They will be
-	 * initialised from the lowest to the highest priority. The use case is to set this
-	 * as a class constant.
+	 * This is used to decide in which order objects must be initialised. They will
+	 * be initialised from the lowest to the highest priority. The use case is to
+	 * set this as a class constant.
+	 * 
 	 * @return the priority level for the object to initialise.
 	 */
 	public int initRank();
-	
+
 //	@Override
 //	public default int compareTo(Initialisable i) {
 //		if (initRank() == i.initRank())

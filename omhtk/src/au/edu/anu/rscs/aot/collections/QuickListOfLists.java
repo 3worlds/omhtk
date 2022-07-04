@@ -40,28 +40,39 @@ import fr.ens.biologie.generic.Sizeable;
 import fr.ens.biologie.generic.Textable;
 
 /**
- * <p>An immutable list of lists enabling to iterate over the whole set as if it was a single
- * list, with a minimal cost at creation time (hence the 'Quick').
- * Immutable, but the elementary lists added to this one may not be immutable.</p>
- * <p>CAUTION: the contained lists may have changed between two accesses to this one - so
- * use with care!</p>
- * <p>Inherited methods {@link java.util.Collection#toArray() toArray()} and 
- * {@link java.util.Collection#containsAll containsAll(...)} are not supported and will throw 
- * an {@link UnsupportedOperationException}.</p>
- *
- * @author Jacques Gignoux - 4/6/2012
+ * <p>
+ * An immutable list of lists enabling iteration over the whole set as if it was
+ * a single list, with a minimal cost at creation time (hence the 'Quick').
+ * Immutable, but the elementary lists added to this one may not be immutable.
+ * </p>
+ * <p>
+ * CAUTION: the contained lists may have changed between two accesses to this
+ * one - so use with care!
+ * </p>
+ * <p>
+ * Inherited methods {@link java.util.Collection#toArray() toArray()} and
+ * {@link java.util.Collection#containsAll containsAll(...)} are not supported
+ * and will throw an {@link UnsupportedOperationException}.
+ * </p>
  *
  * @param <T> the list content type
+ * 
+ * @author Jacques Gignoux - 4/6/2012
  */
 public class QuickListOfLists<T> implements Collection<T>, Textable, Sizeable {
 
 	private LinkedList<Collection<T>> lists = new LinkedList<Collection<T>>();
 	private int size = 0;
 
+	/**
+	 * Construct a QuickListOfLists from a collection.
+	 * 
+	 * @param list The list from which to build this list.
+	 */
 	@SafeVarargs
-	public QuickListOfLists(Collection<T>...list) {
+	public QuickListOfLists(Collection<T>... list) {
 		super();
-		for (int i=0;i<list.length;i++) {
+		for (int i = 0; i < list.length; i++) {
 			lists.add(list[i]);
 			size += list[i].size();
 		}
@@ -74,6 +85,7 @@ public class QuickListOfLists<T> implements Collection<T>, Textable, Sizeable {
 
 	/**
 	 * Add a collection to this list.
+	 * 
 	 * @param list the collection to add
 	 */
 	public void addList(Collection<T> list) {
@@ -87,7 +99,7 @@ public class QuickListOfLists<T> implements Collection<T>, Textable, Sizeable {
 	}
 
 	// All this copied from Shayne's AggregatedIterator
-    private class AggregatedIterator<U> implements Iterator<U> {
+	private class AggregatedIterator<U> implements Iterator<U> {
 
 		private Iterator<Collection<U>> iterablesIterator;
 
@@ -95,53 +107,52 @@ public class QuickListOfLists<T> implements Collection<T>, Textable, Sizeable {
 
 		public AggregatedIterator(Collection<Collection<U>> list) {
 			super();
-		    iterablesIterator = list.iterator();
-		    if (iterablesIterator.hasNext()) {
+			iterablesIterator = list.iterator();
+			if (iterablesIterator.hasNext()) {
 				Iterable<U> i = iterablesIterator.next();
 				iterator = i.iterator();
-		    } else
-			iterator = null;
+			} else
+				iterator = null;
 		}
 
 		private Iterator<U> nextIterator() {
-		    Iterator<U> result;
-		    if (iterablesIterator.hasNext()) {
-			result = iterablesIterator.next().iterator();
-			if (!result.hasNext())
-			    result = nextIterator();
-			return result;
-		    } else
-			return null;
+			Iterator<U> result;
+			if (iterablesIterator.hasNext()) {
+				result = iterablesIterator.next().iterator();
+				if (!result.hasNext())
+					result = nextIterator();
+				return result;
+			} else
+				return null;
 		}
-
 
 		@Override
 		public boolean hasNext() {
-		    if (iterator == null)
-			return false;
-
-		    if (iterator.hasNext())
-			return true;
-		    else {
-			iterator = nextIterator();
 			if (iterator == null)
-			    return false;
-			else
-			    return iterator.hasNext();
-		    }
+				return false;
+
+			if (iterator.hasNext())
+				return true;
+			else {
+				iterator = nextIterator();
+				if (iterator == null)
+					return false;
+				else
+					return iterator.hasNext();
+			}
 		}
 
 		@Override
 		public U next() {
-		    return (U) iterator.next();
+			return (U) iterator.next();
 		}
 
 		@Override
 		public void remove() {
-		    iterator.remove();
+			iterator.remove();
 		}
 
-    }
+	}
 
 	// Object
 	//
@@ -149,12 +160,12 @@ public class QuickListOfLists<T> implements Collection<T>, Textable, Sizeable {
 	public String toString() {
 		StringBuilder result = new StringBuilder("{");
 		if (!isEmpty()) {
-			for (T item:this)
+			for (T item : this)
 				if (item instanceof Textable)
-					result.append(((Textable)item).toShortString()).append(", ");
+					result.append(((Textable) item).toShortString()).append(", ");
 				else
 					result.append(item.toString()).append(", ");
-			result.delete(result.length()-2,result.length());
+			result.delete(result.length() - 2, result.length());
 		}
 		result.append('}');
 		return result.toString();
@@ -174,12 +185,12 @@ public class QuickListOfLists<T> implements Collection<T>, Textable, Sizeable {
 
 	@Override
 	public boolean isEmpty() {
-		return size==0;
+		return size == 0;
 	}
 
 	@Override
 	public boolean contains(Object o) {
-		for (Collection<T> coll:lists)
+		for (Collection<T> coll : lists)
 			if (coll.contains(o))
 				return true;
 		return false;
@@ -198,12 +209,12 @@ public class QuickListOfLists<T> implements Collection<T>, Textable, Sizeable {
 
 	@Override
 	public boolean add(T e) {
-		throw new OmhtkException(getClass().getSimpleName()+" is immutable.");
+		throw new OmhtkException(getClass().getSimpleName() + " is immutable.");
 	}
 
 	@Override
 	public boolean remove(Object o) {
-		throw new OmhtkException(getClass().getSimpleName()+" is immutable.");
+		throw new OmhtkException(getClass().getSimpleName() + " is immutable.");
 	}
 
 	@Override
@@ -213,17 +224,17 @@ public class QuickListOfLists<T> implements Collection<T>, Textable, Sizeable {
 
 	@Override
 	public boolean addAll(Collection<? extends T> c) {
-		throw new OmhtkException(getClass().getSimpleName()+" is immutable.");
+		throw new OmhtkException(getClass().getSimpleName() + " is immutable.");
 	}
 
 	@Override
 	public boolean removeAll(Collection<?> c) {
-		throw new OmhtkException(getClass().getSimpleName()+" is immutable.");
+		throw new OmhtkException(getClass().getSimpleName() + " is immutable.");
 	}
 
 	@Override
 	public boolean retainAll(Collection<?> c) {
-		throw new OmhtkException(getClass().getSimpleName()+" is immutable.");
+		throw new OmhtkException(getClass().getSimpleName() + " is immutable.");
 	}
 
 }

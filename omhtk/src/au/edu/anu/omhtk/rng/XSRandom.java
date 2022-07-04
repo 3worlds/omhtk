@@ -34,28 +34,34 @@ package au.edu.anu.omhtk.rng;
 import java.util.Random;
 
 /**
- * <p>Implementation of George Marsaglia's elegant 
- * <a href="http://www.javamex.com/tutorials/random_numbers/xorshift.shtml">Xorshift</a> 
- * random generator (2003), 
- * 30% faster and better quality than the built-in {@link java.util.Random}. 
- * Code imported from
- * <a href="http://demesos.blogspot.com/2011/09/replacing-java-random-generator.html"> there</a>.
- * It generates random numbers using a single seed and just 3 shifts and XOR operations.</p>
- * <p>This class is a descendant of the {@link java.util.Random} class.
- * An instance of this class is used to generate a stream of pseudo-random
- * numbers.</p>
+ * <p>
+ * Implementation of George Marsaglia's elegant <a href=
+ * "http://www.javamex.com/tutorials/random_numbers/xorshift.shtml">Xorshift</a>
+ * random generator (2003), 30% faster and better quality than the built-in
+ * {@link java.util.Random}. Code imported from <a href=
+ * "http://demesos.blogspot.com/2011/09/replacing-java-random-generator.html">
+ * there</a>. It generates random numbers using a single seed and just 3 shifts
+ * and XOR operations.
+ * </p>
+ * <p>
+ * This class is a descendant of the {@link java.util.Random} class. An instance
+ * of this class is used to generate a stream of pseudo-random numbers.
+ * </p>
  * 
  * @author Ian Davies - Dec 8, 2018
  */
 
-public class XSRandom extends Random{
+public class XSRandom extends Random {
 	private static final long serialVersionUID = 6208727693524452904L;
+	/**
+	 * The seed sets the state of the random number. A stream of generated numbers
+	 * from the same seed will always be identical.
+	 */
 	private long seed;
 
 	/**
-	 * Creates a new pseudo random number generator. The seed is initialized to
-	 * the current time, as if by
-	 * <code>setSeed(System.currentTimeMillis());</code>.
+	 * Creates a new pseudo random number generator. The seed is initialized to the
+	 * current time, as if by <code>setSeed(System.currentTimeMillis());</code>.
 	 */
 	public XSRandom() {
 		this(System.nanoTime());
@@ -65,29 +71,25 @@ public class XSRandom extends Random{
 	 * Creates a new pseudo random number generator, starting with the specified
 	 * seed, using <code>setSeed(seed);</code>.
 	 * 
-	 * @param seed
-	 *            the initial seed
+	 * @param seed the initial seed
 	 */
 	public XSRandom(long seed) {
 		this.seed = seed;
 	}
 
 	/**
-	 * Returns the current state of the seed, can be used to clone the object
-	 * 
-	 * @returns seed 
+	 * @return the current state of the seed. This can be used to clone the object
 	 */
 	public synchronized long getSeed() {
 		return seed;
 	}
 
 	/**
-	 * Sets the seed for this pseudo random number generator. As described
-	 * above, two instances of the same random class, starting with the same
-	 * seed, produce the same results, if the same methods are called.
+	 * Sets the seed for this pseudo random number generator. As described above,
+	 * two instances of the same random class, starting with the same seed, produce
+	 * the same results, if the same methods are called.
 	 * 
-	 * @param seed
-	 *            the new seed
+	 * @param seed the new seed
 	 */
 	public synchronized void setSeed(long seed) {
 		this.seed = seed;
@@ -103,7 +105,7 @@ public class XSRandom extends Random{
 	}
 
 	/**
-	 * Generates the next pseudo-random number. 
+	 * Generates the next pseudo-random number.
 	 */
 	@Override
 	protected int next(int nbits) {

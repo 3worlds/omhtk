@@ -41,8 +41,8 @@ package fr.ens.biologie.generic;
  *
  * @param <T> the type of the returned instance
  * 
- * @see {@link LimitedEdition}
- * @see {@link Factory} 
+ * @see LimitedEdition
+ * @see Factory 
  */
 public interface Singleton<T> {
 	

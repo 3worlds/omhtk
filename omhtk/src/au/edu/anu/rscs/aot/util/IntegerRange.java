@@ -34,9 +34,11 @@ package au.edu.anu.rscs.aot.util;
 import au.edu.anu.rscs.aot.OmhtkException;
 
 /**
- * <p>A class to represent ranges of integer numbers. Fully compatible with 
- * <a href="https://www.uml-diagrams.org/multiplicity.html">UML multiplicities</a>, in particular
- *  accepts the '*' notation for 'any number'.</p>
+ * <p>
+ * A class to represent ranges of integer numbers. Fully compatible with
+ * <a href="https://www.uml-diagrams.org/multiplicity.html">UML
+ * multiplicities</a>, in particular accepts the '*' notation for 'any number'.
+ * </p>
  * 
  * @author Shayne Flint - 2012
  *
@@ -49,8 +51,9 @@ public class IntegerRange {
 
 	/**
 	 * Constructor from two numbers. Throws an Exception if first &gt; last.
+	 * 
 	 * @param first the lowest end of the range
-	 * @param last the upper end of the range
+	 * @param last  the upper end of the range
 	 */
 	public IntegerRange(int first, int last) {
 		this.first = first;
@@ -60,14 +63,15 @@ public class IntegerRange {
 
 	/**
 	 * Constructor from a String.
-	 *  <p>Examples of valid String formats:<br/>
-	 *  1..1<br/>
-	 *  1..*<br/>
-	 *  0..1<br/>
-	 *  0..*<br/>
-	 *  5..12<br/>
-	 *  </p>
-	 *  
+	 * <p>
+	 * Examples of valid String formats:<br/>
+	 * 1..1<br/>
+	 * 1..*<br/>
+	 * 0..1<br/>
+	 * 0..*<br/>
+	 * 5..12<br/>
+	 * </p>
+	 * 
 	 * @param str a String representing an integer range.
 	 */
 	public IntegerRange(String str) {
@@ -127,8 +131,8 @@ public class IntegerRange {
 	}
 
 	/**
-	 * Checks that a value is within the range. Throws an Exception if the value is ≥ range 
-	 * minimum and ≤ range maximum.
+	 * Checks that a value is within the range. Throws an Exception if the value is
+	 * ≥ range minimum and ≤ range maximum.
 	 * 
 	 * @param value the value to test
 	 */
@@ -139,6 +143,7 @@ public class IntegerRange {
 
 	/**
 	 * Creates an instance of {@code IntegerRange} from a String.
+	 * 
 	 * @param str the string to read
 	 * @return the new instance
 	 */
@@ -171,8 +176,7 @@ public class IntegerRange {
 	}
 
 	/**
-	 * The range lower end.
-	 * @return
+	 * @return The range lower end.
 	 */
 	public int getFirst() {
 		return first;
@@ -182,7 +186,7 @@ public class IntegerRange {
 	 * Reset the range upper end.
 	 * 
 	 * @param last the new upper end.
-	 * @return this instance for agile programming
+	 * @return this (fluid interface).
 	 */
 	public IntegerRange setLast(int last) {
 		this.last = last;
@@ -190,19 +194,19 @@ public class IntegerRange {
 	}
 
 	/**
-	 * The range upper end.
-	 * @return
+	 * @return The range upper end.
 	 */
 	public int getLast() {
 		return last;
 	}
-	
+
 	/**
 	 * Checks if a range is contained in this one.
+	 * 
 	 * @param r the IntegerRange to test
 	 * @return {@code true} if {@code r} is fully contained in this instance range.
 	 */
-	public boolean contains (IntegerRange r) {
-		return (r.getFirst()>=first && r.getLast()<=last);
+	public boolean contains(IntegerRange r) {
+		return (r.getFirst() >= first && r.getLast() <= last);
 	}
 }

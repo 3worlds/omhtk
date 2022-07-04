@@ -44,17 +44,26 @@ import au.edu.anu.rscs.aot.OmhtkException;
 /**
  * @author Ian Davies
  * 
- * Date 08 Jul. 2021
+ *         Date 08 Jul. 2021
  *
  */
 public class JavaUtilities {
 	private JavaUtilities() {
 	};
 
+	/**
+	 * TODO used in node renaming to update references to this node in other java
+	 * files.
+	 * 
+	 * @param f          The file to examine.
+	 * @param oldElement Current string in file.
+	 * @param newElement New string in file.
+	 * @throws IOException File reads or attempt to process a non-java file.
+	 */
 	public static void updatePackgeEntry(File f, String oldElement, String newElement) throws IOException {
 		if (!f.getName().contains(".java"))
 			throw new OmhtkException("Cannot change package name in non-java files. [" + f.getAbsolutePath() + "]");
-		List<String> lines = Files.readAllLines(f.toPath(),StandardCharsets.UTF_8);
+		List<String> lines = Files.readAllLines(f.toPath(), StandardCharsets.UTF_8);
 		List<String> newLines = new ArrayList<>();
 		for (String line : lines) {
 			if (line.contains("package") && line.contains(oldElement) && line.endsWith(";")) {

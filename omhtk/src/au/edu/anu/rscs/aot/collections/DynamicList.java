@@ -45,17 +45,24 @@ import fr.ens.biologie.generic.Sizeable;
 import fr.ens.biologie.generic.Textable;
 
 /**
- * <p>Implementation of List<T> with a <em>self-correcting</em> iterator which allows removing of
- * items while in a for loop on the list. It is implemented as a linked list with a clever iterator
- * that skips removed items while looping. Use this class when dealing with highly dynamic lists
- * (where there are many insertions and deletions in the list).</p>
- * <p>[NB:This was formerly known as AotList. Code modified from au.edu.anu.rscs.aot.collections.AotList<T> by Shayne Flint.
- * Removed Query, and dependency from AotCollection and AotIterable.]</p>
- * <p>Given the new facilities provided in java 8 lists, this class may be obsolete. For example,
- * to remove items from a list can be done with instructions such as {@code list.sublist(from,to).clear()}.</p>
+ * Implementation of {@code List<T>} with a <em>self-correcting</em> iterator
+ * which allows removing of items while in a for loop on the list. It is
+ * implemented as a linked list with a clever iterator that skips removed items
+ * while looping. Use this class when dealing with highly dynamic lists (where
+ * there are many insertions and deletions in the list).
+ * <p>
+ * [NB:This was formerly known as AotList. Code modified from
+ * au.edu.anu.rscs.aot.collections. {@code AotList<T>} by Shayne Flint. Removed
+ * Query, and dependency from AotCollection and AotIterable.]
+ * </p>
+ * <p>
+ * Given the new facilities provided in java 8 lists, this class may be
+ * obsolete. For example, to remove items from a list can be done with
+ * instructions such as {@code list.sublist(from,to).clear()}.
+ * </p>
  *
  * @author Shayne Flint - loooong ago. <br/>
- *  refactored by Jacques Gignoux - 30 Nov. 2018
+ *         refactored by Jacques Gignoux - 30 Nov. 2018
  *
  * @param <T> the type of the list items
  */
@@ -64,21 +71,34 @@ public class DynamicList<T> implements List<T>, Deque<T>, Queue<T>, Sizeable, Te
 
 	protected ListNode<T> head = null;
 	protected ListNode<T> tail = null;
-	protected int         size = 0;
+	protected int size = 0;
 
 	// Constructors
 
+	/**
+	 * Default constructor.
+	 */
 	public DynamicList() {
 	}
 
+	/**
+	 * Construct a DynamicList with a simple array of items.
+	 * 
+	 * @param items Items to add to the list.
+	 */
 	@SafeVarargs
-	public DynamicList(T... items)  {
+	public DynamicList(T... items) {
 		super();
 		for (T item : items)
 			add(item);
 	}
 
-	public DynamicList(Iterable<T> iterable)  {
+	/**
+	 * Construct a DynamicList from an iterable.
+	 * 
+	 * @param iterable The interable over the items of type {@code T}.
+	 */
+	public DynamicList(Iterable<T> iterable) {
 		super();
 		for (T item : iterable)
 			add(item);
@@ -122,7 +142,7 @@ public class DynamicList<T> implements List<T>, Deque<T>, Queue<T>, Sizeable, Te
 	private class CorrectingIterator implements Iterator<T> {
 
 		protected ListNode<T> current = head;
-		protected boolean  correcting;
+		protected boolean correcting;
 		protected ListNode<T> lastReturned = null;
 
 		public CorrectingIterator(boolean correcting) {
@@ -186,7 +206,9 @@ public class DynamicList<T> implements List<T>, Deque<T>, Queue<T>, Sizeable, Te
 
 	/**
 	 * Returns a correcting iterator on this list.
-	 * <p>Note: the default iterator() method returns a correcting iterator.</p>
+	 * <p>
+	 * Note: the default iterator() method returns a correcting iterator.
+	 * </p>
 	 *
 	 * @return a correcting iterator
 	 */
@@ -207,7 +229,7 @@ public class DynamicList<T> implements List<T>, Deque<T>, Queue<T>, Sizeable, Te
 	@Override
 	public <E> E[] toArray(E[] a) {
 		if (a.length < size)
-			a = (E[])java.lang.reflect.Array.newInstance(a.getClass().getComponentType(), size);
+			a = (E[]) java.lang.reflect.Array.newInstance(a.getClass().getComponentType(), size);
 		int i = 0;
 		Object[] result = a;
 		for (ListNode<T> n = head; n != null; n = n.next)
@@ -245,7 +267,7 @@ public class DynamicList<T> implements List<T>, Deque<T>, Queue<T>, Sizeable, Te
 	}
 
 	private void removeNode(ListNode<T> n) {
-		if (n==null)
+		if (n == null)
 			throw new NoSuchElementException();
 		if (head == n && tail == n) {
 			n.next = null;
@@ -302,14 +324,23 @@ public class DynamicList<T> implements List<T>, Deque<T>, Queue<T>, Sizeable, Te
 		return true;
 	}
 
+	/**
+	 * Add items from a simple array.
+	 * 
+	 * @param items Array of items to add.
+	 * @return True if all items successfully added, false otherwise.
+	 */
 	@SuppressWarnings("unchecked")
 	public boolean addAll(T... items) {
+		boolean result = true;
 		for (T item : items) {
-			add(item);
+			if (!add(item)) {
+				result = false;
+			}
+			;
 		}
-		return true;
+		return result;
 	}
-
 
 	private void removeAll(Object o) {
 		ListNode<T> node = find(o);
@@ -344,7 +375,8 @@ public class DynamicList<T> implements List<T>, Deque<T>, Queue<T>, Sizeable, Te
 
 	@Override
 	public void clear() {
-		// invalidate all nodes so that checked iterators know that the nodes have been deleted
+		// invalidate all nodes so that checked iterators know that the nodes have been
+		// deleted
 		//
 		ListNode<T> node = head;
 		while (node != null) {
@@ -373,7 +405,7 @@ public class DynamicList<T> implements List<T>, Deque<T>, Queue<T>, Sizeable, Te
 	public void add(int index, T element) {
 		ListNode<T> node = nodeAt(index);
 		ListNode<T> newNode = new ListNode<T>(element, node.next, node);
-		if (index < size-1)
+		if (index < size - 1)
 			node.next.prev = newNode;
 		else
 			tail = newNode;
@@ -383,14 +415,14 @@ public class DynamicList<T> implements List<T>, Deque<T>, Queue<T>, Sizeable, Te
 	@Override
 	public T remove(int index) {
 		ListNode<T> node = nodeAt(index);
-		if (size==1) {
+		if (size == 1) {
 			node.next = node;
 			head = null;
 			tail = null;
 		} else if (index == 0) {
 			head = node.next;
 			node.next.prev = null;
-		} else if (index == size-1) {
+		} else if (index == size - 1) {
 			tail = node.prev;
 			node.prev.next = null;
 			node.next = node;
@@ -418,7 +450,7 @@ public class DynamicList<T> implements List<T>, Deque<T>, Queue<T>, Sizeable, Te
 
 	@Override
 	public int lastIndexOf(Object o) {
-		int index = size -1;
+		int index = size - 1;
 		ListNode<T> n = tail;
 		while (n != null) {
 			if (n.item.equals(o))
@@ -446,11 +478,11 @@ public class DynamicList<T> implements List<T>, Deque<T>, Queue<T>, Sizeable, Te
 			throw new NoSuchElementException();
 		else if (index == 0)
 			return head;
-		else if (index == size -1)
+		else if (index == size - 1)
 			return tail;
 		else {
 			ListNode<T> result = head;
-			for (int i=0; i<index; i++)
+			for (int i = 0; i < index; i++)
 				result = result.next;
 			return result;
 		}
@@ -458,7 +490,8 @@ public class DynamicList<T> implements List<T>, Deque<T>, Queue<T>, Sizeable, Te
 	}
 
 	/**
-	 * A correcting list iterator, ie an iterator that can traverse the list up or down
+	 * A correcting list iterator, ie an iterator that can traverse the list up or
+	 * down
 	 *
 	 * @author Shayne Flint - long ago
 	 *
@@ -467,7 +500,7 @@ public class DynamicList<T> implements List<T>, Deque<T>, Queue<T>, Sizeable, Te
 
 		public CorrectingListIterator(boolean correcting, int index) {
 			super(correcting);
-			if (size()==0)
+			if (size() == 0)
 				current = null;
 			else
 				current = nodeAt(index);
@@ -556,8 +589,9 @@ public class DynamicList<T> implements List<T>, Deque<T>, Queue<T>, Sizeable, Te
 	}
 
 	/**
-	 * Returns a list iterator over the elements in this list (in proper sequence), starting at 
-	 * the list top. 
+	 * Returns a list iterator over the elements in this list (in proper sequence),
+	 * starting at the list top.
+	 * 
 	 * @param correcting {@code true} for a correctingIterator
 	 * @return an iterator over the list
 	 */
@@ -566,9 +600,12 @@ public class DynamicList<T> implements List<T>, Deque<T>, Queue<T>, Sizeable, Te
 	}
 
 	/**
-	 * Returns a list iterator over the elements in this list (in proper sequence), starting at 
-	 * the specified position in the list. The specified index indicates the first element that 
-	 * would be returned by an initial call to {@link java.util.Iterator#next next}.
+	 * Returns a list iterator over the elements in this list (in proper sequence),
+	 * starting at the specified position in the list. The specified index indicates
+	 * the first element that would be returned by an initial call to
+	 * {@link java.util.Iterator#next next}.
+	 * 
+	 * @param index      Starting position in the list.
 	 * @param correcting true for a correctingIterator
 	 * @return an iterator over the list
 	 */
@@ -580,13 +617,18 @@ public class DynamicList<T> implements List<T>, Deque<T>, Queue<T>, Sizeable, Te
 	public List<T> subList(int fromIndex, int toIndex) {
 		DynamicList<T> result = new DynamicList<T>();
 		ListNode<T> node = nodeAt(fromIndex);
-		for (int i=fromIndex; i<=toIndex; i++) {
+		for (int i = fromIndex; i <= toIndex; i++) {
 			result.add(node.item);
 			node = node.next;
 		}
 		return result;
 	}
 
+	/**
+	 * Debugging method to display contents along with a message.
+	 * 
+	 * @param message The message.
+	 */
 	public void show(String message) {
 		System.out.println(message);
 		System.out.println("  Head: " + head);
@@ -602,10 +644,12 @@ public class DynamicList<T> implements List<T>, Deque<T>, Queue<T>, Sizeable, Te
 		}
 	}
 
+	/**
+	 * Debugging method to display contents.
+	 */
 	public void show() {
 		show("AotList");
 	}
-
 
 	// Deque interface
 	//
@@ -649,7 +693,7 @@ public class DynamicList<T> implements List<T>, Deque<T>, Queue<T>, Sizeable, Te
 	@Override
 	public T removeLast() {
 		T result = tail.item;
-		remove(size-1);
+		remove(size - 1);
 		return result;
 	}
 
@@ -767,15 +811,14 @@ public class DynamicList<T> implements List<T>, Deque<T>, Queue<T>, Sizeable, Te
 		return new CorrectingDescendingIterator(true);
 	}
 
-	public Iterator<T> descendingCorrectingIterator(boolean correcting) {
-		return new CorrectingDescendingIterator(correcting);
-	}
+//	private Iterator<T> descendingCorrectingIterator(boolean correcting) {
+//		return new CorrectingDescendingIterator(correcting);
+//	}
 
-	
 	private class CorrectingDescendingIterator implements Iterator<T> {
 
 		protected ListNode<T> current = tail;
-		protected boolean  correcting;
+		protected boolean correcting;
 		protected ListNode<T> lastReturned = null;
 
 		public CorrectingDescendingIterator(boolean correcting) {
@@ -826,10 +869,15 @@ public class DynamicList<T> implements List<T>, Deque<T>, Queue<T>, Sizeable, Te
 
 	} // private class CorrectingDescendingIterator
 
-
 	// Additional helper methods
 	//
 
+	/**
+	 * Helper method to return items in one list that are not in the other.
+	 * 
+	 * @param list Comparision list.
+	 * @return List of differences.
+	 */
 	public DynamicList<T> difference(DynamicList<T> list) {
 		DynamicList<T> result = new DynamicList<T>();
 		for (T item : list)
@@ -841,6 +889,12 @@ public class DynamicList<T> implements List<T>, Deque<T>, Queue<T>, Sizeable, Te
 		return result;
 	}
 
+	/**
+	 * Helper method to return items that appear in both lists.
+	 * 
+	 * @param list Comparison list.
+	 * @return Intersection of the two lists.
+	 */
 	public DynamicList<T> intersection(DynamicList<T> list) {
 		DynamicList<T> result = new DynamicList<T>();
 		for (T item : list)
@@ -850,10 +904,10 @@ public class DynamicList<T> implements List<T>, Deque<T>, Queue<T>, Sizeable, Te
 	}
 
 	/**
-	 * Sorts this list using a {@link java.util.Comparator Comparator}.
-	 * Renamed from sort to sortList to avoid conflict with JDK 1.8 List.sort().
+	 * Sorts this list using a {@link java.util.Comparator Comparator}. Renamed from
+	 * sort to sortList to avoid conflict with JDK 1.8 List.sort().
 	 *
-	 * @param comparator the comparator to use for sorting
+	 * @param comparator The comparator to use for sorting.
 	 */
 	public void sortList(Comparator<? super T> comparator) {
 		if (this.size() > 0)
@@ -862,8 +916,10 @@ public class DynamicList<T> implements List<T>, Deque<T>, Queue<T>, Sizeable, Te
 
 	/**
 	 * Checks if the list is sorted.
+	 * 
 	 * @param comparator the comparator to use for sorting
-	 * @return {@code true} if the list is in the comparator order, {@code false} otherwise
+	 * @return {@code true} if the list is in the comparator order, {@code false}
+	 *         otherwise
 	 */
 	public boolean isSorted(Comparator<T> comparator) {
 		Iterator<T> iter = iterator();
@@ -883,6 +939,7 @@ public class DynamicList<T> implements List<T>, Deque<T>, Queue<T>, Sizeable, Te
 
 	/**
 	 * Adds an item to the list only if it is not already present.
+	 * 
 	 * @param item the item to add
 	 * @return {@code true} if the item was added, {@code false} otherwise
 	 */
@@ -895,6 +952,7 @@ public class DynamicList<T> implements List<T>, Deque<T>, Queue<T>, Sizeable, Te
 
 	/**
 	 * Adds all elements of its argument into the list, only if not already present.
+	 * 
 	 * @param list the list of items to add
 	 * @return {@code true} if all items were added, {@code false} otherwise
 	 */
@@ -911,23 +969,22 @@ public class DynamicList<T> implements List<T>, Deque<T>, Queue<T>, Sizeable, Te
 	//
 
 	/**
-	 * Creates a normal array comprising elements which refer to the data items in this AotList
+	 * Creates a normal array comprising elements which refer to the data items in
+	 * this DynamicList
 	 *
-	 * @return
+	 * @return The simple array of type {@code T}.
 	 */
 	@SuppressWarnings("unchecked")
 	public T[] makeArray() {
 		Object[] result;
 		result = new Object[size()];
-		int i=0;
+		int i = 0;
 		for (T t : this) {
 			result[i] = t;
 			i++;
 		}
-		return (T[])result;
+		return (T[]) result;
 	}
-
-
 
 	// Object
 	//
@@ -935,12 +992,12 @@ public class DynamicList<T> implements List<T>, Deque<T>, Queue<T>, Sizeable, Te
 	public String toString() {
 		StringBuilder result = new StringBuilder("{");
 		if (!isEmpty()) {
-			for (T item:this)
+			for (T item : this)
 				if (item instanceof Textable)
-					result.append(((Textable)item).toShortString()).append(", ");
+					result.append(((Textable) item).toShortString()).append(", ");
 				else
 					result.append(item.toString()).append(", ");
-			result.delete(result.length()-2,result.length());
+			result.delete(result.length() - 2, result.length());
 		}
 		result.append('}');
 		return result.toString();

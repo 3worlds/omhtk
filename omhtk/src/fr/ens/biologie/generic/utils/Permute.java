@@ -31,12 +31,22 @@
  **************************************************************************/
 package fr.ens.biologie.generic.utils;
 
-import java.util.Arrays;
+//import java.util.Arrays;
 
+/**
+ * The <a href=
+ * "https://en.wikipedia.org/wiki/Steinhaus%E2%80%93Johnson%E2%80%93Trotter_algorithm">Steinhaus,
+ * Johnson and Trotter algorithm</a> for generating permuted indices.
+ *
+ * 
+ * @author Ian Davies - 4 July 2022
+ */
 public class Permute {
-	
 
-	//Johnson and Trotter algorithm
+	/**
+	 * @param n The number of indices.
+	 * @return Array of permutations.
+	 */
 	public static int[][] getPemutationIndices(int n) {
 		int[][] result = new int[fact(n)][n];
 		int[] a = new int[n];
@@ -52,7 +62,7 @@ public class Permute {
 		for (int i = 1; i < fact(n); i++) {
 			doOnePerm(a, dir, n);
 			for (int j = 0; j < n; j++) {
-				result[i][j] = a[j]-1;// zero counting
+				result[i][j] = a[j] - 1;// zero counting
 			}
 		}
 		return result;
@@ -102,7 +112,6 @@ public class Permute {
 			return mobile;
 	}
 
-	
 	private static int doOnePerm(int a[], boolean dir[], int n) {
 		int mobile = getMobile(a, dir, n);
 		int pos = searchArr(a, n, mobile);
@@ -135,6 +144,7 @@ public class Permute {
 
 		return 0;
 	}
+
 	private static int fact(int n) {
 		int res = 1;
 
@@ -143,10 +153,10 @@ public class Permute {
 		return res;
 	}
 
-	public static void main(String argc[]) {
-		int n = 6;
-		int[][] p = getPemutationIndices(n);
-		System.out.println(Arrays.deepToString(p));
-	}
+//	public static void main(String argc[]) {
+//		int n = 6;
+//		int[][] p = getPemutationIndices(n);
+//		System.out.println(Arrays.deepToString(p));
+//	}
 
 }

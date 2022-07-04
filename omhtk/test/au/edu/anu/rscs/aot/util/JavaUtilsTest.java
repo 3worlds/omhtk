@@ -48,23 +48,23 @@ class JavaUtilsTest {
 //		System.out.println(method+": "+text);
 	}
 
-	@Test
-	final void testGetClassString() {
-		assertThrows(Exception.class,()->JavaUtils.getClass("JavaUtils"));
-		try {
-			Class<?> c = JavaUtils.getClass("au.edu.anu.rscs.aot.util.JavaUtils");
-			show("testGetClassString",c.getName());
-			assertNotNull(c);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+//	@Test
+//	final void testGetClassString() {
+//		assertThrows(Exception.class,()->JavaUtils.getClass("JavaUtils"));
+//		try {
+//			Class<?> c = JavaUtils.getClass("au.edu.anu.rscs.aot.util.JavaUtils");
+//			show("testGetClassString",c.getName());
+//			assertNotNull(c);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//	}
 
-	@Test
-	final void testClassExists() {
-		assertTrue(JavaUtils.classExists("au.edu.anu.rscs.aot.util.JavaUtils"));
-		assertFalse(JavaUtils.classExists("JavaUtils"));
-	}
+//	@Test
+//	final void testClassExists() {
+//		assertTrue(JavaUtils.classExists("au.edu.anu.rscs.aot.util.JavaUtils"));
+//		assertFalse(JavaUtils.classExists("JavaUtils"));
+//	}
 
 	@Test
 	final void testGetClassesInPackage() {

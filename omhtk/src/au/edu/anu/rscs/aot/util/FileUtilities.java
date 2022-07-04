@@ -58,27 +58,25 @@ import au.edu.anu.rscs.aot.OmhtkException;
 // NOT TESTED
 public class FileUtilities {
 
-	/* deletes all files and directories include the root. */
 	/**
 	 * Delete all files and directories including the root directory.
+	 * 
 	 * @param dir the root of the directory tree to delete
-	 * @throws IOException
+	 * @throws IOException If deletion fails.
 	 */
 	public static void deleteFileTree(File dir) throws IOException {
 		Path root = dir.toPath();
 		Files.walk(root).sorted(Comparator.reverseOrder()).map(Path::toFile).forEach(File::delete);
-//		if (Files.exists(root))
-//			throw new OmhtkException("Failed to delete directory tree: [" + root + "]");
 	}
 
 	/**
-	 * Test if two streams are identical. Efficient and wuick, based on this 
+	 * Test if two streams are identical. Efficient and quick, based on this
 	 * <a href="https://dzone.com/articles/comparing-files-in-java">post</a>.
 	 * 
-	 * @param fis1
-	 * @param fis2
-	 * @return
-	 * @throws IOException
+	 * @param fis1 The first stream
+	 * @param fis2 The second stream.
+	 * @return true if identical, false otherwise.
+	 * @throws IOException If there is a file reading error.
 	 */
 	public static boolean identicalStreams(BufferedInputStream fis1, BufferedInputStream fis2) throws IOException {
 		int b1 = 0, b2 = 0;
@@ -96,6 +94,7 @@ public class FileUtilities {
 
 	/**
 	 * Copy a file to a target destination, erasing the target file it it exists.
+	 * 
 	 * @param src the source file
 	 * @param dst the target destination file
 	 */
@@ -105,13 +104,14 @@ public class FileUtilities {
 				dst.getParentFile().mkdirs();
 			Files.copy(src.toPath(), dst.toPath(), StandardCopyOption.REPLACE_EXISTING);
 		} catch (IOException e) {
-			throw new OmhtkException("FileUtilities.copyFileReplace: ",e);
+			throw new OmhtkException("FileUtilities.copyFileReplace: ", e);
 		}
 	}
 
 	/**
-	 * Construct a OS-independent path from its arguments. Has no effect on the file system, i.e. this
-	 * is just String manipulation. Ignores empty and {@code null} Strings in its arguments.
+	 * Construct a OS-independent path from its arguments. Has no effect on the file
+	 * system, i.e. this is just String manipulation. Ignores empty and {@code null}
+	 * Strings in its arguments.
 	 * 
 	 * @param pathElement a list of path elements (i.e. OS-compatible names)
 	 * @return the full path name
@@ -129,8 +129,9 @@ public class FileUtilities {
 	}
 
 	/**
-	 * Construct a OS-independent path from its arguments. Has no effect on the file system, i.e. this
-	 * is just String manipulation. Ignores empty and {@code null} Strings in its arguments.
+	 * Construct a OS-independent path from its arguments. Has no effect on the file
+	 * system, i.e. this is just String manipulation. Ignores empty and {@code null}
+	 * Strings in its arguments.
 	 * 
 	 * @param pathElements a list of path elements (i.e. OS-compatible names)
 	 * @return the {@link java.io.File File} handle to the path
@@ -193,14 +194,14 @@ public class FileUtilities {
 	/**
 	 * Create a file and write it to the file system.
 	 * 
-	 * @param file the file to create
+	 * @param file  the file to create
 	 * @param lines the lines to write to the file.
 	 */
 	public static void createFile(File file, Object... lines) {
 		try {
 			String dir = file.getParent();
 			createPath(dir);
-			PrintWriter out = new PrintWriter(file,StandardCharsets.UTF_8);
+			PrintWriter out = new PrintWriter(file, StandardCharsets.UTF_8);
 			for (Object line : lines)
 				out.println(line);
 			out.close();
@@ -210,11 +211,11 @@ public class FileUtilities {
 	}
 
 	/**
-	 * Read a text file from the file system.
+	 * Read a text file from the file system and return as a String array.
 	 * 
 	 * @param file the file to read
 	 * @return the content of the file as an array of Strings
-	 * @throws IOException
+	 * @throws IOException If file reading error.
 	 */
 	public static String[] readFile(File file) throws IOException {
 		List<String> lines = Files.readAllLines(Paths.get(file.getAbsolutePath()), Charset.defaultCharset());

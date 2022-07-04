@@ -61,19 +61,24 @@ public class JavaUtils {
 	
 	private static Logger log = Logging.getLogger(JavaUtils.class);
 
-	public static Class<?> getClass(String className) throws Exception {
-		return Class.forName(className);
-	}
+//	/**
+//	 * @param className The String className
+//	 * @return a Java class from a String className
+//	 * @throws Exception
+//	 */
+//	public static Class<?> getClass(String className) throws Exception {
+//		return Class.forName(className);
+//	}
 
-	@SuppressWarnings("unused")
-	public static Boolean classExists(String className) {
-		try {
-			Class<?> ItemClass = getClass(className);
-			return true;
-		} catch (Exception e) {
-			return false;
-		}
-	}
+//	@SuppressWarnings("unused")
+//	public static Boolean classExists(String className) {
+//		try {
+//			Class<?> ItemClass = getClass(className);
+//			return true;
+//		} catch (Exception e) {
+//			return false;
+//		}
+//	}
 
 	// Based on http://forum.java.sun.com/thread.jspa?threadID=341935&tstart=30
 	//
@@ -200,35 +205,35 @@ public class JavaUtils {
 		}
 	}
 
-	/**
-	 * get  list of all classes on the class path. 
-	 * doesnt work because some classes dont load simply. forget this. Bad idea.
-	 * @return
-	 */
-	@Deprecated
-	public static List<Class<?>> getClassList() {
-		return getClassList(getClassNameList());
-	}
+//	/**
+//	 * get  list of all classes on the class path. 
+//	 * doesnt work because some classes dont load simply. forget this. Bad idea.
+//	 * @return
+//	 */
+//	@Deprecated
+//	public static List<Class<?>> getClassList() {
+//		return getClassList(getClassNameList());
+//	}
 
-	/**
-	 * doesnt work because some classes dont load simply. forget this. Bad idea.
-	 * 
-	 * @param classNameList
-	 * @return
-	 */
-	@Deprecated
-	public static List<Class<?>> getClassList(List<String> classNameList) {
-		List<Class<?>> result = new LinkedList<Class<?>>();
-		for (String className : classNameList)
-			try {
-				result.add(Class.forName(className));
-			} catch (Exception e) {
-				System.out.println("JavaUtils.getClassList: '" + className + "', "  + e);
-				//e.printStackTrace();
-				//throw new OmhtkException("JavaUtils.getClassList(): class not found '" + className + "'", e);
-			}
-		return result;
-	}
+//	/**
+//	 * doesnt work because some classes dont load simply. forget this. Bad idea.
+//	 * 
+//	 * @param classNameList
+//	 * @return
+//	 */
+//	@Deprecated
+//	public static List<Class<?>> getClassList(List<String> classNameList) {
+//		List<Class<?>> result = new LinkedList<Class<?>>();
+//		for (String className : classNameList)
+//			try {
+//				result.add(Class.forName(className));
+//			} catch (Exception e) {
+//				System.out.println("JavaUtils.getClassList: '" + className + "', "  + e);
+//				//e.printStackTrace();
+//				//throw new OmhtkException("JavaUtils.getClassList(): class not found '" + className + "'", e);
+//			}
+//		return result;
+//	}
 
 	/**
 	 * Returns all the classes found on the class path. 

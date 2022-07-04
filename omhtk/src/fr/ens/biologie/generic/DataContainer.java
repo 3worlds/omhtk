@@ -32,74 +32,137 @@
 package fr.ens.biologie.generic;
 
 /**
- * <p>An interface for objects that contain data.</p>
+ * <p>
+ * An interface for objects that contain data.
+ * </p>
  * 
- * <p>Objects implementing this interface are assumed to contain data of an identical elementary
- * type ({@code Object} or primitive types).
+ * <p>
+ * Objects implementing this interface are assumed to contain data of an
+ * identical elementary type ({@code Object} or primitive types).
  * 
- * The interface only deals with the block data treatments (clone, clear, fill...).</p>
- * <p>All {@code fillWith(...)} method have a default implementation that does nothing.</p>
- *  
+ * The interface only deals with the block data treatments (clone, clear,
+ * fill...).
+ * </p>
+ * <p>
+ * All {@code fillWith(...)} method have a default implementation that does
+ * nothing.
+ * </p>
+ * 
  * @author J. Gignoux - 13 févr. 2017
  *
  */
 public interface DataContainer extends Cloneable {
 
-	/** creates a new instance of this container with the same content */
+	/**
+	 * creates a new instance of this container with the same content
+	 * 
+	 * @return The cloned {@code DataContainer}.
+	 */
 	public DataContainer clone();
-	
-	/** sets the content of this container to zero, whatever this means for the content type. */
+
+	/**
+	 * sets the content of this container to zero, whatever this means for the
+	 * content type.
+	 * 
+	 * @return this (fluid interface).
+	 */
 	public DataContainer clear();
-	
-	/** fills this container with a single {@code Object} value */
+
+	/**
+	 * fills this container with a single {@code Object} value
+	 * 
+	 * @param value Filling value.
+	 * 
+	 * @return this (fluid interface).
+	 */
 	public default DataContainer fillWith(Object value) {
 		// do nothing
 		return this;
 	}
 
-	/** fills this container with a single {@code int} value */
+	/**
+	 * fills this container with a single {@code int} value
+	 * 
+	 * @param value Filling value.
+	 * @return this (fluid interface).
+	 */
 	public default DataContainer fillWith(int value) {
 		// do nothing
 		return this;
-	}	
+	}
 
-	/** fills this container with a single {@code long} value */
+	/**
+	 * fills this container with a single {@code long} value
+	 * 
+	 * @param value Filling value.
+	 * @return this (fluid interface)
+	 */
 	public default DataContainer fillWith(long value) {
 		// do nothing
 		return this;
 	}
-	
-	/** fills this container with a single {@code short} value */
+
+	/**
+	 * fills this container with a single {@code short} value
+	 * 
+	 * @param value Filling value.
+	 * @return this (fluid interface)
+	 */
 	public default DataContainer fillWith(short value) {
 		// do nothing
 		return this;
 	}
 
-	/** fills this container with a single {@code byte} value */
+	/**
+	 * fills this container with a single {@code byte} value
+	 * 
+	 * @param value Filling value.
+	 * @return this (fluid interface)
+	 */
 	public default DataContainer fillWith(byte value) {
 		// do nothing
 		return this;
 	}
 
-	/** fills this container with a single {@code boolean} value */
+	/**
+	 * fills this container with a single {@code boolean} value
+	 * 
+	 * @param value Filling value.
+	 * @return this (fluid interface)
+	 */
 	public default DataContainer fillWith(boolean value) {
 		// do nothing
 		return this;
 	}
 
-	/** fills this container with a single {@code double} value */
+	/**
+	 * fills this container with a single {@code double} value
+	 * 
+	 * @param value Filling value.
+	 * @return this (fluid interface)
+	 */
 	public default DataContainer fillWith(double value) {
 		// do nothing
 		return this;
 	}
 
-	/** fills this container with a single {@code float} value */
+	/**
+	 * fills this container with a single {@code float} value
+	 * 
+	 * @param value Filling value.
+	 * @return this (fluid interface)
+	 */
 	public default DataContainer fillWith(float value) {
 		// do nothing
 		return this;
 	}
 
-	/** fills this container with a single {@code char} value */
+	/**
+	 * fills this container with a single {@code char} value
+	 * 
+	 * @param value Filling value.
+	 * @return this (fluid interface)
+	 */
 	public default DataContainer fillWith(char value) {
 		// do nothing
 		return this;

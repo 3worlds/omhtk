@@ -45,6 +45,12 @@ public class ListNode<T> {
 	protected ListNode<T> next;
 	protected ListNode<T> prev;
 
+	/**
+	 * ListNode constructor.
+	 * @param item The item to wrap.
+	 * @param next Its next ListNode.
+	 * @param prev Its previous ListNode.
+	 */
 	public ListNode(T item, ListNode<T> next, ListNode<T> prev) {
 		this.item = item;
 		this.next = next;
@@ -69,6 +75,9 @@ public class ListNode<T> {
 		return result;
 	}
 	
+	/**
+	 * @return If removed, false otherwise.
+	 */
 	public boolean isRemoved() {
 		return (prev == this);
 	}

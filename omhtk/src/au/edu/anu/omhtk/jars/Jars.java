@@ -84,7 +84,7 @@ import fr.ens.biologie.generic.utils.Logging;
  * <li>Set the main class / application entry point, if any.</li>
  * <li>Call {@code saveJar(...)} from the instance to create the jar file.</li>
  * </ol>
- * </p>
+ * 
  * 
  * @author Shayne Flint <br/>
  *         refactored by Jacques Gignoux 2017 <br/>
@@ -115,16 +115,18 @@ public abstract class Jars {
 
 	/**
 	 * <p>
-	 * A method to test if the code where the klass argument was found originates
-	 * from a jar. [hack found <a
-	 * href=https://stackoverflow.com/questions/482560/can-you-tell-on-runtime-
-	 * if-youre-running-java-from-within-a-jar> there</a>. The test is based on the
-	 * existence of the manifest].
+	 * Test if, at runtime, the origin of the class argument is in a jar. [hack
+	 * found <a
+	 * href=https://stackoverflow.com/questions/482560/can-you-tell-on-runtime-if-youre-running-java-from-within-a-jar>
+	 * here</a>]. The test depends on the presence of a manifest in the jar. This
+	 * test is needed if we must specifically load generated classes
 	 * </p>
 	 * 
-	 * @param klass the class to search for
+	 * @param klass The class to search for.
+	 * 
+	 * @return The file path string.
 	 */
-	@SuppressWarnings("unused")
+	// @SuppressWarnings("unused")
 	public static String getRunningJarFilePath(Class<?> klass) {
 		String result = null;
 		try {
@@ -139,29 +141,30 @@ public abstract class Jars {
 		}
 	}
 
-	/** Information for the manifest - specification vendor */
+	/**
+	 * A getter to add the specification vendor field to the manifest.
+	 * 
+	 * @return specification vendor for the manifest.
+	 */
 	public String getSpecVendor() {
 		return specVendor;
 	}
 
-	/** Information for the manifest - specification title */
+	/**
+	 * A getter to add the specification title to the the manifest.e
+	 * 
+	 * @return specification title for the manifest.
+	 */
 	public String getSpecTitle() {
 		return specTitle;
 	}
 
-	/** Information for the manifest - main class name */
-	public String getVersion() {
-		return version;
-	}
-
-//	public void setVersion(String major, String minor, String micro) {
-//		version = major+"."+minor+"."+micro;
-//	}
-
 	/**
-	 * Add all entries found in a jar to this jar.
+	 * 
+	 * /** Add all entries found in a jar to this jar.
 	 * 
 	 * @param jarName the jar to copy entries from
+	 * 
 	 */
 	public void addDependencyOnJar(String jarName) {
 		dependsOnJars.add(jarName);
@@ -201,8 +204,8 @@ public abstract class Jars {
 	 * "https://docs.oracle.com/javase/tutorial/deployment/jar/appman.html">entry
 	 * point</a> of this jar
 	 * 
-	 * @param className the class to use as an entry point - must have a
-	 *                  {@code main(...)} method
+	 * @param className the class to use as an entry point. It must have a
+	 *                  {@code main(...)} method.
 	 */
 	public void setMainClass(String className) {
 		this.mainClassName = className;
@@ -211,8 +214,8 @@ public abstract class Jars {
 	/**
 	 * Add any file (i.e. not only java classes) to this jar.
 	 * 
-	 * @param fileName     the name of the file
-	 * @param jarDirectory the directory where the file is
+	 * @param fileName     The name of the file.
+	 * @param jarDirectory The directory where the file resides.
 	 */
 	public void addFile(String fileName, String jarDirectory) {
 		File file = new File(fileName);
@@ -229,11 +232,6 @@ public abstract class Jars {
 	 * @param packageName the java package name to search for resources, i.e. with
 	 *                    dots as separators
 	 */
-	// CAUTION:
-	// * packageName = java name of the package, i.e. with dots as separators
-	// * absolutePackageDirName = absolute packageDirName, i.e. with the root of the
-	// threeworlds
-	// project hierarchy as a prefix
 	public void addResources(String packageName) {
 		log.info("adding resources in jar from package " + packageName);
 		URL root = ClassLoader.getSystemResource("");
@@ -302,17 +300,17 @@ public abstract class Jars {
 		jars.add(jarPath);
 	}
 
-	/**
-	 * Add a resource file to this jar.
-	 * 
-	 * @param resourceName the name of the resource file to search
-	 * @param packageName  the package name containing the resource
-	 */
-	// CAUTION: jars cannot be searched for file names - this must be wrong!
-	public void addResourceJar(String resourceName, String packageName) {
-		File file = Resources.getFile(resourceName, packageName);
-		jars.add(file.getAbsolutePath());
-	}
+//	/**
+//	 * Add a resource file to this jar.
+//	 * 
+//	 * @param resourceName the name of the resource file to search
+//	 * @param packageName  the package name containing the resource
+//	 */
+//	// CAUTION: jars cannot be searched for file names - this must be wrong!
+//	public void addResourceJar(String resourceName, String packageName) {
+//		File file = Resources.getFile(resourceName, packageName);
+//		jars.add(file.getAbsolutePath());
+//	}
 
 	// local class to store the file and java name of a jar entry
 	private class JarFileRecord {
@@ -326,15 +324,14 @@ public abstract class Jars {
 	}
 
 	/**
-	 * Save this jar instance as a jar file. Uses all the information stored in this
-	 * class instance after calls to {@code add...(...)} methods and manifest
-	 * settings to write the jar file. Also packs jar <a href=
+	 * Save this jar information a properly formatted jar file. Uses all the
+	 * information stored in its fields following calls to {@code add...(...)} and
+	 * manifest property values. Also packs jar <a href=
 	 * "https://docs.oracle.com/javase/8/docs/technotes/guides/jar/jar.html#Service_Provider">services</a>
-	 * found in included jars.
+	 * found in included jars. The method prevents attempts to add duplicates.
 	 * 
 	 * @param jarFile the name of the jar file to create
 	 */
-	// NB refactored by JG to prevent duplicate jar entries.
 	public void saveJar(File jarFile) {
 		final int BUFFER_SIZE = 10240;
 		try {
@@ -365,7 +362,7 @@ public abstract class Jars {
 			// JarOutputStream out = new JarOutputStream(stream, manifest);
 			JarOutputStream jarOutStream = new JarOutputStream(new FileOutputStream(jarFile), manifest);
 			Set<String> jEntryList = new HashSet<>();
-	
+
 			for (String className : classNames) {
 				log.info("adding class " + className);
 				File classFile = JavaUtils.fileForClass(className);

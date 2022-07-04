@@ -32,8 +32,9 @@
 package fr.ens.biologie.generic.utils;
 
 /**
- * A class holding a triplet (in the mathematical sense, ie ordered) of objects of possibly different classes. 
- * A three element Tuple based on javafx.util.Pair. Immutable.
+ * A class holding a triplet (in the mathematical sense, ie ordered) of objects
+ * of possibly different classes. A three element Tuple based on
+ * javafx.util.Pair. Immutable.
  * 
  * @author Ian Davies - 14 Oct 2019
  * 
@@ -41,7 +42,7 @@ package fr.ens.biologie.generic.utils;
  * @param <S> The class of the second triplet member
  * @param <T> The class of the triplet member
  *
- *	@see Duple
+ * @see Duple
  */
 public class Tuple<F, S, T> {
 
@@ -51,7 +52,7 @@ public class Tuple<F, S, T> {
 
 	/**
 	 * 
-	 * @param f the first member 
+	 * @param f the first member
 	 * @param s the second member
 	 * @param t the third member
 	 */
@@ -63,24 +64,21 @@ public class Tuple<F, S, T> {
 	}
 
 	/**
-	 * The first member.
-	 * @return
+	 * @return The first member.
 	 */
 	public F getFirst() {
 		return first;
 	}
 
 	/**
-	 * The second member.
-	 * @return
+	 * @return The second member.
 	 */
 	public S getSecond() {
 		return second;
 	}
 
 	/**
-	 * The third member.
-	 * @return
+	 * @return The third member.
 	 */
 	public T getThird() {
 		return third;

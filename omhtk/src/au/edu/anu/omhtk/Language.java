@@ -43,8 +43,14 @@ public class Language {
 
 	private static final String lang = System.getProperty("user.language");
 //	private static final String lang = "fr";
-	
+
+	/**
+	 * Opening single quote.
+	 */
 	public static String oq = "'";
+	/**
+	 * Closing single quote.
+	 */
 	public static String cq = "'";
 	static {
 		if (French()) {
@@ -56,14 +62,23 @@ public class Language {
 		}
 	}
 
+	/**
+	 * @return true if the system's language is French, false otherwise.
+	 */
 	public static boolean French() {
 		return lang.equals("fr");
 	}
 
+	/**
+	 * @return true if the system's language is Japanese, false otherwise.
+	 */
 	public static boolean Japanese() {
 		return lang.equals("jp");
 	}
 
+	/**
+	 * @return true if the system's language is Chinese (Mandarin), false otherwise.
+	 */
 	public static boolean Chinese() {
 		return lang.equals("cn");
 	}

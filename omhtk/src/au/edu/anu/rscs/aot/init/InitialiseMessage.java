@@ -34,21 +34,24 @@ package au.edu.anu.rscs.aot.init;
 import fr.ens.biologie.generic.Initialisable;
 
 /**
- * <p>A class to store error messages that occurred during a late (=after instantiation) initialisation.
- * Works in conjunction with {@link Initialiser}.</p>
+ * <p>
+ * A class to store error messages that occurred during a late (=after
+ * instantiation) initialisation. Works in conjunction with {@link Initialiser}.
+ * </p>
+ * 
  * @author Jacques Gignoux - 7 mai 2019
  *
  */
 public class InitialiseMessage {
-	
+
 	private Exception exc = null;
 	private Object target = null;
-	
+
 	/**
 	 * Constructor
 	 * 
-	 * @param item the object on which initialisation failed
-	 * @param failed the error raised by the initialisation method call
+	 * @param item   the object on which initialisation failed.
+	 * @param failed the error raised by the initialisation method call.
 	 */
 	public InitialiseMessage(Object item, Exception failed) {
 		super();
@@ -56,12 +59,21 @@ public class InitialiseMessage {
 		exc = failed;
 	}
 
-	/** The error raised by the initialisation method call */
+	/**
+	 * The error raised by the initialisation method call
+	 * 
+	 * @return The exception.
+	 */
 	public Exception getException() {
 		return exc;
 	}
 
-	/** The object which caused the error. Usually, an {@link Initialisable} instance.*/
+	/**
+	 * The object which caused the error. Usually, an {@link Initialisable}
+	 * instance.
+	 * 
+	 * @return the object that caused the error.
+	 */
 	public Object getTarget() {
 		return target;
 	}
@@ -69,10 +81,8 @@ public class InitialiseMessage {
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("Initialisation failed for object:\n\t")
-			.append(target.toString())
-			.append("\n--with Error:\n\t")
-			.append(exc.toString());
+		sb.append("Initialisation failed for object:\n\t").append(target.toString()).append("\n--with Error:\n\t")
+				.append(exc.toString());
 		return sb.toString();
 	}
 }

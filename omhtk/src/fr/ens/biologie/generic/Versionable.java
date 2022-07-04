@@ -32,57 +32,171 @@
 package fr.ens.biologie.generic;
 
 /**
- * An interface to put version numbers on objects. Assumes a major.minor.micro format.
- * Methods are self-explained getters and setters.
+ * An interface to put version numbers on objects.
+ * <p>
+ * Version numbers are dot separated integers in the form
+ * {@code <major>.<minor>.<micro>}.
+ *
+ * <ol>
+ * <li>Major: Upgraded when making incompatible API changes.</li>
+ * <li>Minor: Upgraded when adding functionality in a backwards compatible
+ * manner.</li>
+ * <li>Micro: Upgraded when making backwards compatible bug fixes.</li>
+ * </ol>
+ * 
+ * @see <a href ="https://semver.org/">Version numbering semantics</a>
  * 
  * @author Jacques Gignoux - 11/5/2018
  *
  */
 public interface Versionable {
-	
+
+	/**
+	 * Getter for the version string.
+	 * <p>
+	 * Version numbers are dot separated integers in the form
+	 * {@code <major>.<minor>.<micro>}.
+	 * 
+	 * 
+	 * @return The version string
+	 */
 	public String getVersion();
-	
+
+	/**
+	 * Interface default implementation setter for version numbers.
+	 * <p>
+	 * Version numbers are dot separated integers in the form
+	 * {@code <major>.<minor>.<micro>}.
+	 * 
+	 * @param major Part representing incompatible API changes.
+	 * @param minor Part representing added functionality that is backwards
+	 *              compatible.
+	 * @param micro Part representing new backwards compatible bug fixes.
+	 */
 	public void setVersion(String major, String minor, String micro);
-	
+
+	/**
+	 * Interface default implementation setter for version numbers.
+	 * <p>
+	 * Version numbers are dot separated integers in the form
+	 * {@code <major>.<minor>.<micro>}.
+	 * 
+	 * @param major Part representing incompatible API changes.
+	 * @param minor Part representing added functionality that is backwards
+	 *              compatible.
+	 * @param micro Part representing new backwards compatible bug fixes.
+	 */
 	default public void setVersion(int major, int minor, int micro) {
-		setVersion(major,minor,micro);
+		setVersion(major, minor, micro);
 	}
-	
+
+	/**
+	 * Getter for the major part of the version string.
+	 * <p>
+	 * Version strings are dot separated integers in the form
+	 * {@code <major>.<minor>.<micro>}.
+	 * 
+	 * @return Major (first) part of version string.
+	 */
 	default public String getMajor() {
 		return getVersion().split("\\.")[0];
 	}
-	
+
+	/**
+	 * Getter for the minor part of the version string.
+	 * <p>
+	 * Version strings are dot separated integers in the form
+	 * {@code <major>.<minor>.<micro>}.
+	 * 
+	 * @return minor (second) part of version string.
+	 */
 	default public String getMinor() {
 		return getVersion().split("\\.")[1];
 	}
 
+	/**
+	 * Getter for the micro part of the version string.
+	 * <p>
+	 * Version strings are dot separated integers in the form
+	 * {@code <major>.<minor>.<micro>}.
+	 * 
+	 * @return micro (third) part of version string.
+	 */
 	default public String getMicro() {
 		return getVersion().split("\\.")[2];
 	}
 
+	/**
+	 * Setter for the major part of the version string.
+	 * <p>
+	 * Version strings are dot separated integers in the form
+	 * {@code <major>.<minor>.<micro>}.
+	 * 
+	 * @param major The major (first) part of the version string.
+	 */
 	default public void setMajor(String major) {
 		String[] s = getVersion().split("\\.");
-		setVersion(major,s[1],s[2]);
+		setVersion(major, s[1], s[2]);
 	}
-	
+
+	/**
+	 * Setter for the minor part of the version string.
+	 * <p>
+	 * Version strings are dot separated integers in the form
+	 * {@code <major>.<minor>.<micro>}.
+	 * 
+	 * @param minor The minor (second) part of the version string.
+	 */
 	default public void setMinor(String minor) {
 		String[] s = getVersion().split("\\.");
-		setVersion(s[0],minor,s[2]);
+		setVersion(s[0], minor, s[2]);
 	}
 
+	/**
+	 * Setter for the micro part of the version string.
+	 * <p>
+	 * Version strings are dot separated integers in the form
+	 * {@code <major>.<minor>.<micro>}.
+	 * 
+	 * @param micro The micro (thrid) part of the version string.
+	 */
 	default public void setMicro(String micro) {
 		String[] s = getVersion().split("\\.");
-		setVersion(s[0],s[1],micro);
+		setVersion(s[0], s[1], micro);
 	}
 
+	/**
+	 * Setter for the major part of the version string.
+	 * <p>
+	 * Version strings are dot separated integers in the form
+	 * {@code <major>.<minor>.<micro>}.
+	 * 
+	 * @param major The major (first) part of the version string.
+	 */
 	default public void setMajor(int major) {
 		setMajor(Integer.toString(major));
 	}
 
+	/**
+	 * Setter for the major part of the version string.
+	 * <p>
+	 * Version strings are dot separated integers in the form
+	 * {@code <major>.<minor>.<micro>}.
+	 * 
+	 * @param minor The minor (second) part of the version string.
+	 */
 	default public void setMinor(int minor) {
 		setMinor(Integer.toString(minor));
 	}
 
+	/**
+	 * Setter for the micro part of the version string.
+	 * <p>
+	 * Version strings are dot separated integers in the form
+	 * {@code <major>.<minor>.<micro>}.
+	 * 
+	 * @param micro The micro (thrid) part of the version string.
+	 */
 	default public void setMicro(int micro) {
 		setMicro(Integer.toString(micro));
 	}
