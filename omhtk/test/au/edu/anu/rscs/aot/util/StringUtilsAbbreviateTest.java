@@ -30,11 +30,7 @@
  **************************************************************************/
 package au.edu.anu.rscs.aot.util;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import org.junit.jupiter.api.Test;
-
-import au.edu.anu.rscs.aot.OmhtkException;
 
 class StringUtilsAbbreviateTest {
 

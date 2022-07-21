@@ -31,8 +31,6 @@
  **************************************************************************/
 package au.edu.anu.omhtk.preferences;
 
-import java.io.File;
-
 /**
  * <p>
  * This static class is a wrapper for any implementations of

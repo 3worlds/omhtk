@@ -31,8 +31,6 @@
  **************************************************************************/
 package au.edu.anu.rscs.aot.util;
 
-import au.edu.anu.rscs.aot.OmhtkException;
-
 /**
  * Static methods to manipulate strings
  * 
