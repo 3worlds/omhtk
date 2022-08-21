@@ -1,7 +1,10 @@
 package fr.ens.biologie.generic.utils;
 
 /**
- * http://erison.blogspot.com/2011/07/algorithm-for-optimal-scaling-on-chart.html
+ * http://erison.blogspot.com/2011/07/algorithm-for-optimal-scaling-on-chart.html.
+ * <p>
+ * This class does not throw any exceptions. Results must be checked for NaN
+ * etc.
  * 
  * @author Ian Davies - 24 July 2022
  */
@@ -126,11 +129,4 @@ public class NiceScale {
 		return niceMax;
 	}
 
-	public static void main(String[] args) {
-		NiceScale numScale = new NiceScale(0, 22141.5);
-
-		System.out.println("Tick Spacing:\t" + numScale.getTickSpacing());
-		System.out.println("Nice Minimum:\t" + numScale.getNiceMin());
-		System.out.println("Nice Maximum:\t" + numScale.getNiceMax());
-	}
 }
