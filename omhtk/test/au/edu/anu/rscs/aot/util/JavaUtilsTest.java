@@ -72,7 +72,7 @@ class JavaUtilsTest {
 		assertNotNull(list);
 		for (Class<?> c:list)
 			show("testGetClassesInPackage",c.getSimpleName());
-		assertEquals(list.size(),8);
+		assertEquals(list.size(),9);
 	}
 
 	@Test
