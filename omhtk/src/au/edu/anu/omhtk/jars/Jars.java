@@ -126,7 +126,7 @@ public abstract class Jars {
 	 * 
 	 * @return The file path string.
 	 */
-	// @SuppressWarnings("unused")
+	@SuppressWarnings("unused")
 	public static String getRunningJarFilePath(Class<?> klass) {
 		String result = null;
 		try {
