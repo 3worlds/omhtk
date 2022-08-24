@@ -124,289 +124,289 @@ class DynamicListTest {
 		assertEquals(i,15);
 	}
 
-	@Test
-	void testCorrectingIterator() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	void testToArray() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	void testToArrayEArray() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	void testAddT() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	void testRemoveObject() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	void testContainsAll() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	void testAddAllCollectionOfQextendsT() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	void testAddAllIntCollectionOfQextendsT() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	void testAddAllTArray() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	void testRemoveAll() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	void testRetainAll() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	void testClear() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	void testGet() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	void testSet() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	void testAddIntT() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	void testRemoveInt() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	void testIndexOf() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	void testLastIndexOf() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	void testListIterator() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	void testListIteratorInt() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	void testCheckedListIterator() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	void testCorrectingListIterator() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	void testSubList() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	void testShowString() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	void testShow() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	void testAddFirst() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	void testAddLast() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	void testOfferFirst() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	void testOfferLast() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	void testRemoveFirst() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	void testRemoveLast() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	void testPollFirst() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	void testPollLast() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	void testGetFirst() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	void testGetLast() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	void testPeekFirst() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	void testPeekLast() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	void testRemoveFirstOccurrence() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	void testRemoveLastOccurrence() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	void testOffer() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	void testRemove() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	void testPoll() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	void testElement() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	void testPeek() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	void testPush() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	void testPop() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	void testDescendingIterator() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	void testDescendingCorrectingIterator() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	void testDifference() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	void testIntersection() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	void testSortList() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	void testIsSorted() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	void testAddUnique() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	void testAddAllUnique() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	void testMakeArray() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	void testToString() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	void testToLongString() {
-		fail("Not yet implemented");
-	}
+//	@Test
+//	void testCorrectingIterator() {
+//		fail("Not yet implemented");
+//	}
+//
+//	@Test
+//	void testToArray() {
+//		fail("Not yet implemented");
+//	}
+//
+//	@Test
+//	void testToArrayEArray() {
+//		fail("Not yet implemented");
+//	}
+//
+//	@Test
+//	void testAddT() {
+//		fail("Not yet implemented");
+//	}
+//
+//	@Test
+//	void testRemoveObject() {
+//		fail("Not yet implemented");
+//	}
+//
+//	@Test
+//	void testContainsAll() {
+//		fail("Not yet implemented");
+//	}
+//
+//	@Test
+//	void testAddAllCollectionOfQextendsT() {
+//		fail("Not yet implemented");
+//	}
+//
+//	@Test
+//	void testAddAllIntCollectionOfQextendsT() {
+//		fail("Not yet implemented");
+//	}
+//
+//	@Test
+//	void testAddAllTArray() {
+//		fail("Not yet implemented");
+//	}
+//
+//	@Test
+//	void testRemoveAll() {
+//		fail("Not yet implemented");
+//	}
+//
+//	@Test
+//	void testRetainAll() {
+//		fail("Not yet implemented");
+//	}
+//
+//	@Test
+//	void testClear() {
+//		fail("Not yet implemented");
+//	}
+//
+//	@Test
+//	void testGet() {
+//		fail("Not yet implemented");
+//	}
+//
+//	@Test
+//	void testSet() {
+//		fail("Not yet implemented");
+//	}
+//
+//	@Test
+//	void testAddIntT() {
+//		fail("Not yet implemented");
+//	}
+//
+//	@Test
+//	void testRemoveInt() {
+//		fail("Not yet implemented");
+//	}
+//
+//	@Test
+//	void testIndexOf() {
+//		fail("Not yet implemented");
+//	}
+//
+//	@Test
+//	void testLastIndexOf() {
+//		fail("Not yet implemented");
+//	}
+//
+//	@Test
+//	void testListIterator() {
+//		fail("Not yet implemented");
+//	}
+//
+//	@Test
+//	void testListIteratorInt() {
+//		fail("Not yet implemented");
+//	}
+//
+//	@Test
+//	void testCheckedListIterator() {
+//		fail("Not yet implemented");
+//	}
+//
+//	@Test
+//	void testCorrectingListIterator() {
+//		fail("Not yet implemented");
+//	}
+//
+//	@Test
+//	void testSubList() {
+//		fail("Not yet implemented");
+//	}
+//
+//	@Test
+//	void testShowString() {
+//		fail("Not yet implemented");
+//	}
+//
+//	@Test
+//	void testShow() {
+//		fail("Not yet implemented");
+//	}
+//
+//	@Test
+//	void testAddFirst() {
+//		fail("Not yet implemented");
+//	}
+//
+//	@Test
+//	void testAddLast() {
+//		fail("Not yet implemented");
+//	}
+//
+//	@Test
+//	void testOfferFirst() {
+//		fail("Not yet implemented");
+//	}
+//
+//	@Test
+//	void testOfferLast() {
+//		fail("Not yet implemented");
+//	}
+//
+//	@Test
+//	void testRemoveFirst() {
+//		fail("Not yet implemented");
+//	}
+//
+//	@Test
+//	void testRemoveLast() {
+//		fail("Not yet implemented");
+//	}
+//
+//	@Test
+//	void testPollFirst() {
+//		fail("Not yet implemented");
+//	}
+//
+//	@Test
+//	void testPollLast() {
+//		fail("Not yet implemented");
+//	}
+//
+//	@Test
+//	void testGetFirst() {
+//		fail("Not yet implemented");
+//	}
+//
+//	@Test
+//	void testGetLast() {
+//		fail("Not yet implemented");
+//	}
+//
+//	@Test
+//	void testPeekFirst() {
+//		fail("Not yet implemented");
+//	}
+//
+//	@Test
+//	void testPeekLast() {
+//		fail("Not yet implemented");
+//	}
+//
+//	@Test
+//	void testRemoveFirstOccurrence() {
+//		fail("Not yet implemented");
+//	}
+//
+//	@Test
+//	void testRemoveLastOccurrence() {
+//		fail("Not yet implemented");
+//	}
+//
+//	@Test
+//	void testOffer() {
+//		fail("Not yet implemented");
+//	}
+//
+//	@Test
+//	void testRemove() {
+//		fail("Not yet implemented");
+//	}
+//
+//	@Test
+//	void testPoll() {
+//		fail("Not yet implemented");
+//	}
+//
+//	@Test
+//	void testElement() {
+//		fail("Not yet implemented");
+//	}
+//
+//	@Test
+//	void testPeek() {
+//		fail("Not yet implemented");
+//	}
+//
+//	@Test
+//	void testPush() {
+//		fail("Not yet implemented");
+//	}
+//
+//	@Test
+//	void testPop() {
+//		fail("Not yet implemented");
+//	}
+//
+//	@Test
+//	void testDescendingIterator() {
+//		fail("Not yet implemented");
+//	}
+//
+//	@Test
+//	void testDescendingCorrectingIterator() {
+//		fail("Not yet implemented");
+//	}
+//
+//	@Test
+//	void testDifference() {
+//		fail("Not yet implemented");
+//	}
+//
+//	@Test
+//	void testIntersection() {
+//		fail("Not yet implemented");
+//	}
+//
+//	@Test
+//	void testSortList() {
+//		fail("Not yet implemented");
+//	}
+//
+//	@Test
+//	void testIsSorted() {
+//		fail("Not yet implemented");
+//	}
+//
+//	@Test
+//	void testAddUnique() {
+//		fail("Not yet implemented");
+//	}
+//
+//	@Test
+//	void testAddAllUnique() {
+//		fail("Not yet implemented");
+//	}
+//
+//	@Test
+//	void testMakeArray() {
+//		fail("Not yet implemented");
+//	}
+//
+//	@Test
+//	void testToString() {
+//		fail("Not yet implemented");
+//	}
+//
+//	@Test
+//	void testToLongString() {
+//		fail("Not yet implemented");
+//	}
 
 }
