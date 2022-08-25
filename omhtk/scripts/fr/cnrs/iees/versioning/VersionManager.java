@@ -97,7 +97,7 @@ public class VersionManager {
 
 	"\t<!-- Artifacts are produced in the project lib directory-->\n" +
 	"\t<property name=\"jarRepo\" location=\"${user.dir}/../lib\"/>\n\n" +
-	"\t<property name=\"docRepo\" location=\"${user.dir}/../doc/javadoc\"/>" +
+	"\t<property name=\"docRepo\" location=\"${user.dir}/../javadoc\"/>" +
 
 	"\t<!-- Use this string as the organisation package -->\n" +
 	"\t<property name=\"org\" value=\"" + ORG +"\"/>\n\n" +
