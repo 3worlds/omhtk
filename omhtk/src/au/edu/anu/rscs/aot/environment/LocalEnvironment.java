@@ -43,7 +43,6 @@ import java.util.logging.Logger;
 
 import org.apache.commons.io.FileUtils;
 
-import au.edu.anu.rscs.aot.OmhtkException;
 import au.edu.anu.rscs.aot.util.ExceptionString;
 import au.edu.anu.rscs.aot.util.ExecutionResults;
 import fr.ens.biologie.generic.utils.Logging;
@@ -126,7 +125,7 @@ public class LocalEnvironment extends Environment {
 		if (dirStack.size() > 1)
 			dirStack.pop();
 		else
-			throw new OmhtkException("Illegal attempt to pop cwd from dirStack");
+			throw new IndexOutOfBoundsException("Illegal attempt to pop cwd from dirStack: size = "+dirStack.size());
 	}
 
 	@Override
@@ -151,7 +150,7 @@ public class LocalEnvironment extends Environment {
 		try {
 			FileUtils.copyFile(new File(source), new File(target));
 		} catch (IOException e) {
-			throw new OmhtkException("LocalEnvironment.copyFile", e);
+			e.printStackTrace();
 		}
 	}
 
@@ -189,7 +188,7 @@ public class LocalEnvironment extends Environment {
 //		try {
 //			FileUtils.deleteDirectory(makeFile(path));
 //		} catch (IOException e) {
-//			throw new OmhtkException(e);
+//			e.printStackTrace();
 //		}
 	}
 

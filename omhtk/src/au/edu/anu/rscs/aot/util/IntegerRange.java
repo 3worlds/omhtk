@@ -31,8 +31,6 @@
  **************************************************************************/
 package au.edu.anu.rscs.aot.util;
 
-import au.edu.anu.rscs.aot.OmhtkException;
-
 /**
  * <p>
  * A class to represent ranges of integer numbers. Fully compatible with
@@ -90,7 +88,7 @@ public class IntegerRange {
 				last = Integer.MAX_VALUE;
 			}
 		} else
-			throw new OmhtkException("'" + str + "' is not a valid integer range");
+			throw new IllegalArgumentException("'" + str + "' is not a valid integer range");
 		check();
 	}
 
@@ -105,7 +103,7 @@ public class IntegerRange {
 //			else
 //				last = Integer.valueOf(endStr);
 //		} else
-//			throw new OmhtkException("'" + str + "' is not a valid integer range");
+//			throw new something("'" + str + "' is not a valid integer range");
 //		check();
 //	}
 
@@ -117,7 +115,7 @@ public class IntegerRange {
 
 	private void check() {
 		if (first > last)
-			throw new OmhtkException("Invalid integer range: " + first + " must <= " + last);
+			throw new IllegalArgumentException("Invalid integer range: " + first + " must <= " + last);
 	}
 
 	/**
@@ -138,7 +136,7 @@ public class IntegerRange {
 	 */
 	public void check(int value) {
 		if (!inRange(value))
-			throw new OmhtkException(value + " is not in integer range " + first + ".." + last);
+			throw new IllegalArgumentException(value + " is not in integer range " + first + ".." + last);
 	}
 
 	/**

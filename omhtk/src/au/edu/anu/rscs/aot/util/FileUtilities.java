@@ -47,8 +47,6 @@ import java.nio.file.StandardCopyOption;
 import java.util.Comparator;
 import java.util.List;
 
-import au.edu.anu.rscs.aot.OmhtkException;
-
 /**
  * Utilities to manipulate files independent of OS.
  * 
@@ -104,7 +102,7 @@ public class FileUtilities {
 				dst.getParentFile().mkdirs();
 			Files.copy(src.toPath(), dst.toPath(), StandardCopyOption.REPLACE_EXISTING);
 		} catch (IOException e) {
-			throw new OmhtkException("FileUtilities.copyFileReplace: ", e);
+			e.printStackTrace();
 		}
 	}
 
@@ -154,7 +152,7 @@ public class FileUtilities {
 			}
 			in.close();
 		} catch (Exception e) {
-			throw new OmhtkException("FileUtils.catFile(): " + file);
+			e.printStackTrace();
 		}
 	}
 
@@ -172,7 +170,7 @@ public class FileUtilities {
 			}
 			in.close();
 		} catch (Exception e) {
-			throw new OmhtkException("FileUtils.catReader(): " + reader);
+			e.printStackTrace();
 		}
 	}
 
@@ -206,7 +204,7 @@ public class FileUtilities {
 				out.println(line);
 			out.close();
 		} catch (Exception e) {
-			throw new OmhtkException("FileUtils.createFile(): " + file, e);
+			e.printStackTrace();
 		}
 	}
 

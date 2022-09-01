@@ -34,9 +34,8 @@ package au.edu.anu.rscs.aot.util;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.AbstractCollection;
-
-import au.edu.anu.rscs.aot.OmhtkException;
 
 /**
  * <p>
@@ -128,8 +127,8 @@ public class ExecutionResults {
 			this.results = new String[len];
 			for (int i = 0; i < len; i++)
 				this.results[i] = br.readLine();
-		} catch (Exception e) {
-			throw new OmhtkException(e);
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -179,7 +178,7 @@ public class ExecutionResults {
 	 */
 	public void check() {
 		if (exitCode != NORMAL_EXIT)
-			throw new OmhtkException(toString());
+			throw new IllegalStateException(toString());
 	}
 
 }

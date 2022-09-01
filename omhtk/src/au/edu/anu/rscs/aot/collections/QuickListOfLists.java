@@ -35,7 +35,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-import au.edu.anu.rscs.aot.OmhtkException;
 import fr.ens.biologie.generic.Sizeable;
 import fr.ens.biologie.generic.Textable;
 
@@ -209,12 +208,12 @@ public class QuickListOfLists<T> implements Collection<T>, Textable, Sizeable {
 
 	@Override
 	public boolean add(T e) {
-		throw new OmhtkException(getClass().getSimpleName() + " is immutable.");
+		throw new UnsupportedOperationException(getClass().getSimpleName() + " is immutable.");
 	}
 
 	@Override
 	public boolean remove(Object o) {
-		throw new OmhtkException(getClass().getSimpleName() + " is immutable.");
+		throw new UnsupportedOperationException(getClass().getSimpleName() + " is immutable.");
 	}
 
 	@Override
@@ -224,17 +223,17 @@ public class QuickListOfLists<T> implements Collection<T>, Textable, Sizeable {
 
 	@Override
 	public boolean addAll(Collection<? extends T> c) {
-		throw new OmhtkException(getClass().getSimpleName() + " is immutable.");
+		throw new UnsupportedOperationException(getClass().getSimpleName() + " is immutable.");
 	}
 
 	@Override
 	public boolean removeAll(Collection<?> c) {
-		throw new OmhtkException(getClass().getSimpleName() + " is immutable.");
+		throw new UnsupportedOperationException(getClass().getSimpleName() + " is immutable.");
 	}
 
 	@Override
 	public boolean retainAll(Collection<?> c) {
-		throw new OmhtkException(getClass().getSimpleName() + " is immutable.");
+		throw new UnsupportedOperationException(getClass().getSimpleName() + " is immutable.");
 	}
 
 }

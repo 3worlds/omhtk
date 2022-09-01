@@ -45,7 +45,6 @@ import java.util.jar.JarFile;
 import java.util.logging.Logger;
 
 import au.edu.anu.omhtk.jars.Jars;
-import au.edu.anu.rscs.aot.OmhtkException;
 import au.edu.anu.rscs.aot.collections.DynamicList;
 import fr.ens.biologie.generic.utils.Logging;
 
@@ -188,7 +187,8 @@ public class JavaUtils {
 			}
 			jarFile.close();
 		} catch (IOException e) {
-			throw new OmhtkException("JavaUtils.getClassFromJar: cannot open jar '" + jar + "'", e);
+			e.printStackTrace();
+//			throw new something("JavaUtils.getClassFromJar: cannot open jar '" + jar + "'", e);
 		}
 	}
 
@@ -230,7 +230,7 @@ public class JavaUtils {
 //			} catch (Exception e) {
 //				System.out.println("JavaUtils.getClassList: '" + className + "', "  + e);
 //				//e.printStackTrace();
-//				//throw new OmhtkException("JavaUtils.getClassList(): class not found '" + className + "'", e);
+//				//throw new something("JavaUtils.getClassList(): class not found '" + className + "'", e);
 //			}
 //		return result;
 //	}

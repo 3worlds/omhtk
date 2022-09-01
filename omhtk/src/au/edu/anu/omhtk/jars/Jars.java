@@ -58,7 +58,6 @@ import java.util.zip.ZipFile;
 
 import org.apache.commons.io.IOUtils;
 
-import au.edu.anu.rscs.aot.OmhtkException;
 import au.edu.anu.rscs.aot.environment.Environment;
 import au.edu.anu.rscs.aot.environment.LocalEnvironment;
 import au.edu.anu.rscs.aot.util.JavaUtils;
@@ -255,7 +254,7 @@ public abstract class Jars {
 				}
 			}
 		else
-			throw new OmhtkException("Error packing jar: " + packageName + " is not a directory");
+			throw new IllegalArgumentException("Error packing jar: " + packageName + " is not a directory");
 	}
 
 	/**

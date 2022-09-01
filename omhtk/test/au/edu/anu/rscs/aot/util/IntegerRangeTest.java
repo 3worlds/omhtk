@@ -34,8 +34,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
-import au.edu.anu.rscs.aot.OmhtkException;
-
 /**
  * 
  * @author Jacques Gignoux - 4 avr. 2019
@@ -47,7 +45,7 @@ class IntegerRangeTest {
 	void testIntegerRangeIntInt() {
 		IntegerRange r = new IntegerRange(0,3);
 		assertEquals(r.toString(),"0..3");
-		assertThrows(OmhtkException.class,()->new IntegerRange(3,0));
+		assertThrows(IllegalArgumentException.class,()->new IntegerRange(3,0));
 	}
 
 	@Test
@@ -56,7 +54,7 @@ class IntegerRangeTest {
 		assertEquals(r.toString(),"0..3");
 		r = new IntegerRange("1..*");
 		assertEquals(r.toString(),"1..*");
-		assertThrows(OmhtkException.class,()->new IntegerRange("blah"));
+		assertThrows(IllegalArgumentException.class,()->new IntegerRange("blah"));
 	}
 
 	@Test
@@ -80,7 +78,7 @@ class IntegerRangeTest {
 	@Test
 	void testCheck() {
 		IntegerRange r = new IntegerRange("25..*");
-		assertThrows(OmhtkException.class,()->r.check(0));
+		assertThrows(IllegalArgumentException.class,()->r.check(0));
 		r.check(26);
 	}
 

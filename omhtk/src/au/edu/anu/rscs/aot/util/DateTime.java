@@ -39,8 +39,6 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
 
-import au.edu.anu.rscs.aot.OmhtkException;
-
 /**
  * A date-time format. Immutable.
  * 
@@ -113,10 +111,9 @@ public class DateTime {
 				this.date = localDate;
 				return;
 			} catch (ParseException e) {
-//				System.out.println(e);
+				e.printStackTrace();
 			}
 		}
-		throw new OmhtkException("Cannot convert '" + dateStr + "' to a date");
 	}
 
 	/**

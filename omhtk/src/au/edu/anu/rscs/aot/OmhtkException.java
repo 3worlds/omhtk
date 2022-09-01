@@ -42,6 +42,7 @@ import fr.ens.biologie.generic.Textable;
 //NB: this was previously AotException
 //Policy is to make an exception at least for each library
 //The general advice for exceptions is to throw early and catch late.
+@Deprecated
 public class OmhtkException extends RuntimeException {
 
 	private static final long serialVersionUID = -8889113181614003738L;

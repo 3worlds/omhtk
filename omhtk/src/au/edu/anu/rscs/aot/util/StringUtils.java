@@ -51,9 +51,9 @@ public class StringUtils {
 //	 */
 //	public static String abbreviate(String s, int l) {
 //		if (l < 0)
-//			throw new OmhtkException("Attempt to abbreviate a string to less than 0");
+//			throw new something("Attempt to abbreviate a string to less than 0");
 //		if (s == null)
-//			throw new OmhtkException("Attempt to abbreviate a null string");
+//			throw new something("Attempt to abbreviate a null string");
 //		
 //		if (s.length() <= (l + 1))
 //			return s;

@@ -31,8 +31,6 @@
  **************************************************************************/
 package au.edu.anu.omhtk.rng;
 
-import au.edu.anu.rscs.aot.OmhtkException;
-
 /**
  * A static list of 1,000 true random integer numbers generated from "atmospheric noise" on 10/07/2018
  * found <a href="https://www.random.org/integers/">here</a>, to use as seeds for pseudo-random
@@ -52,7 +50,7 @@ public class RandomSeeds {
 		if (index >= 0 && index < seeds.length)
 			return seeds[index];
 		else
-			throw new OmhtkException("Random seed index out of range (" + index + ") [0.." + (seeds.length - 1) + "] ");
+			throw new IndexOutOfBoundsException("Random seed index out of range (" + index + ") [0.." + (seeds.length - 1) + "] ");
 	}
 	
 	/**

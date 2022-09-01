@@ -31,8 +31,6 @@
  **************************************************************************/
 package fr.ens.biologie.generic;
 
-import au.edu.anu.rscs.aot.OmhtkException;
-
 /**
  * <p>An interface for relatively complex objects that can return information with various 
  * levels of detail.</p>
@@ -58,7 +56,7 @@ public interface Textable {
 		// Typically, this method shoud return Object.toString(), which returns the
 		// object reference. But this cannot be made the default behaviour in
 		// an interface because super is not available in interfaces
-		throw new OmhtkException("Unimplemented method: toUniqueString()");
+		throw new UnsupportedOperationException("Unimplemented method: toUniqueString()");
 	}
 
 	/**

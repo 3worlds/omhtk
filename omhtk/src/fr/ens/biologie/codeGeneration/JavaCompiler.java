@@ -44,7 +44,6 @@ import javax.tools.JavaFileObject;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.ToolProvider;
 
-import au.edu.anu.rscs.aot.OmhtkException;
 import fr.ens.biologie.generic.utils.Logging;
 
 /**
@@ -90,7 +89,7 @@ public final class JavaCompiler {
 		String result = null;
 		// Must have a compiler available!
 		if (compiler == null)
-			throw new OmhtkException("No complier provided: Please install jdk");
+			throw new IllegalStateException("No complier provided: Please install jdk");
 		StandardJavaFileManager stdFileManager = compiler.getStandardFileManager(null, Locale.getDefault(), null);
 		File[] files = new File[] { classFile };
 		Iterable<? extends JavaFileObject> compilationUnits = stdFileManager
@@ -143,9 +142,9 @@ public final class JavaCompiler {
 		String result = null;
 		// Must have a compiler available!
 		if (compiler == null)
-			throw new OmhtkException("No complier provided: Please install jdk");
+			throw new IllegalStateException("No complier provided: Please install jdk");
 		if (!sourceDir.isDirectory())
-			throw new OmhtkException("Error: '"+sourceDir+"' is not a directory");
+			throw new IllegalArgumentException("Error: '"+sourceDir+"' is not a directory");
 		FileFilter ff = new FileFilter() {
 			public boolean accept(File pathname) {
 				return pathname.toString().endsWith(".java");

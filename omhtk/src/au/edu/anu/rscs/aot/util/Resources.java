@@ -43,7 +43,6 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import au.edu.anu.omhtk.jars.Jars;
-import au.edu.anu.rscs.aot.OmhtkException;
 import fr.ens.biologie.generic.utils.Logging;
 
 /**
@@ -69,9 +68,9 @@ public class Resources {
 	public static URL getURL(String name) {
 		URL result = ClassLoader.getSystemResource(name);
 //		if (result==null)
-//			throw new OmhtkException("Resource not found by ClassLoader: "+name);
+//			throw new something("Resource not found by ClassLoader: "+name);
 //		if (new File(result.getFile()).isDirectory()) {
-//			throw new OmhtkException("Directory resources are not permitted '" + name + "'");				
+//			throw new something("Directory resources are not permitted '" + name + "'");				
 //		}
 		return result;
 	}
@@ -178,7 +177,7 @@ public class Resources {
 	public static List<String> getTextResource(String name) {
 		InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream(name);
 		if (in == null)
-			throw new OmhtkException("Resource '" + name + "' not found");
+			throw new NullPointerException("Resource '" + name + "' not found");
 		BufferedReader reader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
 		return readText(reader, name);
 	}
@@ -196,7 +195,7 @@ public class Resources {
 	public static List<String> getTextResource(String name, Class<?> associatedWithClass) {
 		InputStream in = associatedWithClass.getResourceAsStream(name);
 		if (in == null)
-			throw new OmhtkException("Resource '" + name + "' not found");
+			throw new NullPointerException("Resource '" + name + "' not found");
 		BufferedReader reader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
 		return readText(reader, name);
 	}

@@ -31,8 +31,6 @@
  **************************************************************************/
 package fr.ens.biologie.generic;
 
-import au.edu.anu.rscs.aot.OmhtkException;
-
 /**
  * <p>An interface for objects that can be saved as text (in text files or Strings) and later
  * re-loaded with a (static) {@code valueOf()} method.</p>
@@ -151,7 +149,8 @@ public interface SaveableAsText {
 	 * method
 	 */
 	public default String toSaveableString(char[][] blockDelimiters, char[] itemSeparators) {
-		throw new OmhtkException("Unimplemented method: toSaveableString(char[][] blockDelimiters,char[] itemSeparators)");
+		
+		throw new UnsupportedOperationException("Unimplemented method: toSaveableString(char[][] blockDelimiters,char[] itemSeparators)");
 	}
 
 	/**

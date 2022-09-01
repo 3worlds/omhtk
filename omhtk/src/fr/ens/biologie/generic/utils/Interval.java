@@ -31,8 +31,6 @@
  **************************************************************************/
 package fr.ens.biologie.generic.utils;
 
-import au.edu.anu.rscs.aot.OmhtkException;
-
 /**
  * A (simple) class for mathematical intervals. Handles closed, open, half-open
  * and half-closed intervals; and infinite values.
@@ -58,7 +56,7 @@ public class Interval {
 	private Interval(double inf, double sup, boolean openInf, boolean openSup) {
 		super();
 		if (inf > sup)
-			throw new OmhtkException("sup (here " + sup + ") must be greater or equal to inf (here " + inf + ")");
+			throw new IllegalArgumentException("sup (here " + sup + ") must be greater or equal to inf (here " + inf + ")");
 		this.sup = sup;
 		this.inf = inf;
 		this.openInf = openInf;
@@ -246,20 +244,20 @@ public class Interval {
 		else if (s.startsWith("]"))
 			openInf = true;
 		else
-			throw new OmhtkException("Interval must start with ']' or '[' - '" + s.charAt(0) + "' found instead");
+			throw new IllegalArgumentException("Interval must start with ']' or '[' - '" + s.charAt(0) + "' found instead");
 		if (s.endsWith("]"))
 			openSup = false;
 		else if (s.endsWith("["))
 			openSup = true;
 		else
-			throw new OmhtkException(
+			throw new IllegalArgumentException(
 					"Interval must end with ']' or '[' - '" + s.charAt(s.length() - 1) + "' found instead");
 		s = s.substring(1, s.length() - 1);
 		String[] ss = s.split(",");
 		if (ss.length > 2)
-			throw new OmhtkException("Too many limits in interval string \"" + s + "\"");
+			throw new IllegalArgumentException("Too many limits in interval string \"" + s + "\"");
 		if (ss.length < 2)
-			throw new OmhtkException("Not enough limits in interval string \"" + s + "\"");
+			throw new IllegalArgumentException("Not enough limits in interval string \"" + s + "\"");
 		if ((ss[0].contains("-∞")) || (ss[0].contains("-Inf")))
 			inf = Double.NEGATIVE_INFINITY;
 		else

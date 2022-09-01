@@ -37,7 +37,6 @@ import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Date;
 import java.util.Enumeration;
-import au.edu.anu.rscs.aot.OmhtkException;
 import fr.ens.biologie.generic.Textable;
 
 /**
@@ -104,7 +103,7 @@ public class Uid implements Serializable, Comparable<Uid>, Textable {
 				macAddress = new byte[6];
 			count = 0;
 		} catch (SocketException e) {
-			throw new OmhtkException("Unable to get a MAC address for UIDs.", e);
+			e.printStackTrace();;
 		}
 	}
 
@@ -167,7 +166,7 @@ public class Uid implements Serializable, Comparable<Uid>, Textable {
 			check(uidStr, 29, '-');
 			cnt = extractShort(uidStr, 30, 34);
 		} else
-			throw new OmhtkException("Uid: Cannot create Uid from string '" + uidStr + "'");
+			throw new IllegalArgumentException("Uid: Cannot create Uid from string '" + uidStr + "'");
 	}
 
 	/**
@@ -272,7 +271,7 @@ public class Uid implements Serializable, Comparable<Uid>, Textable {
 
 	private void check(String str, int index, char ch) {
 		if (str.charAt(index) != ch)
-			throw new OmhtkException("Uid: expected '" + ch + "' at position " + index + " in '" + str + "'");
+			throw new IllegalArgumentException("Uid: expected '" + ch + "' at position " + index + " in '" + str + "'");
 	}
 
 	static private String toString(byte[] macAddress) {

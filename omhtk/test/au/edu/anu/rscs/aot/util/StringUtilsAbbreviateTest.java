@@ -41,8 +41,8 @@ class StringUtilsAbbreviateTest {
 //		assertEquals(StringUtils.abbreviate(s,3),"hel"+StringUtils.ELLIPSIS);
 //		assertEquals(StringUtils.abbreviate(s,4),"hello");
 //		assertEquals(StringUtils.abbreviate(s,5),"hello");
-//		assertThrows(OmhtkException.class,()->StringUtils.abbreviate(s,-1));
-//		assertThrows(OmhtkException.class,()->StringUtils.abbreviate(null,2));
+//		assertThrows(somthing.class,()->StringUtils.abbreviate(s,-1));
+//		assertThrows(something.class,()->StringUtils.abbreviate(null,2));
 
 	}
 
