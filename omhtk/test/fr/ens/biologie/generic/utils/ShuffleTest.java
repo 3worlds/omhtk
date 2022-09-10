@@ -18,7 +18,7 @@ class ShuffleTest {
 		Random r = new Random();
 		Integer[] result = Shuffle.shuffleIndices(n, r);
 		int sum=0;
-		for (Integer i : result) {
+		for (int i : result) {
 			sum+=i;
 		}
 		// duplicates?
