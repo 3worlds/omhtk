@@ -32,10 +32,8 @@
 package au.edu.anu.omhtk.preferences;
 
 /**
- * <p>
  * This static class is a wrapper for any implementations of
  * {@link IPreferences}. As a static class, it is globally accessible.
- * </p>
  * 
  * @author Ian Davies - Dec 11, 2018
  */

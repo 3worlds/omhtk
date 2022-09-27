@@ -42,15 +42,15 @@ import java.util.prefs.Preferences;
 import au.edu.anu.omhtk.stringarrays.StringArrayConversion;
 
 /**
- * 
  * This implementation of {@link IPreferences} is a wrapper class for
  * {@link java.util.prefs.Preferences}. This class loads the node from file, if
- * present, and writes to file on flush()
- * 
+ * present, and writes to file on flush().
+ * <p>
  * It also contains methods to get/put primitive arrays by conversion to String.
- * 
+ * </p>
+ * <p>
  * Keys and values have a maximum size imposed by
- * {@link java.util.prefs.Preferences} 80 and 8182 respectivly. If this is
+ * {@link java.util.prefs.Preferences} 80 and 8182 respectively. If this is
  * exceeded there will be problems.
  * 
  * @author Ian Davies - Dec 11, 2018

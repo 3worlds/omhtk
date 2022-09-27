@@ -40,7 +40,7 @@ import java.util.Random;
  * random generator (2003), 30% faster and better quality than the built-in
  * {@link java.util.Random}. Code imported from <a href=
  * "http://demesos.blogspot.com/2011/09/replacing-java-random-generator.html">
- * there</a>. It generates random numbers using a single seed and just 3 shifts
+ * here</a>. It generates random numbers using a single seed and just 3 shifts
  * and XOR operations.
  * </p>
  * <p>

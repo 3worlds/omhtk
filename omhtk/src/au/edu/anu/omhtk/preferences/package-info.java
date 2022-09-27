@@ -8,7 +8,7 @@
  * <p>
  * The intention is that preference data can be saved along with file specific
  * data for an application session so the appearance of the application is
- * stored with that particular session of which there can be any number. *
+ * stored with that particular session of which there can be any number.
  * <p>
  * <img src="{@docRoot}/../doc/images/Preferences.svg" width="600" alt=
  * "Application preferences"/>

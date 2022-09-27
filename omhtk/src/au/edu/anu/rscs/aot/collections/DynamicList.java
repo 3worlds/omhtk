@@ -64,7 +64,7 @@ import fr.ens.biologie.generic.Textable;
  * @author Shayne Flint - loooong ago. <br/>
  *         refactored by Jacques Gignoux - 30 Nov. 2018
  *
- * @param <T> the type of the list items
+ * @param <T> the list item type.
  */
 // TODO: finish testing - only partly done.
 public class DynamicList<T> implements List<T>, Deque<T>, Queue<T>, Sizeable, Textable {

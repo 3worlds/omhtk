@@ -43,23 +43,6 @@ public class StringUtils {
 	/** The '...' character */
 	public static final String ELLIPSIS = "\u2026";
 
-//	/**
-//	 * Abbreviate a string to a given length.
-//	 * @param s the String to abbreviate
-//	 * @param l the number of characters to keep
-//	 * @return the abbreviated String
-//	 */
-//	public static String abbreviate(String s, int l) {
-//		if (l < 0)
-//			throw new something("Attempt to abbreviate a string to less than 0");
-//		if (s == null)
-//			throw new something("Attempt to abbreviate a null string");
-//		
-//		if (s.length() <= (l + 1))
-//			return s;
-//		return s.substring(0, l) + ELLIPSIS;
-//	}
-
 	/**
 	 * Capitalise the first character of a String.
 	 * @param s the String
@@ -103,25 +86,6 @@ public class StringUtils {
 //	 * @param s
 //	 * @return
 //	 */
-//	@Deprecated
-//	public static String plural(String s) {
-//		//
-//		// Not perfect, but probably good enough. We can extend this function as we go.
-//		//
-//
-//		if (s.endsWith("s"))
-//			return s + "es";
-//		if (s.endsWith("sh"))
-//			return s + "es";
-//		if (s.endsWith("ch"))
-//			return s + "es";
-//		if (s.endsWith("y"))
-//			return s.substring(0, s.length() - 1) + "ies";
-//		if (s.endsWith("o"))
-//			return s + "es";
-//		else
-//			return s + "s";
-//	}
 
 //	/**
 //	 * Replace ",", "[" and "]" delimiters by plain characters.

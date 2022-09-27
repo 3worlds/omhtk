@@ -32,7 +32,7 @@
 package au.edu.anu.omhtk.preferences;
 
 /**
- * Interface for any class using the preferences system.
+ * Interface for any class using a preferences system.
  * 
  * @author Ian Davies - 23 Sep. 2022
  *

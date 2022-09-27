@@ -32,21 +32,21 @@
 package au.edu.anu.rscs.aot.collections;
 
 /**
- * A container for items in a List (formerly AotList). This class is not meant to be used directly,
- * it's hidden in {@link DynamicList}.
+ * A container for items in a List (formerly AotList). This class is not meant
+ * to be used directly, it's hidden in {@link DynamicList}.
  * 
- * @author Shayne Flint - long ago
- *
  * @param <T> The list element type
+ * @author Shayne Flint - long ago
  */
 public class ListNode<T> {
-	
+
 	protected T item;
 	protected ListNode<T> next;
 	protected ListNode<T> prev;
 
 	/**
 	 * ListNode constructor.
+	 * 
 	 * @param item The item to wrap.
 	 * @param next Its next ListNode.
 	 * @param prev Its previous ListNode.
@@ -58,7 +58,7 @@ public class ListNode<T> {
 	}
 
 	public String toString() {
-		String result = "[ListNode "; 
+		String result = "[ListNode ";
 		if (isRemoved())
 			result = result + "(removed) ";
 		result = result + this.item + " prev=";
@@ -74,7 +74,7 @@ public class ListNode<T> {
 		result = result + " item=" + item + "]";
 		return result;
 	}
-	
+
 	/**
 	 * @return If removed, false otherwise.
 	 */
