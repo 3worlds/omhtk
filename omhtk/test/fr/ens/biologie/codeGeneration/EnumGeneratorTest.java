@@ -1,0 +1,68 @@
+package fr.ens.biologie.codeGeneration;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.Test;
+
+import fr.ens.biologie.generic.Sizeable;
+
+class EnumGeneratorTest {
+
+	@Test
+	void testAsText1() {
+		EnumGenerator eg = new EnumGenerator(this.getClass().getPackageName(),
+			"/** some javadoc comment */\n",
+			"EnumTest");
+		eg.setConstant("Un");
+		eg.setConstant("Deux");
+		eg.setConstant("Trois");
+		assertEquals(eg.asText("\t"),"package fr.ens.biologie.codeGeneration;\n"
+			+ "\n"
+			+ "/** some javadoc comment */\n"
+			+ "\n"
+			+ "public enum EnumTest {\n"
+			+ "\n"
+			+ "	Un,\n"
+			+ "	Deux,\n"
+			+ "	Trois,\n"
+			+ "	;\n"
+			+ "\n"
+			+ "}\n"
+			+ "");
+	}
+
+	@Test
+	void testAsText2() {
+		EnumGenerator eg = new EnumGenerator(this.getClass().getPackageName(),
+			"/** some javadoc comment */\n",
+			"EnumTest",
+			Sizeable.class.getName());
+		eg.setConstant("Un");
+		eg.setConstant("Deux");
+		eg.setConstant("Trois");
+		eg.getMethod("size").setReturnStatement("return 3");
+//		System.out.print(eg.asText("\t"));
+		assertEquals(eg.asText("\t"),"package fr.ens.biologie.codeGeneration;\n"
+			+ "\n"
+			+ "import fr.ens.biologie.generic.Sizeable;\n"
+			+ "\n"
+			+ "/** some javadoc comment */\n"
+			+ "\n"
+			+ "public enum EnumTest implements Sizeable {\n"
+			+ "\n"
+			+ "	Un,\n"
+			+ "	Deux,\n"
+			+ "	Trois,\n"
+			+ "	;\n"
+			+ "\n"
+			+ "	@Override\n"
+			+ "	public int size() {\n"
+			+ "		return 3;\n"
+			+ "	}\n"
+			+ "\n"
+			+ "}\n"
+			+ "");
+	}
+
+	
+}

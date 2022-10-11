@@ -31,12 +31,21 @@
  **************************************************************************/
 package fr.ens.biologie.codeGeneration;
 
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-/**
+import fr.ens.biologie.generic.JavaCode;
+
+/**BACKUP CLASS - WIP - TO REMOVE SOON
+ * 
+ * 
  *  <p>A simple java class generator.
  *  It can generate almost any standard class code, as long as there are no inner classes.</p>
  *  <p>Usage:</p>
@@ -45,7 +54,7 @@ import java.util.Set;
  *  to generate (e.g. superclass, package, methods to override...).</li>
  *  <li>Adapt the generator to your needs by adding methods, constructors, fields, etc., using
  *  methods defined here.</li>
- *  <li>When all this is finished, call {@link ClassGenerator#asText(String) asText()} to generate a String that can be 
+ *  <li>When all this is finished, call {@link ClassGenerator2#asText(String) asText()} to generate a String that can be 
  *  saved as a java source file.</li>
  *  </ol>
  *  <p>You should then check that the generated code, saved as a source file, properly compiles
@@ -55,7 +64,7 @@ import java.util.Set;
  * @see MethodGenerator
  *
  */
-public class ClassGenerator extends AbstractClassGenerator {
+public class ClassGenerator2 implements JavaCode {
 
 	private class field {
 		public String scope = null;
@@ -64,11 +73,37 @@ public class ClassGenerator extends AbstractClassGenerator {
 		public String defaultValue = null;
 	}
 
+	private String packageName;
+	private Set<String> imports = new HashSet<String>();
+	private String classComment = null;
+//	private boolean isInterface = false;
 	private String scope = "public";
+	private String name;
 	private String superclass = null;
+	protected Set<String> interfaces = new HashSet<String>();
 	private Map<String,field> fields = new HashMap<String,field>();
+	private Map<String,MethodGenerator> methods = new HashMap<String,MethodGenerator>();
 	private Map<String,MethodGenerator> constructors = new HashMap<String,MethodGenerator>();
 	private List<String> rawMethods = null;
+	private List<String> methodsToOverride = new ArrayList<>();
+
+	private void recordAncestorMethods(Class<?> c) {
+		Method[] lm = c.getDeclaredMethods();
+		for (Method m:lm) {
+			if (!methods.containsKey(m.getName()))
+			if (Modifier.isAbstract(m.getModifiers()) ||
+				(methodsToOverride.contains(m.getName()))) {
+				methods.put(m.getName(), new MethodGenerator(m));
+			}
+		}
+	}
+
+	private String stripTemplate(String className) {
+		String result = className;
+		if (className.indexOf('<')>-1)
+			result = className.substring(0, className.indexOf('<'));
+		return result;
+	}
 
 	/**
 	 *Constructor. The default behaviour is to generate method bodies only for methods declared
@@ -83,61 +118,50 @@ public class ClassGenerator extends AbstractClassGenerator {
 	 * @param superclass the superclass
 	 * @param interfaces the interfaces
 	 */
-	public ClassGenerator(String packageName,
+	public ClassGenerator2(String packageName,
 		String classComment,
 		String name,
-		String scope, 
+		boolean isInterface, 
 		Set<String> methodsToOverride,
 		String superclass,
 		String... interfaces) {
-		super(packageName, name, classComment, interfaces);
-		if (scope.equals("public") || scope.equals("") || scope.equals("protected"))
-			this.scope = scope;
-		else
-			throw new IllegalArgumentException("The scope argument must be equal to \"public\",  \"protected\", or\"\".");
+		super();
+		scope = "public";
+		this.packageName = packageName;
+		this.classComment = classComment;
+		this.name = name;
+//		this.isInterface = isInterface;
 		if (methodsToOverride!=null)
 			this.methodsToOverride.addAll(methodsToOverride);
-		recordAncestorInterfaceMethods();
-		this.superclass = recordSuperClassMethods(superclass);
+		this.superclass = superclass;
+		for (String s:interfaces)
+			this.interfaces.add(s);
+		if (superclass!=null) {
+			try { recordAncestorMethods(Class.forName(superclass));	}
+			catch (ClassNotFoundException e) {}
+			// a class name with no package is assumed to be in the same package, hence no import
+			if (superclass.contains(".")) 
+				imports.add(stripTemplate(superclass));
+			this.superclass = stripPackageFromClassName(superclass);
+		}
+		for (String s:interfaces) {
+			try { recordAncestorMethods(Class.forName(s)); }
+			catch (ClassNotFoundException e) {}
+			// an interface name with no package is assumed to be in the same package, hence no import
+			if (s.contains(".")) 
+				imports.add(stripTemplate(s));
+			this.interfaces.remove(s);
+			this.interfaces.add(stripPackageFromClassName(s));
+		}
 	}
 
-	/**
-	 * Constructor for a public class with no ancestry
-	 * 
-	 * @param packageName
-	 * @param classComment
-	 * @param name
-	 */
-	public ClassGenerator(String packageName,
-			String classComment,
-			String name) {
-			super(packageName, name, classComment);			
-	}
-
-	/**
-	 * Constructor for a public class with a superclass but no interfaces
-	 * 
-	 * @param packageName
-	 * @param classComment
-	 * @param name
-	 * @param methodsToOverride
-	 * @param superclass
-	 */
-	public ClassGenerator(String packageName,
-			String classComment,
-			String name,
-			Set<String> methodsToOverride,
-			String superclass) {
-			this(packageName, classComment, name, "public", methodsToOverride, superclass);			
-	}
-	
 	/**
 	 * Declares a new constructor with its argument types.
 	 * @param argTypes argument types. Must be valid type names (i.e. java types or your own classes)
 	 * @return this class for agile programming
 	 */
-	public ClassGenerator setConstructor(String... argTypes) {
-		MethodGenerator c = new MethodGenerator("public",false,null,name(),argTypes);
+	public ClassGenerator2 setConstructor(String... argTypes) {
+		MethodGenerator c = new MethodGenerator("public",false,null,name,argTypes);
 		constructors.put("constructor"+String.valueOf(constructors.size()+1),c);
 		return this;
 	}
@@ -154,13 +178,34 @@ public class ClassGenerator extends AbstractClassGenerator {
 	}
 
 	/**
+	 * Remove the package from a class name.
+	 * @param fullClassName the fully qualified class name
+	 * @return just the class name (last word of fullClassName)
+	 */
+	private String stripPackageFromClassName(String fullClassName) {
+		String[] sc = fullClassName.split("\\.");
+		return sc[sc.length-1];
+	}
+
+	/**
+	 * Declares a new import.
+	 * @param imp a fully qualified class name to import or more generally any valid java text 
+	 * that can fit between "import " and ";" in a java import statement.
+	 * @return this class for agile programming
+	 */
+	public ClassGenerator2 setImport(String imp) {
+		imports.add(imp);
+		return this;
+	}
+
+	/**
 	 * Inserts raw code lines. These lines will be inserted verbatim in the class, with no indentation.
 	 * You can use this to implement private methods, typically, or code copied from external sources.
 	 * 
 	 * @param snippet the lines to insert
 	 * @return this class for agile programming
 	 */
-	public ClassGenerator setRawMethodCode(List<String> snippet) {
+	public ClassGenerator2 setRawMethodCode(List<String> snippet) {
 		rawMethods = snippet;
 		return this;
 	}
@@ -188,7 +233,7 @@ public class ClassGenerator extends AbstractClassGenerator {
 	 * @param fvalue the default value of the field, if any
 	 * @return this class for agile programming
 	 */
-	public ClassGenerator setField(String fname, String ftype, String fvalue) {
+	public ClassGenerator2 setField(String fname, String ftype, String fvalue) {
 		field f = new field();
 		f.scope = "private";
 		f.name = fname;
@@ -208,96 +253,114 @@ public class ClassGenerator extends AbstractClassGenerator {
 	public field getField(String fname) {
 		return fields.get(fname);
 	}
+
+	/**
+	 * Declare a new method by adding a new {@code MethodGenerator} instance to this class.
+	 * @param mname the method key (usually, its name)
+	 * @param method the {@code MethodGenerator} instance
+	 * @return this class for agile programming
+	 */
+	public ClassGenerator2 setMethod(String mname, MethodGenerator method) {
+		methods.put(mname,method);
+		return this;
+	}
+
+	/**
+	 * Get a declared method. This enables one to add statements into automatically generated 
+	 * methods (e.g. when building the class from a superclass).
+	 * @param mname the method key
+	 * @return the method generator
+	 */
+	public MethodGenerator getMethod(String mname) {
+		return methods.get(mname);
+	}
+
+	/**
+	 * Get all the methods declared in this class.
+	 * @return a collection of method generators
+	 */
+	public Collection<MethodGenerator> getMethods() {
+		return methods.values();
+	}
 	
-	@Override
-	protected String headerText() {
+	/**
+	 * header text class definition
+	 * 
+	 * @param indent
+	 * @return
+	 */
+	protected String headerText(String name) {
 		StringBuilder result = new StringBuilder();
-		result.append(scope).append(" class ").append(name());
+		result.append(scope).append(" class ").append(name);
 		if (superclass!=null) result.append(" extends ").append(superclass);
-		if (nInterfaces()>0)
+		if (interfaces.size()>0)
 			result.append(" implements");
 		return result.toString();
 	}
 
 	@Override
-	protected String fieldText(String indent) {
-		StringBuilder result = new StringBuilder();
+	public String asText(String indent) {
+		String result = "";
+		result += "package "+packageName+";\n\n";
+		for (String imp:imports)
+			result += "import "+imp+";\n";
+		if (imports.size()>0)
+			result += "\n";
+		if (classComment!=null)
+			result += classComment+"\n";
+		// start header
+		result += headerText(name);
+//		if (isInterface) {
+//			result += "interface "+name;
+//			if (interfaces.size()>0)
+//				result += " extends";
+//		}
+//		else {
+//			result += scope+" class "+name;
+//			if (superclass!=null) result += " extends "+superclass;
+//			if (interfaces.size()>0)
+//				result += " implements";
+//		}
+		// end specific part of header
+		String[] ifs = interfaces.toArray(new String[interfaces.size()]);
+		for (int i=0; i<ifs.length; i++) {
+			if (i<ifs.length-1) result += " "+ifs[i]+", ";
+			else result += " "+ifs[i];
+		}
+		result += " {\n\n"; // 1
 		for (field f:fields.values()) {
-			result.append(indent)
-				.append(f.scope).append(' ')
-				.append(f.type).append(' ')
-				.append(f.name);
+			result += indent+f.scope+" "+f.type+" "+f.name;
 			if (f.defaultValue!=null)
-				result.append(" = ").append(f.defaultValue);
-			result.append(";\n");
+				result += " = "+f.defaultValue;
+			result += ";\n";
 		}
 		if (!fields.isEmpty())
-			result.append("\n");
-		return result.toString();
-	}
-
-	@Override
-	protected String methodText(String indent) {
-		StringBuilder result = new StringBuilder();
+			result += "\n";
 		for (MethodGenerator c:constructors.values())
-			result.append(c.asText(indent));
-		for (MethodGenerator m:getMethods())
-			result.append(m.asText(indent));
+			result += c.asText(indent);
+		for (MethodGenerator m:methods.values())
+			result += m.asText(indent);
 		if (rawMethods!=null)
 			for (String s:rawMethods)
-				result.append(s).append("\n");
-		return result.toString();
+				result += s+"\n";
+		result += "}\n"; // 1
+		return result;
 	}
 
-	
-//	@Override
-//	public String asText(String indent) {
-//		String result = "";
-//		result += "package "+packageName+";\n\n";
-//		for (String imp:imports)
-//			result += "import "+imp+";\n";
-//		if (imports.size()>0)
-//			result += "\n";
-//		if (classComment!=null)
-//			result += classComment+"\n";
-//		// start header
-//		result += headerText(name);
-////		if (isInterface) {
-////			result += "interface "+name;
-////			if (interfaces.size()>0)
-////				result += " extends";
-////		}
-////		else {
-////			result += scope+" class "+name;
-////			if (superclass!=null) result += " extends "+superclass;
-////			if (interfaces.size()>0)
-////				result += " implements";
-////		}
-//		// end specific part of header
-//		String[] ifs = interfaces.toArray(new String[interfaces.size()]);
-//		for (int i=0; i<ifs.length; i++) {
-//			if (i<ifs.length-1) result += " "+ifs[i]+", ";
-//			else result += " "+ifs[i];
-//		}
-//		result += " {\n\n"; // 1
-//		for (field f:fields.values()) {
-//			result += indent+f.scope+" "+f.type+" "+f.name;
-//			if (f.defaultValue!=null)
-//				result += " = "+f.defaultValue;
-//			result += ";\n";
-//		}
-//		if (!fields.isEmpty())
-//			result += "\n";
-//		for (MethodGenerator c:constructors.values())
-//			result += c.asText(indent);
-//		for (MethodGenerator m:methods.values())
-//			result += m.asText(indent);
-//		if (rawMethods!=null)
-//			for (String s:rawMethods)
-//				result += s+"\n";
-//		result += "}\n"; // 1
-//		return result;
-//	}
+	/**
+	 * The name of the class represented by this generator.
+	 * @return the generated class simple name
+	 */
+	public String getClassName() {
+		return name;
+	}
 
+	/**
+	 * The package of the class represented by this generator.
+	 * @return the generated class package name
+	 */
+	public String packageName() {
+		return packageName;
+	}
 
 }
