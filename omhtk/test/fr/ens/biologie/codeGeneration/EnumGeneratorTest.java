@@ -4,11 +4,12 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
+import fr.ens.biologie.generic.Factory;
 import fr.ens.biologie.generic.Sizeable;
 
 class EnumGeneratorTest {
 
-	@Test
+	@Test // plain enum
 	void testAsText1() {
 		EnumGenerator eg = new EnumGenerator(this.getClass().getPackageName(),
 			"/** some javadoc comment */\n",
@@ -31,7 +32,7 @@ class EnumGeneratorTest {
 			+ "");
 	}
 
-	@Test
+	@Test // enum implementing interface
 	void testAsText2() {
 		EnumGenerator eg = new EnumGenerator(this.getClass().getPackageName(),
 			"/** some javadoc comment */\n",
@@ -64,5 +65,33 @@ class EnumGeneratorTest {
 			+ "");
 	}
 
+	@Test // interface with generic type
+	void testAsText3() {
+		EnumGenerator eg = new EnumGenerator(this.getClass().getPackageName(),
+			"/** some javadoc comment */",
+			"EnumTest",
+			Factory.class.getCanonicalName());
+		eg.addInterfaceGenericParameter("Factory", ClassGenerator.class.getName());
+		eg.setConstant("Un");
+		eg.setConstant("Deux");
+		eg.setConstant("Trois");
+		eg.getMethod("newInstance").setReturnType(ClassGenerator.class.getSimpleName());
+		System.out.print(eg.asText("\t"));
+	}
+
+	@Test // multiple interfaces
+	void testAsText4() {
+		EnumGenerator eg = new EnumGenerator(this.getClass().getPackageName(),
+			"/** some javadoc comment */",
+			"EnumTest",
+			Factory.class.getName(),Sizeable.class.getName());
+		eg.addInterfaceGenericParameter("Factory", ClassGenerator.class.getName());
+		eg.setConstant("Un");
+		eg.setConstant("Deux");
+		eg.setConstant("Trois");
+		eg.getMethod("newInstance").setReturnType(ClassGenerator.class.getSimpleName());
+		eg.getMethod("size").setReturnStatement("return 3;");
+		System.out.print(eg.asText("\t"));
+	}
 	
 }

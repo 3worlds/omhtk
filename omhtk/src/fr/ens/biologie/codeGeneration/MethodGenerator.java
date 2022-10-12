@@ -296,45 +296,53 @@ public class MethodGenerator implements JavaCode {
 
 	@Override
 	public String asText(String indent) {
-		String result = "";
+		StringBuilder result = new StringBuilder(); 
 		if (override != null)
-			result += indent + override + "\n";
+			result.append(indent).append(override).append("\n");
 		if (returnType == null) // constructors only (never abstract)
-			result += indent + scope + " " + name + "(";
+			result.append(indent).append(scope).append(" ").append(name).append("(");
 		else { // other methods (may be abstract)
 			if (isAbstract)
-				result += indent + scope + " abstract " + returnType + " " + name + "(";
+				result.append(indent).append(scope).append(" abstract ").append(returnType)
+					.append(" ").append(name).append("(");
 			else
-				result += indent + scope + " " + returnType + " " + name + "(";
+				result.append(indent).append(scope).append(" ").append(returnType)
+					.append(" ").append(name).append("(");
 		}
 		if (argTypes != null)
 			for (int i = 0; i < argTypes.length; i++) {
-				result += argTypes[i] + " " + argNames[i];
+				result.append(argTypes[i]).append(" ").append(argNames[i]);
 				if (i == argTypes.length - 1)
 					;
 				else
-					result += ", ";
+					result.append(", ");
 			}
 		if (isAbstract) // no body
-			result += ");\n\n";
+			result.append(");\n\n");
 		else { // print body
-			result += ") {\n";
+			result.append(") {\n");
 			if (insertCodeInsertionComment)
-				result += indent + singleLineComment(startCodeInsertion);
+				result.append(indent).append(singleLineComment(startCodeInsertion));
 			for (String s : statements) {
-				result += indent + indent + s + ";\n";
+				result.append(indent).append(indent).append(s);
+				if (s.endsWith(";")||s.endsWith("}")) // do not add ';' when not needed
+					result.append("\n");
+				else
+					result.append(";\n");
 			}
 			if (returnType == null)
 				;
 			else if (returnType.equals("void"))
 				;
+			else if (returnStatement.endsWith(";")||returnStatement.endsWith("}"))
+				result.append(indent).append(indent).append(returnStatement).append("\n");
 			else
-				result += indent + indent + returnStatement + ";\n";
+				result.append(indent).append(indent).append(returnStatement).append(";\n");
 			if (insertCodeInsertionComment)
-				result += indent + singleLineComment(finishCodeInsertion);
-			result += indent + "}\n\n";
+				result.append(indent).append(singleLineComment(finishCodeInsertion));
+			result.append(indent).append("}\n\n");
 		}
-		return result;
+		return result.toString();
 	}
 
 }
