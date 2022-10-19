@@ -45,7 +45,7 @@ import org.apache.commons.io.FileUtils;
 
 import au.edu.anu.rscs.aot.util.ExceptionString;
 import au.edu.anu.rscs.aot.util.ExecutionResults;
-import fr.ens.biologie.generic.utils.Logging;
+import fr.cnrs.iees.omhtk.utils.Logging;
 
 /**
  * An {@link Environment} representing the local computer where the application

@@ -29,73 +29,76 @@
  *  If not, see <https://www.gnu.org/licenses/gpl.html>.                  *
  *                                                                        *
  **************************************************************************/
-package au.edu.anu.rscs.aot.init;
+package fr.cnrs.iees.omhtk.utils;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.SortedMap;
-import java.util.TreeMap;
-
-import fr.cnrs.iees.omhtk.Initialisable;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 /**
- * <p>A class used to initialise a series of objects that require late initialisation, i.e. after
- * instantiation. It is meant to work in conjunction with the {@link Initialisable} interface.</p>
- * <p>This class is instantiated with a list of {@code Initialisable} to process. Then,
- * a call to {@code Initialiser.initialise()} will call the {@code initialise()} method
- * of all {@code Initialisable} instances in turn, in order of increasing {@code initRank()}.
- * </p>
+ * This utility extracts files and directories of a standard zip file to a
+ * destination directory.
  * 
- * @author Shayne Flint - looong ago<br/> 
- * heavily refactored by Jacques Gignoux - 7 mai 2019
+ * @author www.codejava.net
  *
  */
-public class Initialiser {
-	
-	private SortedMap<Integer,List<Initialisable>> toInit = new TreeMap<>();
-	private List<InitialiseMessage> initFailList = new LinkedList<>();
+public class UnzipUtility {
+	/**
+	 * Size of the buffer to read/write data
+	 */
+	private static final int BUFFER_SIZE = 4096;
 
 	/**
-	 * This constructor takes a list of {@code Initialisable} objects
-	 * @param initList the list of objects to initialise
+	 * Extracts a zip file specified by the inStream to a directory specified by
+	 * destDirectory (will be created if does not exists)
+	 * 
+	 * @param inStream      The inputStream for the zip file.
+	 * @param destDirectory The destination.
+	 * @throws IOException If zip file reads fail.
 	 */
-	public Initialiser(Iterable<Initialisable> initList) {
-		super();
-		for (Initialisable init:initList) {
-			int priority = init.initRank();
-			if (!toInit.containsKey(priority))
-				toInit.put(priority, new LinkedList<>());
-			// the sorted map sorts the key integers in increasing order
-			toInit.get(priority).add(init);
+	public void unzip(InputStream inStream, String destDirectory) throws IOException {
+		File destDir = new File(destDirectory);
+		if (!destDir.exists()) {
+			destDir.mkdir();
 		}
+		ZipInputStream zipIn = new ZipInputStream(inStream);
+		ZipEntry entry = zipIn.getNextEntry();
+		// iterates over entries in the zip file
+		while (entry != null) {
+			String filePath = destDirectory + File.separator + entry.getName();
+			if (!entry.isDirectory()) {
+				// if the entry is a file, extracts it
+				extractFile(zipIn, filePath);
+			} else {
+				// if the entry is a directory, make the directory
+				File dir = new File(filePath);
+				dir.mkdirs();
+			}
+			zipIn.closeEntry();
+			entry = zipIn.getNextEntry();
+		}
+		zipIn.close();
 	}
-	
+
 	/**
-	 * Initialises all objects passed to the constructor
-	 * following their priority ranking, from the lowest to the highest priority
+	 * Extracts a zip entry (file entry)
+	 * 
+	 * @param zipIn
+	 * @param filePath
+	 * @throws IOException
 	 */
-	public void initialise() {
-		// the SortedMap iterator returns its content in ascending order
-		for (int priority:toInit.keySet())
-			for (Initialisable init:toInit.get(priority))
-				try {
-					init.initialise();
-				}
-				catch (Exception e) {
-					initFailList.add(new InitialiseMessage(init,e));
-				}
+	private void extractFile(ZipInputStream zipIn, String filePath) throws IOException {
+		BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(filePath));
+		byte[] bytesIn = new byte[BUFFER_SIZE];
+		int read = 0;
+		while ((read = zipIn.read(bytesIn)) != -1) {
+			bos.write(bytesIn, 0, read);
+		}
+		bos.close();
 	}
-	
-	/**
-	 * Returns the problems which occured during the initialisation process. Errors are stored in
-	 * {@link InitialiseMessage} instances.
-	 * @return null if no error, the error list otherwise
-	 */
-	public Iterable<InitialiseMessage> errorList() {
-		if (initFailList.isEmpty())
-			return null;
-		else 
-			return initFailList;
-	}
-	
+
 }

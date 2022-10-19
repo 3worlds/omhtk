@@ -62,7 +62,7 @@ import au.edu.anu.rscs.aot.environment.Environment;
 import au.edu.anu.rscs.aot.environment.LocalEnvironment;
 import au.edu.anu.rscs.aot.util.JavaUtils;
 import au.edu.anu.rscs.aot.util.Resources;
-import fr.ens.biologie.generic.utils.Logging;
+import fr.cnrs.iees.omhtk.utils.Logging;
 
 /**
  * <p>

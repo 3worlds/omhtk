@@ -1,14 +1,15 @@
 /**************************************************************************
  *  OMHTK - One More Handy Tool Kit                                       *
  *                                                                        *
- *  Copyright 2018: Shayne FLint, Jacques Gignoux & Ian D. Davies         *
+ *  Copyright 2021: Shayne R. Flint, Jacques Gignoux & Ian D. Davies      *
  *       shayne.flint@anu.edu.au                                          *
  *       jacques.gignoux@upmc.fr                                          *
  *       ian.davies@anu.edu.au                                            * 
  *                                                                        *
  *  OMHTK is a bunch of useful, very generic interfaces for designing     *
- *  consistent, plus some other utilities. The kind of things you need    *
- *  in all software projects and keep rebuilding all the time.            *
+ *  consistent class hierarchies, plus some other utilities. The kind of  *
+ *  things you need in all software projects and keep rebuilding all the  * 
+ *  time.                                                                 *
  *                                                                        *
  **************************************************************************                                       
  *  This file is part of OMHTK (One More Handy Tool Kit).                 *
@@ -28,28 +29,39 @@
  *  If not, see <https://www.gnu.org/licenses/gpl.html>.                  *
  *                                                                        *
  **************************************************************************/
-package au.edu.anu.rscs.aot.init;
-
-import fr.cnrs.iees.omhtk.Initialisable;
+package fr.cnrs.iees.omhtk;
 
 /**
- * @author Ian Davies - 27 Aug 2019
+ * <p>An interface for objects that can be reset to an initial state after having been brought
+ * into a different state.
+ * It assumes the object has a life cycle of the type "<em>initial state</em> → <em>running</em>
+ *  → <em>final state</em>" </p>
+ *  
+ * @author Jacques Gignoux - 2 juin 2012<br/><br/>
+ *
  */
-public class DummyNode implements Initialisable{
-
-	private int rk ;
-	public DummyNode(int rank) {
-		this.rk=rank;
-	}
-	@Override
-	public void initialise() throws Exception {
-		throw new Exception(""+rk);
-	}
-
-	@Override
-	public int initRank() {
-		// TODO Auto-generated method stub
-		return rk;
+public interface Resettable {
+	
+	/**
+	 * Processes whatever has to be done when entering <em>initial state</em> 
+	 * (does nothing by default).
+	 */
+	public default void preProcess() {}
+	
+	/**
+	 * Processes whatever has to be done when entering <em>final state</em> 
+	 * (does nothing by default).
+	 */
+	public default void postProcess() {} 
+	
+	/**
+	 * Revert from <em>final state</em> to <em>initial state</em>
+	 * by calling {@code postProcess()}, then {@code preProcess()}.
+	 * Should never be overriden.
+	 */
+	public default void reset() {
+		postProcess();
+		preProcess();
 	}
 
 }

@@ -39,7 +39,7 @@ import java.util.Random;
 
 import org.junit.jupiter.api.Test;
 
-import fr.ens.biologie.generic.Initialisable;
+import fr.cnrs.iees.omhtk.Initialisable;
 
 /**
  * @author Ian Davies - 27 Aug 2019

@@ -43,7 +43,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import au.edu.anu.omhtk.jars.Jars;
-import fr.ens.biologie.generic.utils.Logging;
+import fr.cnrs.iees.omhtk.utils.Logging;
 
 /**
  * Utilities to locate resources (usually text files) in the project class

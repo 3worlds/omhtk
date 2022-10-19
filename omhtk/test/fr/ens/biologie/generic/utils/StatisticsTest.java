@@ -37,6 +37,8 @@ import java.util.Random;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import fr.cnrs.iees.omhtk.utils.Statistics;
+
 /**
  * 
  * @author Jacques Gignoux - 22 oct. 2020

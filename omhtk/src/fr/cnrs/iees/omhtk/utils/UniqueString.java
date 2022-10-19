@@ -29,73 +29,64 @@
  *  If not, see <https://www.gnu.org/licenses/gpl.html>.                  *
  *                                                                        *
  **************************************************************************/
-package au.edu.anu.rscs.aot.init;
+package fr.cnrs.iees.omhtk.utils;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.SortedMap;
-import java.util.TreeMap;
-
-import fr.cnrs.iees.omhtk.Initialisable;
+import java.util.Set;
 
 /**
- * <p>A class used to initialise a series of objects that require late initialisation, i.e. after
- * instantiation. It is meant to work in conjunction with the {@link Initialisable} interface.</p>
- * <p>This class is instantiated with a list of {@code Initialisable} to process. Then,
- * a call to {@code Initialiser.initialise()} will call the {@code initialise()} method
- * of all {@code Initialisable} instances in turn, in order of increasing {@code initRank()}.
- * </p>
+ * A factory for unique Strings. 
  * 
- * @author Shayne Flint - looong ago<br/> 
- * heavily refactored by Jacques Gignoux - 7 mai 2019
+ * @author Ian Davies - 28 jan. 2019
  *
  */
-public class Initialiser {
-	
-	private SortedMap<Integer,List<Initialisable>> toInit = new TreeMap<>();
-	private List<InitialiseMessage> initFailList = new LinkedList<>();
+public class UniqueString {
 
 	/**
-	 * This constructor takes a list of {@code Initialisable} objects
-	 * @param initList the list of objects to initialise
+	 * Create a String unique within a set of existing Strings (= scope). The first argument
+	 * is a String the user wants to be unique within the scope. The second argument is the scope.
+	 * If the String is already present in the scope, this method returns the String suffixed
+	 * with increasing numbers.
+	 * 
+	 * @param proposedString the String one wants to be unique
+	 * @param set the scope, i.e. the set of already existing Strings
+	 * @return either proposedString, or proposedString suffixed by an increasing number
 	 */
-	public Initialiser(Iterable<Initialisable> initList) {
-		super();
-		for (Initialisable init:initList) {
-			int priority = init.initRank();
-			if (!toInit.containsKey(priority))
-				toInit.put(priority, new LinkedList<>());
-			// the sorted map sorts the key integers in increasing order
-			toInit.get(priority).add(init);
+	public static String makeString(String proposedString, Set<String> set) {
+		if (!set.contains(proposedString))
+			return proposedString;
+		Duple<String, Integer> duple = parseNumberedString(proposedString);
+		int count = duple.getSecond() + 1;
+		proposedString = duple.getFirst() + count;
+		return makeString(proposedString, set);
+	}
+
+	private static Duple<String, Integer> parseNumberedString(String numberedString) {
+		int idx = getCountStartIndex(numberedString);
+		// has no numbers at the end
+		if (idx < 0)
+			return new Duple<>(numberedString, 0);
+		// all numbers
+		if (idx == 0)
+			return new Duple<String, Integer>(numberedString + "_", 0);
+		// ends with some numbers
+		String key = numberedString.substring(0, idx);
+		String sCount = numberedString.substring(idx, numberedString.length());
+		int count = Integer.parseInt(sCount);
+		return new Duple<>(key, count);
+	}
+
+	private static int getCountStartIndex(String numberedString) {
+		int result = -1;
+		for (int i = numberedString.length() - 1; i >= 0; i--) {
+			String s = numberedString.substring(i, i + 1);
+			try {
+				Integer.parseInt(s);
+				result = i;
+			} catch (NumberFormatException e) {
+				return result;
+			}
 		}
+		return result;
 	}
-	
-	/**
-	 * Initialises all objects passed to the constructor
-	 * following their priority ranking, from the lowest to the highest priority
-	 */
-	public void initialise() {
-		// the SortedMap iterator returns its content in ascending order
-		for (int priority:toInit.keySet())
-			for (Initialisable init:toInit.get(priority))
-				try {
-					init.initialise();
-				}
-				catch (Exception e) {
-					initFailList.add(new InitialiseMessage(init,e));
-				}
-	}
-	
-	/**
-	 * Returns the problems which occured during the initialisation process. Errors are stored in
-	 * {@link InitialiseMessage} instances.
-	 * @return null if no error, the error list otherwise
-	 */
-	public Iterable<InitialiseMessage> errorList() {
-		if (initFailList.isEmpty())
-			return null;
-		else 
-			return initFailList;
-	}
-	
+
 }

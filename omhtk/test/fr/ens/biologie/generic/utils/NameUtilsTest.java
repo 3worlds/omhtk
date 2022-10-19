@@ -36,6 +36,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
 
+import fr.cnrs.iees.omhtk.utils.NameUtils;
+
 /**
  * 
  * @author Jacques Gignoux - 4 juil. 2019

@@ -34,6 +34,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
+import fr.cnrs.iees.omhtk.utils.Duple;
+
 class DupleTest {
 	
 	private Duple<String,Integer> dup1 = new Duple<>("blah",2);

@@ -1,14 +1,15 @@
 /**************************************************************************
  *  OMHTK - One More Handy Tool Kit                                       *
  *                                                                        *
- *  Copyright 2018: Shayne FLint, Jacques Gignoux & Ian D. Davies         *
+ *  Copyright 2021: Shayne R. Flint, Jacques Gignoux & Ian D. Davies      *
  *       shayne.flint@anu.edu.au                                          *
  *       jacques.gignoux@upmc.fr                                          *
  *       ian.davies@anu.edu.au                                            * 
  *                                                                        *
  *  OMHTK is a bunch of useful, very generic interfaces for designing     *
- *  consistent, plus some other utilities. The kind of things you need    *
- *  in all software projects and keep rebuilding all the time.            *
+ *  consistent class hierarchies, plus some other utilities. The kind of  *
+ *  things you need in all software projects and keep rebuilding all the  * 
+ *  time.                                                                 *
  *                                                                        *
  **************************************************************************                                       
  *  This file is part of OMHTK (One More Handy Tool Kit).                 *
@@ -28,28 +29,28 @@
  *  If not, see <https://www.gnu.org/licenses/gpl.html>.                  *
  *                                                                        *
  **************************************************************************/
-package au.edu.anu.rscs.aot.init;
-
-import fr.cnrs.iees.omhtk.Initialisable;
+package fr.cnrs.iees.omhtk;
 
 /**
- * @author Ian Davies - 27 Aug 2019
+ * An interface for classes generating java code. 
+ * 
+ * @author Shayne Flint<br/>
+ * 
+ * modified by JG <br/>
+ * modified again by JG 23/11/2016<br/>
+ * modified again by JG 23/5/2017<br/>
+ *
  */
-public class DummyNode implements Initialisable{
+public interface JavaGenerator {
 
-	private int rk ;
-	public DummyNode(int rank) {
-		this.rk=rank;
-	}
-	@Override
-	public void initialise() throws Exception {
-		throw new Exception(""+rk);
-	}
-
-	@Override
-	public int initRank() {
-		// TODO Auto-generated method stub
-		return rk;
-	}
-
+	/**
+	 * Generates java code. It assumes code specification has been passed to implementing instances
+	 * in some way, for example at construction. Typically, this method should check the code by 
+	 * compiling it.
+	 *  
+	 * @param reportErrors whether errors should be reported in some way
+	 * @return {@code true} if the code compiles, {@code false} otherwise.
+	 */
+	public 	boolean generateCode(boolean reportErrors);
+	
 }

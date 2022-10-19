@@ -46,7 +46,7 @@ import java.util.logging.Logger;
 
 import au.edu.anu.omhtk.jars.Jars;
 import au.edu.anu.rscs.aot.collections.DynamicList;
-import fr.ens.biologie.generic.utils.Logging;
+import fr.cnrs.iees.omhtk.utils.Logging;
 
 
 /**

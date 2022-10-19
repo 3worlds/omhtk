@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
+import fr.cnrs.iees.omhtk.utils.NiceScale;
+
 class NiceScaleTest {
 
 	@Test

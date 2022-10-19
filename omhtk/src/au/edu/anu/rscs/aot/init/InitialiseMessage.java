@@ -31,7 +31,7 @@
  **************************************************************************/
 package au.edu.anu.rscs.aot.init;
 
-import fr.ens.biologie.generic.Initialisable;
+import fr.cnrs.iees.omhtk.Initialisable;
 
 /**
  * <p>

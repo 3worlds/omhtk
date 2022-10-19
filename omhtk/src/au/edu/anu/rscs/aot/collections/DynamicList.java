@@ -41,8 +41,8 @@ import java.util.ListIterator;
 import java.util.NoSuchElementException;
 import java.util.Queue;
 
-import fr.ens.biologie.generic.Sizeable;
-import fr.ens.biologie.generic.Textable;
+import fr.cnrs.iees.omhtk.Sizeable;
+import fr.cnrs.iees.omhtk.Textable;
 
 /**
  * Implementation of {@code List<T>} with a <em>self-correcting</em> iterator

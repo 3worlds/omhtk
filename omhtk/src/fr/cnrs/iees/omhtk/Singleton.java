@@ -1,14 +1,15 @@
 /**************************************************************************
  *  OMHTK - One More Handy Tool Kit                                       *
  *                                                                        *
- *  Copyright 2018: Shayne FLint, Jacques Gignoux & Ian D. Davies         *
+ *  Copyright 2021: Shayne R. Flint, Jacques Gignoux & Ian D. Davies      *
  *       shayne.flint@anu.edu.au                                          *
  *       jacques.gignoux@upmc.fr                                          *
  *       ian.davies@anu.edu.au                                            * 
  *                                                                        *
  *  OMHTK is a bunch of useful, very generic interfaces for designing     *
- *  consistent, plus some other utilities. The kind of things you need    *
- *  in all software projects and keep rebuilding all the time.            *
+ *  consistent class hierarchies, plus some other utilities. The kind of  *
+ *  things you need in all software projects and keep rebuilding all the  * 
+ *  time.                                                                 *
  *                                                                        *
  **************************************************************************                                       
  *  This file is part of OMHTK (One More Handy Tool Kit).                 *
@@ -28,28 +29,28 @@
  *  If not, see <https://www.gnu.org/licenses/gpl.html>.                  *
  *                                                                        *
  **************************************************************************/
-package au.edu.anu.rscs.aot.init;
-
-import fr.cnrs.iees.omhtk.Initialisable;
+package fr.cnrs.iees.omhtk;
 
 /**
- * @author Ian Davies - 27 Aug 2019
+ * An interface for a singleton instance of class {@code T}. Like a {@link Factory}, but the returned
+ * object is always the same instance.
+ * <p>To make sure the instance returned by this class is unique, {@code T} should have a protected
+ * constructor only visible to this class.</p>
+ * 
+ * @author Jacques Gignoux - 31 mai 2019
+ *
+ * @param <T> the type of the returned instance
+ * 
+ * @see LimitedEdition
+ * @see Factory 
  */
-public class DummyNode implements Initialisable{
-
-	private int rk ;
-	public DummyNode(int rank) {
-		this.rk=rank;
-	}
-	@Override
-	public void initialise() throws Exception {
-		throw new Exception(""+rk);
-	}
-
-	@Override
-	public int initRank() {
-		// TODO Auto-generated method stub
-		return rk;
-	}
+public interface Singleton<T> {
+	
+	/**
+	 * Gets the singleton (i.e., unique) instance of class {@code T}.
+	 * 
+	 * @return the unique instance of {@code T}
+	 */
+	public T getInstance();
 
 }

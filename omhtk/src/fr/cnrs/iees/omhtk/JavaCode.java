@@ -1,14 +1,15 @@
 /**************************************************************************
  *  OMHTK - One More Handy Tool Kit                                       *
  *                                                                        *
- *  Copyright 2018: Shayne FLint, Jacques Gignoux & Ian D. Davies         *
+ *  Copyright 2021: Shayne R. Flint, Jacques Gignoux & Ian D. Davies      *
  *       shayne.flint@anu.edu.au                                          *
  *       jacques.gignoux@upmc.fr                                          *
  *       ian.davies@anu.edu.au                                            * 
  *                                                                        *
  *  OMHTK is a bunch of useful, very generic interfaces for designing     *
- *  consistent, plus some other utilities. The kind of things you need    *
- *  in all software projects and keep rebuilding all the time.            *
+ *  consistent class hierarchies, plus some other utilities. The kind of  *
+ *  things you need in all software projects and keep rebuilding all the  * 
+ *  time.                                                                 *
  *                                                                        *
  **************************************************************************                                       
  *  This file is part of OMHTK (One More Handy Tool Kit).                 *
@@ -28,28 +29,23 @@
  *  If not, see <https://www.gnu.org/licenses/gpl.html>.                  *
  *                                                                        *
  **************************************************************************/
-package au.edu.anu.rscs.aot.init;
+package fr.cnrs.iees.omhtk;
 
-import fr.cnrs.iees.omhtk.Initialisable;
-
-/**
- * @author Ian Davies - 27 Aug 2019
- */
-public class DummyNode implements Initialisable{
-
-	private int rk ;
-	public DummyNode(int rank) {
-		this.rk=rank;
-	}
-	@Override
-	public void initialise() throws Exception {
-		throw new Exception(""+rk);
-	}
-
-	@Override
-	public int initRank() {
-		// TODO Auto-generated method stub
-		return rk;
-	}
+/** 
+ * An interface for classes which return a java source code as text, typically code generators. 
+ * 
+ * @author Jacques Gignoux - 19 déc. 2014
+ * */
+public interface JavaCode {
+	
+	/**
+	 * Constructs and returns valid java code as a plain text {@code String}. The returned String
+	 * is assumed to contain lines separated by end-of-line characters so that it can be directly
+	 * saved to a {@code .java} code file.
+	 * 
+	 * @param indent the String to use for indentation of code lines
+	 * @return the code as a single String
+	 */
+	public abstract String asText(String indent);
 
 }

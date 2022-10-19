@@ -29,73 +29,84 @@
  *  If not, see <https://www.gnu.org/licenses/gpl.html>.                  *
  *                                                                        *
  **************************************************************************/
-package au.edu.anu.rscs.aot.init;
-
-import java.util.LinkedList;
-import java.util.List;
-import java.util.SortedMap;
-import java.util.TreeMap;
-
-import fr.cnrs.iees.omhtk.Initialisable;
+package fr.cnrs.iees.omhtk.utils;
 
 /**
- * <p>A class used to initialise a series of objects that require late initialisation, i.e. after
- * instantiation. It is meant to work in conjunction with the {@link Initialisable} interface.</p>
- * <p>This class is instantiated with a list of {@code Initialisable} to process. Then,
- * a call to {@code Initialiser.initialise()} will call the {@code initialise()} method
- * of all {@code Initialisable} instances in turn, in order of increasing {@code initRank()}.
- * </p>
+ * Utility methods to make java-compatible names from Strings.
  * 
- * @author Shayne Flint - looong ago<br/> 
- * heavily refactored by Jacques Gignoux - 7 mai 2019
+ * @author Jacques Gignoux - 15/2/2012
  *
  */
-public class Initialiser {
-	
-	private SortedMap<Integer,List<Initialisable>> toInit = new TreeMap<>();
-	private List<InitialiseMessage> initFailList = new LinkedList<>();
+// tested OK with version 0.1.5
+// TODO Check all this - may already be done by apache commons.lang3.wordUtils
+public class NameUtils {
 
 	/**
-	 * This constructor takes a list of {@code Initialisable} objects
-	 * @param initList the list of objects to initialise
+	 * @return a Java compatible String with uppercase words from a String with
+	 *         separators.
+	 * @param s the input string.
+	 * 
 	 */
-	public Initialiser(Iterable<Initialisable> initList) {
-		super();
-		for (Initialisable init:initList) {
-			int priority = init.initRank();
-			if (!toInit.containsKey(priority))
-				toInit.put(priority, new LinkedList<>());
-			// the sorted map sorts the key integers in increasing order
-			toInit.get(priority).add(init);
-		}
+	static public String wordUpperCaseName(String s) {
+		String[] tokens = s.split("\\W");
+		String result = "";
+		if (tokens.length > 0) {
+			result = tokens[0];
+			for (int i = 1; i < tokens.length; i++) {
+				result += initialUpperCase(tokens[i]);
+			}
+		} else
+			result = s;
+		return result;
 	}
-	
+
 	/**
-	 * Initialises all objects passed to the constructor
-	 * following their priority ranking, from the lowest to the highest priority
+	 * @return a String with an initial uppercase.
+	 * 
+	 * @param s the input string.
 	 */
-	public void initialise() {
-		// the SortedMap iterator returns its content in ascending order
-		for (int priority:toInit.keySet())
-			for (Initialisable init:toInit.get(priority))
-				try {
-					init.initialise();
-				}
-				catch (Exception e) {
-					initFailList.add(new InitialiseMessage(init,e));
-				}
+	static public String initialUpperCase(String s) {
+		if (s.length() > 1)
+			return s.substring(0, 1).toUpperCase() + s.substring(1);
+		else if (s.length() == 1)
+			return s.toUpperCase();
+		else
+			return s;
 	}
-	
+
 	/**
-	 * Returns the problems which occured during the initialisation process. Errors are stored in
-	 * {@link InitialiseMessage} instances.
-	 * @return null if no error, the error list otherwise
+	 * @return a String where separators are replaced by underscores
+	 * 
+	 * @param s the input string.
+	 * 
 	 */
-	public Iterable<InitialiseMessage> errorList() {
-		if (initFailList.isEmpty())
-			return null;
-		else 
-			return initFailList;
+	static public String wordUnderscoreName(String s) {
+		String[] tokens = s.split("\\W");
+		String result = "";
+		if (tokens.length > 0) {
+			result = tokens[0];
+			for (int i = 1; i < tokens.length; i++) {
+				if (tokens[i].length() > 0)
+					result += "_" + tokens[i];
+			}
+		} else
+			result = s;
+		return result;
 	}
-	
+
+	/**
+	 * Makes a valid java variable name from a string by replacing all non valid
+	 * characters with "X".
+	 * 
+	 * @param s The input string.
+	 * @return a valid java variable name.
+	 */
+	static public String validJavaName(String s) {
+		String result = s;
+		if (s.substring(0, 1).matches("\\d"))
+			result = "_" + s;
+		result = result.replaceAll("\\W", "X");
+		return result;
+	}
+
 }

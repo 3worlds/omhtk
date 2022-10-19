@@ -29,73 +29,83 @@
  *  If not, see <https://www.gnu.org/licenses/gpl.html>.                  *
  *                                                                        *
  **************************************************************************/
-package au.edu.anu.rscs.aot.init;
+package fr.cnrs.iees.omhtk.utils;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.SortedMap;
-import java.util.TreeMap;
+import java.util.HashMap;
+import java.util.Map;
+import static java.util.logging.Level.*;
 
-import fr.cnrs.iees.omhtk.Initialisable;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
- * <p>A class used to initialise a series of objects that require late initialisation, i.e. after
- * instantiation. It is meant to work in conjunction with the {@link Initialisable} interface.</p>
- * <p>This class is instantiated with a list of {@code Initialisable} to process. Then,
- * a call to {@code Initialiser.initialise()} will call the {@code initialise()} method
- * of all {@code Initialisable} instances in turn, in order of increasing {@code initRank()}.
- * </p>
+ * A centralized logging system for big applications. Only static methods. Based
+ * on <a href=
+ * "https://docs.oracle.com/en/java/javase/11/docs/api/java.logging/java/util/logging/package-summary.html">java.util.logging</a>.
  * 
- * @author Shayne Flint - looong ago<br/> 
- * heavily refactored by Jacques Gignoux - 7 mai 2019
+ * @author Jacques Gignoux - 6 sept. 2019
  *
  */
-public class Initialiser {
-	
-	private SortedMap<Integer,List<Initialisable>> toInit = new TreeMap<>();
-	private List<InitialiseMessage> initFailList = new LinkedList<>();
+public class Logging {
+
+	private static Level defaultLevel = INFO;
+	private static Map<Class<?>, Logger> loggers = new HashMap<>();
+
+	private Logging() {
+	}
 
 	/**
-	 * This constructor takes a list of {@code Initialisable} objects
-	 * @param initList the list of objects to initialise
+	 * Get a Logger for a given class. Separate loggers are used for different
+	 * classes so that the log level can be finely tuned
+	 * 
+	 * @param forclass Class of logger to search for.
+	 * @return The Logger for the given class
 	 */
-	public Initialiser(Iterable<Initialisable> initList) {
-		super();
-		for (Initialisable init:initList) {
-			int priority = init.initRank();
-			if (!toInit.containsKey(priority))
-				toInit.put(priority, new LinkedList<>());
-			// the sorted map sorts the key integers in increasing order
-			toInit.get(priority).add(init);
+	public static Logger getLogger(Class<?> forclass) {
+		if (!loggers.containsKey(forclass)) {
+			Logger log = Logger.getLogger(forclass.getName());
+			log.setLevel(defaultLevel);
+			loggers.put(forclass, log);
 		}
+		return loggers.get(forclass);
 	}
-	
+
 	/**
-	 * Initialises all objects passed to the constructor
-	 * following their priority ranking, from the lowest to the highest priority
+	 * Set the logging level of all loggers
+	 * 
+	 * @param level the logging level. Possible values are:
+	 *              <ul>
+	 *              <li>OFF: no logging at all</li>
+	 *              <li>SEVERE: error messages only</li>
+	 *              <li>WARNING: error+warning messages only</li>
+	 *              <li>INFO: error+warning+debug messages only</li>
+	 *              </ul>
 	 */
-	public void initialise() {
-		// the SortedMap iterator returns its content in ascending order
-		for (int priority:toInit.keySet())
-			for (Initialisable init:toInit.get(priority))
-				try {
-					init.initialise();
-				}
-				catch (Exception e) {
-					initFailList.add(new InitialiseMessage(init,e));
-				}
+	public static void setLogLevel(Level level) {
+		for (Logger log : loggers.values())
+			log.setLevel(level);
 	}
-	
+
 	/**
-	 * Returns the problems which occured during the initialisation process. Errors are stored in
-	 * {@link InitialiseMessage} instances.
-	 * @return null if no error, the error list otherwise
+	 * Set the logging level for a given Logger identified by its class.
+	 * 
+	 * @param level    level the logging level.
+	 * @param forclass the class identifying the Logger
+	 * @see Logging#setLogLevel(Level)
 	 */
-	public Iterable<InitialiseMessage> errorList() {
-		if (initFailList.isEmpty())
-			return null;
-		else 
-			return initFailList;
+	public static void setLogLevel(Level level, Class<?> forclass) {
+		loggers.get(forclass).setLevel(level);
 	}
-	
+
+	/**
+	 * Set the default logging level.
+	 * 
+	 * @param level level the logging level.
+	 * @see Logging#setLogLevel(Level)
+	 */
+	public static void setDefaultLogLevel(Level level) {
+		defaultLevel = level;
+		setLogLevel(level);
+	}
+
 }

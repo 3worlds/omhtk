@@ -29,73 +29,78 @@
  *  If not, see <https://www.gnu.org/licenses/gpl.html>.                  *
  *                                                                        *
  **************************************************************************/
-package au.edu.anu.rscs.aot.init;
+package fr.cnrs.iees.omhtk.codeGeneration;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.SortedMap;
-import java.util.TreeMap;
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
 
-import fr.cnrs.iees.omhtk.Initialisable;
+import fr.cnrs.iees.omhtk.JavaCode;
 
 /**
- * <p>A class used to initialise a series of objects that require late initialisation, i.e. after
- * instantiation. It is meant to work in conjunction with the {@link Initialisable} interface.</p>
- * <p>This class is instantiated with a list of {@code Initialisable} to process. Then,
- * a call to {@code Initialiser.initialise()} will call the {@code initialise()} method
- * of all {@code Initialisable} instances in turn, in order of increasing {@code initRank()}.
- * </p>
- * 
- * @author Shayne Flint - looong ago<br/> 
- * heavily refactored by Jacques Gignoux - 7 mai 2019
+ * Utility methods for code generation.
+ *
+ * @author Jacques Gignoux - 4 juil. 2019
  *
  */
-public class Initialiser {
-	
-	private SortedMap<Integer,List<Initialisable>> toInit = new TreeMap<>();
-	private List<InitialiseMessage> initFailList = new LinkedList<>();
+public class CodeGenerationUtils {
 
 	/**
-	 * This constructor takes a list of {@code Initialisable} objects
-	 * @param initList the list of objects to initialise
+	 * Write a java code file from a {@link JavaCode} instance. 
+	 * @param jc the {@code JavaCode} instance to use
+	 * @param file the file to save to
 	 */
-	public Initialiser(Iterable<Initialisable> initList) {
-		super();
-		for (Initialisable init:initList) {
-			int priority = init.initRank();
-			if (!toInit.containsKey(priority))
-				toInit.put(priority, new LinkedList<>());
-			// the sorted map sorts the key integers in increasing order
-			toInit.get(priority).add(init);
+	public static void writeFile(JavaCode jc, File file) {
+		file.getParentFile().mkdirs();
+		PrintStream classFile;
+		try {
+			classFile = new PrintStream(file,StandardCharsets.UTF_8);
+			classFile.println(jc.asText("\t"));
+			classFile.close();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
-	
+
 	/**
-	 * Initialises all objects passed to the constructor
-	 * following their priority ranking, from the lowest to the highest priority
+	 * Checks a class name. For any class name except primitive wrappers,
+	 * it does nothing. For primitive wrapper classes (e.g. Double, Integer, etc.) it returns 
+	 * the matching primitive type.
+	 * @param type any class name
+	 * @return the class name or the matching primitive type in case of a primitive wrapper
 	 */
-	public void initialise() {
-		// the SortedMap iterator returns its content in ascending order
-		for (int priority:toInit.keySet())
-			for (Initialisable init:toInit.get(priority))
-				try {
-					init.initialise();
-				}
-				catch (Exception e) {
-					initFailList.add(new InitialiseMessage(init,e));
-				}
+	public static String checkType(String type) {
+		if (type.equals("Double")) return "double";
+		else if (type.equals("Integer")) return "int";
+		else if (type.equals("Float")) return "float";
+		else if (type.equals("Boolean")) return "boolean";
+		else if (type.equals("Long")) return "long";
+		else if (type.equals("Char")) return "char";
+		else if (type.equals("Short")) return "short";
+		else if (type.equals("Byte")) return "byte";
+		return type;
 	}
-	
+
 	/**
-	 * Returns the problems which occured during the initialisation process. Errors are stored in
-	 * {@link InitialiseMessage} instances.
-	 * @return null if no error, the error list otherwise
+	 * Get the "zero" value compatible with a class. For primitive types, it will return the
+	 * appropriate zero value. For Strings, it returns an empty String. For all other classes,
+	 * it returns {@code null}.
+	 * @param type the class simple name (e.g. "String")
+	 * @return the proper zero value
 	 */
-	public Iterable<InitialiseMessage> errorList() {
-		if (initFailList.isEmpty())
-			return null;
-		else 
-			return initFailList;
+	public static String zero(String type) {
+		if (type.equals("int")) return "0";
+		else if (type.equals("long")) return "0L";
+		else if (type.equals("float")) return "0.0f";
+		else if (type.equals("double")) return "0.0d";
+		else if (type.equals("boolean")) return "false";
+		else if (type.equals("char")) return "\'\\0\'";
+		else if (type.equals("short")) return "0";
+		else if (type.equals("byte")) return "0";
+		else if (type.equals("String")) return "\"\"";
+		else return "null";
 	}
-	
+
+
 }

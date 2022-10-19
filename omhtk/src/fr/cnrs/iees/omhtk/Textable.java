@@ -29,73 +29,69 @@
  *  If not, see <https://www.gnu.org/licenses/gpl.html>.                  *
  *                                                                        *
  **************************************************************************/
-package au.edu.anu.rscs.aot.init;
-
-import java.util.LinkedList;
-import java.util.List;
-import java.util.SortedMap;
-import java.util.TreeMap;
-
-import fr.cnrs.iees.omhtk.Initialisable;
+package fr.cnrs.iees.omhtk;
 
 /**
- * <p>A class used to initialise a series of objects that require late initialisation, i.e. after
- * instantiation. It is meant to work in conjunction with the {@link Initialisable} interface.</p>
- * <p>This class is instantiated with a list of {@code Initialisable} to process. Then,
- * a call to {@code Initialiser.initialise()} will call the {@code initialise()} method
- * of all {@code Initialisable} instances in turn, in order of increasing {@code initRank()}.
- * </p>
+ * <p>An interface for relatively complex objects that can return information with various 
+ * levels of detail.</p>
+ * <p>This interface should <strong>not</strong> be used to save objects as text. For
+ * this task, the {@link SaveableAsText} interface is better adapted.</p>
+ * <p>These methods complement the {@code Object.toString()} method that is used in eclipse
+ * for debugging code.</p>
  * 
- * @author Shayne Flint - looong ago<br/> 
- * heavily refactored by Jacques Gignoux - 7 mai 2019
+ * @author gignoux - 25 août 2017
  *
  */
-public class Initialiser {
+public interface Textable {
 	
-	private SortedMap<Integer,List<Initialisable>> toInit = new TreeMap<>();
-	private List<InitialiseMessage> initFailList = new LinkedList<>();
+	/**
+	 * Displays the object as simply as possible, showing its unicity as an instance.
+	 * Typically, it should show the object address + some indication of the object
+	 * content. Or if the object has a unique ID (e.g. graph elements), it should
+	 * use it.
+	 * 
+	 * @return a String uniquely characterising this instance
+	 */
+	public default String toUniqueString() {
+		// Typically, this method shoud return Object.toString(), which returns the
+		// object reference. But this cannot be made the default behaviour in
+		// an interface because super is not available in interfaces
+		throw new UnsupportedOperationException("Unimplemented method: toUniqueString()");
+	}
 
 	/**
-	 * This constructor takes a list of {@code Initialisable} objects
-	 * @param initList the list of objects to initialise
+	 * <p>Displays the object as simply as possible, with no guarantee that another 
+	 * object will not return the same string. </p>
+	 * <p>The returned description must fit on one single, short (~20 character), line
+	 * of text.</p>
+	 * @return a short String describing this instance
 	 */
-	public Initialiser(Iterable<Initialisable> initList) {
-		super();
-		for (Initialisable init:initList) {
-			int priority = init.initRank();
-			if (!toInit.containsKey(priority))
-				toInit.put(priority, new LinkedList<>());
-			// the sorted map sorts the key integers in increasing order
-			toInit.get(priority).add(init);
-		}
+	public default String toShortString() {
+		return toString();
+	}
+
+	/**
+	 * <p>Displays the object with all - or at least a lot of - the detailed of its content, for screen or console
+	 * display purpose.</p>
+	 * <p>The returned description should not contain line breaks.</p>
+	 * 
+	 * @return a long String describing this instance.
+	 */
+//	public String toLongString(); // bad name
+	public default String toDetailedString() {
+		return toUniqueString()+" "+toString();
 	}
 	
 	/**
-	 * Initialises all objects passed to the constructor
-	 * following their priority ranking, from the lowest to the highest priority
+	 * This is the inherited method from {@code Object}.
+	 * Keep it simple as it is used by the debugger to show object content
+	 * Suggestion is to make it return one of the other methods depending
+	 * on what debugging level is required (e.g. toUniqueString() when instance
+	 * identity is important, toDetailedString() when everything is important,
+	 * toShortString() when not much is important).
+	 * 
+	 * @return
 	 */
-	public void initialise() {
-		// the SortedMap iterator returns its content in ascending order
-		for (int priority:toInit.keySet())
-			for (Initialisable init:toInit.get(priority))
-				try {
-					init.initialise();
-				}
-				catch (Exception e) {
-					initFailList.add(new InitialiseMessage(init,e));
-				}
-	}
-	
-	/**
-	 * Returns the problems which occured during the initialisation process. Errors are stored in
-	 * {@link InitialiseMessage} instances.
-	 * @return null if no error, the error list otherwise
-	 */
-	public Iterable<InitialiseMessage> errorList() {
-		if (initFailList.isEmpty())
-			return null;
-		else 
-			return initFailList;
-	}
+//	public String toString();
 	
 }

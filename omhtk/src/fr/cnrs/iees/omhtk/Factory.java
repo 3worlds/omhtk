@@ -1,14 +1,15 @@
 /**************************************************************************
  *  OMHTK - One More Handy Tool Kit                                       *
  *                                                                        *
- *  Copyright 2018: Shayne FLint, Jacques Gignoux & Ian D. Davies         *
+ *  Copyright 2021: Shayne R. Flint, Jacques Gignoux & Ian D. Davies      *
  *       shayne.flint@anu.edu.au                                          *
  *       jacques.gignoux@upmc.fr                                          *
  *       ian.davies@anu.edu.au                                            * 
  *                                                                        *
  *  OMHTK is a bunch of useful, very generic interfaces for designing     *
- *  consistent, plus some other utilities. The kind of things you need    *
- *  in all software projects and keep rebuilding all the time.            *
+ *  consistent class hierarchies, plus some other utilities. The kind of  *
+ *  things you need in all software projects and keep rebuilding all the  * 
+ *  time.                                                                 *
  *                                                                        *
  **************************************************************************                                       
  *  This file is part of OMHTK (One More Handy Tool Kit).                 *
@@ -28,28 +29,43 @@
  *  If not, see <https://www.gnu.org/licenses/gpl.html>.                  *
  *                                                                        *
  **************************************************************************/
-package au.edu.anu.rscs.aot.init;
+package fr.cnrs.iees.omhtk;
 
-import fr.cnrs.iees.omhtk.Initialisable;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
- * @author Ian Davies - 27 Aug 2019
+ * An interface for factories for objects of class {@code T}. 
+ * A factory is an object able to return instances of a given class.
+ * Here, every call to newInstance() returns
+ * a new object of class {@code T}. cf. {@link Singleton} for unique instances. 
+ * 
+ * @author Jacques Gignoux - 31 mai 2019
+ *
+ * @param <T> the type of the returned instance
+
+ * @see Singleton
+ * @see LimitedEdition 
  */
-public class DummyNode implements Initialisable{
-
-	private int rk ;
-	public DummyNode(int rank) {
-		this.rk=rank;
-	}
-	@Override
-	public void initialise() throws Exception {
-		throw new Exception(""+rk);
-	}
-
-	@Override
-	public int initRank() {
-		// TODO Auto-generated method stub
-		return rk;
+public interface Factory<T> {
+	
+	/**
+	 * Creates and returns a new instance of class {@code T}.
+	 * @return the new {@code T} instance
+	 */
+	public T newInstance();
+	
+	/**
+	 * Creates and returns a collection of new instances of class {@code T}. The default behaviour
+	 * is to return a single instance in a collection.
+	 * @return the collection of new {@code T} instances
+	 */
+	public default Collection<T> newInstances() {
+		T instance = newInstance();
+		List<T> list = new ArrayList<>();
+		list.add(instance);
+		return list;
 	}
 
 }

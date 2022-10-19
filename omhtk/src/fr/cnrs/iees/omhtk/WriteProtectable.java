@@ -1,14 +1,15 @@
 /**************************************************************************
  *  OMHTK - One More Handy Tool Kit                                       *
  *                                                                        *
- *  Copyright 2018: Shayne FLint, Jacques Gignoux & Ian D. Davies         *
+ *  Copyright 2021: Shayne R. Flint, Jacques Gignoux & Ian D. Davies      *
  *       shayne.flint@anu.edu.au                                          *
  *       jacques.gignoux@upmc.fr                                          *
  *       ian.davies@anu.edu.au                                            * 
  *                                                                        *
  *  OMHTK is a bunch of useful, very generic interfaces for designing     *
- *  consistent, plus some other utilities. The kind of things you need    *
- *  in all software projects and keep rebuilding all the time.            *
+ *  consistent class hierarchies, plus some other utilities. The kind of  *
+ *  things you need in all software projects and keep rebuilding all the  * 
+ *  time.                                                                 *
  *                                                                        *
  **************************************************************************                                       
  *  This file is part of OMHTK (One More Handy Tool Kit).                 *
@@ -28,28 +29,34 @@
  *  If not, see <https://www.gnu.org/licenses/gpl.html>.                  *
  *                                                                        *
  **************************************************************************/
-package au.edu.anu.rscs.aot.init;
-
-import fr.cnrs.iees.omhtk.Initialisable;
+package fr.cnrs.iees.omhtk;
 
 /**
- * @author Ian Davies - 27 Aug 2019
+ * An interface for objects that can be write protected / write enabled.
+ * 
+ * It is similar to {@linkplain Sealable} except the seal is reversible
+ * 
+ *  @author J. Gignoux - 13 févr. 2017
+ *
  */
-public class DummyNode implements Initialisable{
-
-	private int rk ;
-	public DummyNode(int rank) {
-		this.rk=rank;
-	}
-	@Override
-	public void initialise() throws Exception {
-		throw new Exception(""+rk);
-	}
-
-	@Override
-	public int initRank() {
-		// TODO Auto-generated method stub
-		return rk;
-	}
+public interface WriteProtectable {
+	
+	/**
+	 * Whether this instance is writeable.
+	 * @return {@code true} if data is write-protected, {@code false} if writing is permitted
+	 */
+	public boolean isReadOnly();
+	
+	/**
+	 * Enables data writing in this instance.
+	 * @return this instance for agile programming
+	 */
+	public WriteProtectable writeEnable();
+	
+	/**
+	 * Disables data writing in this instance.
+	 * @return this instance for agile programming
+	 */
+	public WriteProtectable writeDisable();
 
 }

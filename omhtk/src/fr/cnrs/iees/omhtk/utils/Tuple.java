@@ -29,73 +29,118 @@
  *  If not, see <https://www.gnu.org/licenses/gpl.html>.                  *
  *                                                                        *
  **************************************************************************/
-package au.edu.anu.rscs.aot.init;
-
-import java.util.LinkedList;
-import java.util.List;
-import java.util.SortedMap;
-import java.util.TreeMap;
-
-import fr.cnrs.iees.omhtk.Initialisable;
+package fr.cnrs.iees.omhtk.utils;
 
 /**
- * <p>A class used to initialise a series of objects that require late initialisation, i.e. after
- * instantiation. It is meant to work in conjunction with the {@link Initialisable} interface.</p>
- * <p>This class is instantiated with a list of {@code Initialisable} to process. Then,
- * a call to {@code Initialiser.initialise()} will call the {@code initialise()} method
- * of all {@code Initialisable} instances in turn, in order of increasing {@code initRank()}.
- * </p>
+ * A class holding a triplet (in the mathematical sense, ie ordered) of objects
+ * of possibly different classes. A three element Tuple based on
+ * javafx.util.Pair. Immutable.
  * 
- * @author Shayne Flint - looong ago<br/> 
- * heavily refactored by Jacques Gignoux - 7 mai 2019
+ * @author Ian Davies - 14 Oct 2019
+ * 
+ * @param <F> The class of the first triplet member
+ * @param <S> The class of the second triplet member
+ * @param <T> The class of the triplet member
  *
+ * @see Duple
  */
-public class Initialiser {
-	
-	private SortedMap<Integer,List<Initialisable>> toInit = new TreeMap<>();
-	private List<InitialiseMessage> initFailList = new LinkedList<>();
+public class Tuple<F, S, T> {
+
+	private F first;
+	private S second;
+	private T third;
 
 	/**
-	 * This constructor takes a list of {@code Initialisable} objects
-	 * @param initList the list of objects to initialise
+	 * 
+	 * @param f the first member
+	 * @param s the second member
+	 * @param t the third member
 	 */
-	public Initialiser(Iterable<Initialisable> initList) {
+	public Tuple(F f, S s, T t) {
 		super();
-		for (Initialisable init:initList) {
-			int priority = init.initRank();
-			if (!toInit.containsKey(priority))
-				toInit.put(priority, new LinkedList<>());
-			// the sorted map sorts the key integers in increasing order
-			toInit.get(priority).add(init);
+		first = f;
+		second = s;
+		third = t;
+	}
+
+	/**
+	 * @return The first member.
+	 */
+	public F getFirst() {
+		return first;
+	}
+
+	/**
+	 * @return The second member.
+	 */
+	public S getSecond() {
+		return second;
+	}
+
+	/**
+	 * @return The third member.
+	 */
+	public T getThird() {
+		return third;
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append(first).append("|").append(second).append("|").append(third);
+		return sb.toString();
+	}
+
+	@Override
+	public int hashCode() {
+		return toString().hashCode();
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public boolean equals(java.lang.Object o) {
+		if (o == null)
+			return false;
+		try {
+			Tuple<F, S, T> other = (Tuple<F, S, T>) o;
+			boolean equalFirst = false;
+			if (first == null)
+				if (other.first == null)
+					equalFirst = true;
+				else
+					return false;
+			else if (other.first == null)
+				return false;
+			else
+				equalFirst = first.equals(other.first);
+
+			boolean equalSecond = false;
+			if (second == null)
+				if (other.second == null)
+					equalSecond = true;
+				else
+					return false;
+			else if (other.second == null)
+				return false;
+			else
+				equalSecond = second.equals(other.second);
+
+			boolean equalThird = false;
+			if (third == null)
+				if (other.third == null)
+					equalThird = true;
+				else
+					return false;
+			else if (other.third == null)
+				return false;
+			else
+				equalThird = third.equals(other.third);
+
+			return equalFirst && equalSecond && equalThird;
+
+		} catch (Exception e) {
+			return false;
 		}
 	}
-	
-	/**
-	 * Initialises all objects passed to the constructor
-	 * following their priority ranking, from the lowest to the highest priority
-	 */
-	public void initialise() {
-		// the SortedMap iterator returns its content in ascending order
-		for (int priority:toInit.keySet())
-			for (Initialisable init:toInit.get(priority))
-				try {
-					init.initialise();
-				}
-				catch (Exception e) {
-					initFailList.add(new InitialiseMessage(init,e));
-				}
-	}
-	
-	/**
-	 * Returns the problems which occured during the initialisation process. Errors are stored in
-	 * {@link InitialiseMessage} instances.
-	 * @return null if no error, the error list otherwise
-	 */
-	public Iterable<InitialiseMessage> errorList() {
-		if (initFailList.isEmpty())
-			return null;
-		else 
-			return initFailList;
-	}
-	
+
 }

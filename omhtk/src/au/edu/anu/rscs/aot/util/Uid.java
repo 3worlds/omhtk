@@ -37,7 +37,8 @@ import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Date;
 import java.util.Enumeration;
-import fr.ens.biologie.generic.Textable;
+
+import fr.cnrs.iees.omhtk.Textable;
 
 /**
  * Guaranteed universally unique identifers. The identifier is constructed from:

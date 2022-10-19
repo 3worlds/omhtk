@@ -35,8 +35,8 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-import fr.ens.biologie.generic.Sizeable;
-import fr.ens.biologie.generic.Textable;
+import fr.cnrs.iees.omhtk.Sizeable;
+import fr.cnrs.iees.omhtk.Textable;
 
 /**
  * <p>

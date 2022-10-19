@@ -7,6 +7,8 @@ import java.util.Random;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import fr.cnrs.iees.omhtk.utils.Shuffle;
+
 class ShuffleTest {
 
 	@Test
