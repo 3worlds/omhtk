@@ -6,8 +6,6 @@ import org.junit.jupiter.api.Test;
 
 import fr.cnrs.iees.omhtk.Factory;
 import fr.cnrs.iees.omhtk.Sizeable;
-import fr.cnrs.iees.omhtk.codeGeneration.ClassGenerator;
-import fr.cnrs.iees.omhtk.codeGeneration.EnumGenerator;
 
 class EnumGeneratorTest {
 

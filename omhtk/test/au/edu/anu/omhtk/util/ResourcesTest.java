@@ -39,8 +39,6 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 
 import au.edu.anu.omhtk.environment.LocalEnvironment;
-import au.edu.anu.omhtk.util.IntegerRange;
-import au.edu.anu.omhtk.util.Resources;
 
 class ResourcesTest {
 

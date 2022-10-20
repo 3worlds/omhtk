@@ -36,8 +36,6 @@ import java.util.Iterator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import au.edu.anu.omhtk.collections.DynamicList;
-
 class DynamicListTest {
 	
 	private DynamicList<Integer> l1, l2, l3;

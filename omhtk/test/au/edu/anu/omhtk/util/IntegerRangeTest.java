@@ -34,8 +34,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
-import au.edu.anu.omhtk.util.IntegerRange;
-
 /**
  * 
  * @author Jacques Gignoux - 4 avr. 2019

@@ -11,9 +11,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import au.edu.anu.omhtk.util.DateTime;
-import au.edu.anu.omhtk.util.Uid;
-
 /**
  * @author gignoux
  *

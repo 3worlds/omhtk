@@ -39,8 +39,6 @@ import java.util.Random;
 
 import org.junit.jupiter.api.Test;
 
-import au.edu.anu.omhtk.init.InitialiseMessage;
-import au.edu.anu.omhtk.init.Initialiser;
 import fr.cnrs.iees.omhtk.Initialisable;
 
 /**

@@ -37,8 +37,6 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-import au.edu.anu.omhtk.util.JavaUtils;
-
 /**
  * 
  * @author Jacques Gignoux - 13 août 2019
