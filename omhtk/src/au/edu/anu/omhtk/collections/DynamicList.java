@@ -52,7 +52,7 @@ import fr.cnrs.iees.omhtk.Textable;
  * there are many insertions and deletions in the list).
  * <p>
  * [NB:This was formerly known as AotList. Code modified from
- * au.edu.anu.omugi.collections. {@code AotList<T>} by Shayne Flint. Removed
+ * fr.cnrs.iees.omugi.collections. {@code AotList<T>} by Shayne Flint. Removed
  * Query, and dependency from AotCollection and AotIterable.]
  * </p>
  * <p>

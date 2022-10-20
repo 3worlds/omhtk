@@ -53,7 +53,7 @@ class JavaUtilsTest {
 
 	@Test
 	final void testGetClassesInPackage() {
-		List<Class<?>> list = JavaUtils.getClassesInPackage("au.edu.anu.omugi.collections");
+		List<Class<?>> list = JavaUtils.getClassesInPackage("fr.cnrs.iees.omugi.collections");
 		assertNotNull(list);
 		for (Class<?> c:list)
 			show("testGetClassesInPackage",c.getSimpleName());
@@ -92,7 +92,7 @@ class JavaUtilsTest {
 
 	@Test
 	final void testFileForClassString() {
-		File f = JavaUtils.fileForClass("au.edu.anu.omugi.collections.DynamicList");
+		File f = JavaUtils.fileForClass("fr.cnrs.iees.omugi.collections.DynamicList");
 		show("testFileForClassClassOfQ",f.toString());
 		assertNotNull(f);
 	}
