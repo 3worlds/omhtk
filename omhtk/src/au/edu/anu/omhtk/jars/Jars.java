@@ -58,10 +58,10 @@ import java.util.zip.ZipFile;
 
 import org.apache.commons.io.IOUtils;
 
-import au.edu.anu.rscs.aot.environment.Environment;
-import au.edu.anu.rscs.aot.environment.LocalEnvironment;
-import au.edu.anu.rscs.aot.util.JavaUtils;
-import au.edu.anu.rscs.aot.util.Resources;
+import au.edu.anu.omhtk.environment.Environment;
+import au.edu.anu.omhtk.environment.LocalEnvironment;
+import au.edu.anu.omhtk.util.JavaUtils;
+import au.edu.anu.omhtk.util.Resources;
 import fr.cnrs.iees.omhtk.utils.Logging;
 
 /**

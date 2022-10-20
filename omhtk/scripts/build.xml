@@ -46,7 +46,7 @@
 			<fileset dir="src"/>
 			<manifest>
 				<attribute name="Implementation-Vendor" value="CNRS/ANU"/>
-				<attribute name="Implementation-Title" value="fr.ens.biologie"/>
+				<attribute name="Implementation-Title" value="fr.cnrs.iees.omhtk"/>
 				<attribute name="Implementation-Version" value="0.4.0"/>
 				<attribute name="Built-By" value="${user.name}"/>
  			</manifest>

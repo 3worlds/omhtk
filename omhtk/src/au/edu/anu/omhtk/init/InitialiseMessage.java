@@ -29,71 +29,60 @@
  *  If not, see <https://www.gnu.org/licenses/gpl.html>.                  *
  *                                                                        *
  **************************************************************************/
-package fr.cnrs.iees.omhtk;
+package au.edu.anu.omhtk.init;
+
+import fr.cnrs.iees.omhtk.Initialisable;
 
 /**
  * <p>
- * An interface for objects that require initialisation (whatever this means)
- * after instantiation.
+ * A class to store error messages that occurred during a late (=after
+ * instantiation) initialisation. Works in conjunction with {@link Initialiser}.
  * </p>
- * <p>
- * In big applications, the initialisation of objects is often a complex
- * procedure where many different classes must be instantiated in a precise
- * order, and sometimes with reciprocal dependencies that impose some more
- * initialisation after instantiation. This interface defines two methods that
- * help this process:
- * </p>
- * <ul>
- * <li>{@link Initialisable#initialise() initialise()} performs all the
- * operations required before any instance of this interface can be considered
- * 'ready'.</li>
- * <li>{@link Initialisable#initRank() initRank()} returns a rank that insures
- * that the initialisations are made in the proper order.</li>
- * </ul>
- * <p>
- * This interface is meant to be used with the
- * {@link au.edu.anu.omhtk.init.Initialiser Initialiser} class.
- * {@code Initialiser} is constructed with a list of {@code Initialisable}
- * instances. Then, a call to {@code Initialiser.initialise()} will call the
- * {@code initialise()} method of all {@code Initialisable} instances in turn,
- * in order of increasing {@code initRank()}.
- * </p>
- * 
  * 
  * @author Jacques Gignoux - 7 mai 2019
  *
  */
-public interface Initialisable {
+public class InitialiseMessage {
+
+	private Exception exc = null;
+	private Object target = null;
 
 	/**
-	 * Initialises this instance after construction. Often, classes require other
-	 * classes to be initialized before they themselves can proceed. These
-	 * associated classes will be initialized at the first attempt by a class to use
-	 * them. Thus, initialization occurs in a cascading chain.
+	 * Constructor
 	 * 
-	 * @throws Exception If initialization fails or one its associated classes in
-	 *                   the cascading chain fails to initialize.
+	 * @param item   the object on which initialisation failed.
+	 * @param failed the error raised by the initialisation method call.
 	 */
-	public void initialise() throws Exception;
+	public InitialiseMessage(Object item, Exception failed) {
+		super();
+		target = item;
+		exc = failed;
+	}
 
 	/**
-	 * This is used to decide in which order objects must be initialised. They will
-	 * be initialised from the lowest to the highest priority. The use case is to
-	 * set this as a class constant.
+	 * The error raised by the initialisation method call
 	 * 
-	 * @return the priority level for the object to initialise.
+	 * @return The exception.
 	 */
-	public int initRank();
+	public Exception getException() {
+		return exc;
+	}
 
-//	@Override
-//	public default int compareTo(Initialisable i) {
-//		if (initRank() == i.initRank())
-//			return 0;
-//		if (initRank() > i.initRank())
-//			return 1;
-//		if (initRank() < i.initRank())
-//			return -1;
-//		return 0;
-//	}
+	/**
+	 * The object which caused the error. Usually, an {@link Initialisable}
+	 * instance.
+	 * 
+	 * @return the object that caused the error.
+	 */
+	public Object getTarget() {
+		return target;
+	}
 
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("Initialisation failed for object:\n\t").append(target.toString()).append("\n--with Error:\n\t")
+				.append(exc.toString());
+		return sb.toString();
+	}
 }

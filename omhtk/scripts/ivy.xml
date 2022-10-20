@@ -11,7 +11,7 @@
 		xmlns:m="http://maven.apache.org/POM/4.0.0"
 		xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd">
 
-	<info	organisation="fr.ens.biologie"
+	<info	organisation="fr.cnrs.iees.omhtk"
 			module="generics"
 			revision="0.4.0"
 			status="integration">

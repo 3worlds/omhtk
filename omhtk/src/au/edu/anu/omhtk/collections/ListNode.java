@@ -29,71 +29,57 @@
  *  If not, see <https://www.gnu.org/licenses/gpl.html>.                  *
  *                                                                        *
  **************************************************************************/
-package fr.cnrs.iees.omhtk;
+package au.edu.anu.omhtk.collections;
 
 /**
- * <p>
- * An interface for objects that require initialisation (whatever this means)
- * after instantiation.
- * </p>
- * <p>
- * In big applications, the initialisation of objects is often a complex
- * procedure where many different classes must be instantiated in a precise
- * order, and sometimes with reciprocal dependencies that impose some more
- * initialisation after instantiation. This interface defines two methods that
- * help this process:
- * </p>
- * <ul>
- * <li>{@link Initialisable#initialise() initialise()} performs all the
- * operations required before any instance of this interface can be considered
- * 'ready'.</li>
- * <li>{@link Initialisable#initRank() initRank()} returns a rank that insures
- * that the initialisations are made in the proper order.</li>
- * </ul>
- * <p>
- * This interface is meant to be used with the
- * {@link au.edu.anu.omhtk.init.Initialiser Initialiser} class.
- * {@code Initialiser} is constructed with a list of {@code Initialisable}
- * instances. Then, a call to {@code Initialiser.initialise()} will call the
- * {@code initialise()} method of all {@code Initialisable} instances in turn,
- * in order of increasing {@code initRank()}.
- * </p>
+ * A container for items in a List (formerly AotList). This class is not meant
+ * to be used directly, it's hidden in {@link DynamicList}.
  * 
- * 
- * @author Jacques Gignoux - 7 mai 2019
- *
+ * @param <T> The list element type
+ * @author Shayne Flint - long ago
  */
-public interface Initialisable {
+public class ListNode<T> {
+
+	protected T item;
+	protected ListNode<T> next;
+	protected ListNode<T> prev;
 
 	/**
-	 * Initialises this instance after construction. Often, classes require other
-	 * classes to be initialized before they themselves can proceed. These
-	 * associated classes will be initialized at the first attempt by a class to use
-	 * them. Thus, initialization occurs in a cascading chain.
+	 * ListNode constructor.
 	 * 
-	 * @throws Exception If initialization fails or one its associated classes in
-	 *                   the cascading chain fails to initialize.
+	 * @param item The item to wrap.
+	 * @param next Its next ListNode.
+	 * @param prev Its previous ListNode.
 	 */
-	public void initialise() throws Exception;
+	public ListNode(T item, ListNode<T> next, ListNode<T> prev) {
+		this.item = item;
+		this.next = next;
+		this.prev = prev;
+	}
+
+	public String toString() {
+		String result = "[ListNode ";
+		if (isRemoved())
+			result = result + "(removed) ";
+		result = result + this.item + " prev=";
+		if (prev == null)
+			result = result + "null    ";
+		else
+			result = result + prev.item;
+		result = result + " next=";
+		if (next == null)
+			result = result + "null    ";
+		else
+			result = result + next.item;
+		result = result + " item=" + item + "]";
+		return result;
+	}
 
 	/**
-	 * This is used to decide in which order objects must be initialised. They will
-	 * be initialised from the lowest to the highest priority. The use case is to
-	 * set this as a class constant.
-	 * 
-	 * @return the priority level for the object to initialise.
+	 * @return If removed, false otherwise.
 	 */
-	public int initRank();
-
-//	@Override
-//	public default int compareTo(Initialisable i) {
-//		if (initRank() == i.initRank())
-//			return 0;
-//		if (initRank() > i.initRank())
-//			return 1;
-//		if (initRank() < i.initRank())
-//			return -1;
-//		return 0;
-//	}
+	public boolean isRemoved() {
+		return (prev == this);
+	}
 
 }

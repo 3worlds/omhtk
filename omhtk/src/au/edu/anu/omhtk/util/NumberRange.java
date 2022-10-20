@@ -29,71 +29,100 @@
  *  If not, see <https://www.gnu.org/licenses/gpl.html>.                  *
  *                                                                        *
  **************************************************************************/
-package fr.cnrs.iees.omhtk;
+package au.edu.anu.omhtk.util;
 
 /**
- * <p>
- * An interface for objects that require initialisation (whatever this means)
- * after instantiation.
- * </p>
- * <p>
- * In big applications, the initialisation of objects is often a complex
- * procedure where many different classes must be instantiated in a precise
- * order, and sometimes with reciprocal dependencies that impose some more
- * initialisation after instantiation. This interface defines two methods that
- * help this process:
- * </p>
- * <ul>
- * <li>{@link Initialisable#initialise() initialise()} performs all the
- * operations required before any instance of this interface can be considered
- * 'ready'.</li>
- * <li>{@link Initialisable#initRank() initRank()} returns a rank that insures
- * that the initialisations are made in the proper order.</li>
- * </ul>
- * <p>
- * This interface is meant to be used with the
- * {@link au.edu.anu.omhtk.init.Initialiser Initialiser} class.
- * {@code Initialiser} is constructed with a list of {@code Initialisable}
- * instances. Then, a call to {@code Initialiser.initialise()} will call the
- * {@code initialise()} method of all {@code Initialisable} instances in turn,
- * in order of increasing {@code initRank()}.
- * </p>
+ * Static methods to format number ranges as Strings. "Infinite" numbers are replaced by a String, 
+ * e.g. "MinInteger", "MaxDouble", etc...
  * 
- * 
- * @author Jacques Gignoux - 7 mai 2019
+ * @author Shayne Flint - 4/4/2012
  *
  */
-public interface Initialisable {
+public class NumberRange {
 
 	/**
-	 * Initialises this instance after construction. Often, classes require other
-	 * classes to be initialized before they themselves can proceed. These
-	 * associated classes will be initialized at the first attempt by a class to use
-	 * them. Thus, initialization occurs in a cascading chain.
+	 * Return a range of integers, e.g. 1..57.
 	 * 
-	 * @throws Exception If initialization fails or one its associated classes in
-	 *                   the cascading chain fails to initialize.
+	 * @param min the lower end of the range
+	 * @param max the upper end of the range
+	 * @return a formatted String
 	 */
-	public void initialise() throws Exception;
+	public static String range(int min, int max) {
+		String result = "";
+		if (min == Integer.MIN_VALUE)
+			result = "MinInteger";
+		else 
+			result = result + min;
+		result = result + "..";
+		if (max == Integer.MAX_VALUE)
+			result = result + "MaxInteger";
+		else 
+			result = result + max;	
+		return result;
+	}
 
 	/**
-	 * This is used to decide in which order objects must be initialised. They will
-	 * be initialised from the lowest to the highest priority. The use case is to
-	 * set this as a class constant.
+	 * Return a range of longs, e.g. 153711321244687..5768914546187981434687
 	 * 
-	 * @return the priority level for the object to initialise.
+	 * @param min the lower end of the range
+	 * @param max the upper end of the range
+	 * @return a formatted String
 	 */
-	public int initRank();
+	public static String range(long min, long max) {
+		String result = "";
+		if (min == Long.MIN_VALUE)
+			result = "MinLong";
+		else 
+			result = result + min;
+		result = result + "..";
+		if (max == Long.MAX_VALUE)
+			result = result + "MaxLong";
+		else 
+			result = result + max;	
+		return result;
+	}
 
-//	@Override
-//	public default int compareTo(Initialisable i) {
-//		if (initRank() == i.initRank())
-//			return 0;
-//		if (initRank() > i.initRank())
-//			return 1;
-//		if (initRank() < i.initRank())
-//			return -1;
-//		return 0;
-//	}
+	/**
+	 * Return a range of floats, e.g. 1.0..57.87
+	 * 
+	 * @param min the lower end of the range
+	 * @param max the upper end of the range
+	 * @return a formatted String
+	 */
+	public static String range(float min, float max) {
+		String result = "";
+		if (min == Float.MIN_VALUE)
+			result = "MinFloat";
+		else 
+			result = result + min;
+		result = result + "..";
+		if (max == Float.MAX_VALUE)
+			result = result + "MaxFloat";
+		else 
+			result = result + max;	
+		return result;
+	}
+
+	/**
+	 * Return a range of doubles, e.g. 1.15..57.00
+	 * 
+	 * @param min the lower end of the range
+	 * @param max the upper end of the range
+	 * @return a formatted String
+	 */
+	public static String range(double min, double max) {
+		String result = "";
+		if (min == Double.MIN_VALUE)
+			result = "MinDouble";
+		else 
+			result = result + min;
+		result = result + "..";
+		if (max == Double.MAX_VALUE)
+			result = result + "MaxDouble";
+		else 
+			result = result + max;	
+		return result;
+	}
+
 
 }

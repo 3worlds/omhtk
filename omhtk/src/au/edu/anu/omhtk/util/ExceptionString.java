@@ -29,71 +29,30 @@
  *  If not, see <https://www.gnu.org/licenses/gpl.html>.                  *
  *                                                                        *
  **************************************************************************/
-package fr.cnrs.iees.omhtk;
+package au.edu.anu.omhtk.util;
 
 /**
- * <p>
- * An interface for objects that require initialisation (whatever this means)
- * after instantiation.
- * </p>
- * <p>
- * In big applications, the initialisation of objects is often a complex
- * procedure where many different classes must be instantiated in a precise
- * order, and sometimes with reciprocal dependencies that impose some more
- * initialisation after instantiation. This interface defines two methods that
- * help this process:
- * </p>
- * <ul>
- * <li>{@link Initialisable#initialise() initialise()} performs all the
- * operations required before any instance of this interface can be considered
- * 'ready'.</li>
- * <li>{@link Initialisable#initRank() initRank()} returns a rank that insures
- * that the initialisations are made in the proper order.</li>
- * </ul>
- * <p>
- * This interface is meant to be used with the
- * {@link au.edu.anu.omhtk.init.Initialiser Initialiser} class.
- * {@code Initialiser} is constructed with a list of {@code Initialisable}
- * instances. Then, a call to {@code Initialiser.initialise()} will call the
- * {@code initialise()} method of all {@code Initialisable} instances in turn,
- * in order of increasing {@code initRank()}.
- * </p>
+ * Static method to handle exceptions. Useful when you want to redirect Exception error messages
+ * to your own output.
  * 
- * 
- * @author Jacques Gignoux - 7 mai 2019
+ * @author Shayne Flint - before 27/2/2012
  *
  */
-public interface Initialisable {
+// NOT TESTED
+public class ExceptionString {
 
 	/**
-	 * Initialises this instance after construction. Often, classes require other
-	 * classes to be initialized before they themselves can proceed. These
-	 * associated classes will be initialized at the first attempt by a class to use
-	 * them. Thus, initialization occurs in a cascading chain.
+	 * Get an Exception stack trace into a String (instead of sending it to the console as in
+	 * {@link java.lang.Exception#printStackTrace() Exception.printStackTrace()}).
 	 * 
-	 * @throws Exception If initialization fails or one its associated classes in
-	 *                   the cascading chain fails to initialize.
+	 * @param e the exception to gobble
+	 * @return the stack trace of the exception
 	 */
-	public void initialise() throws Exception;
-
-	/**
-	 * This is used to decide in which order objects must be initialised. They will
-	 * be initialised from the lowest to the highest priority. The use case is to
-	 * set this as a class constant.
-	 * 
-	 * @return the priority level for the object to initialise.
-	 */
-	public int initRank();
-
-//	@Override
-//	public default int compareTo(Initialisable i) {
-//		if (initRank() == i.initRank())
-//			return 0;
-//		if (initRank() > i.initRank())
-//			return 1;
-//		if (initRank() < i.initRank())
-//			return -1;
-//		return 0;
-//	}
-
+	public static String exceptionString(Exception e) {
+		String result = e.toString();
+		for (StackTraceElement ste : e.getStackTrace()) {
+			result = result + "\n  at " + ste.toString();
+		}
+		return result;
+	}
 }
