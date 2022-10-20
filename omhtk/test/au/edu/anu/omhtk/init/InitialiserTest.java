@@ -29,7 +29,7 @@
  *                                                                        *
  **************************************************************************/
 
-package au.edu.anu.aot.init;
+package au.edu.anu.omhtk.init;
 
 import static org.junit.jupiter.api.Assertions.*;
 
