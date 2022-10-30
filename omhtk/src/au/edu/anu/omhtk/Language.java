@@ -32,7 +32,7 @@
 package au.edu.anu.omhtk;
 
 /**
- * A list of supported languages.
+ * A list of supported natural languages.
  * 
  * @author Ian Davies - 5 April 2021
  *
@@ -42,7 +42,6 @@ public class Language {
 	};
 
 	private static final String lang = System.getProperty("user.language");
-//	private static final String lang = "fr";
 
 	/**
 	 * Opening single quote.

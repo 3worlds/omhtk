@@ -14,39 +14,42 @@ import java.util.Set;
 import fr.cnrs.iees.omhtk.JavaCode;
 
 /**
- * NO factory (subclasses are different)
- * Limited support for parameterized interfaces (generates the class header properly but
- * does not manage parameter types in functions - this must be done by hand)
+ * NO factory (subclasses are different) Limited support for parameterized
+ * interfaces (generates the class header properly but does not manage parameter
+ * types in functions - this must be done by hand)
  * 
  * @author Jacques Gignoux - 11 oct. 2022
  *
  */
 public abstract class AbstractClassGenerator implements JavaCode {
-	
+
 	private String packageName;
 	private String name;
 	private Set<String> interfaces = new HashSet<String>();
-	private Map<String,MethodGenerator> methods = new HashMap<String,MethodGenerator>();
+	private Map<String, MethodGenerator> methods = new HashMap<String, MethodGenerator>();
 	List<String> methodsToOverride = new ArrayList<>();
-	
+
 	private Set<String> imports = new HashSet<String>();
 	private String classComment = null;
-	
-	// in case interfaces have parameters (eg Partition<T>), a valid class name should be passed here
-	private Map<String,List<String>> interfaceParameters = new HashMap<>();
+
+	// in case interfaces have parameters (eg Partition<T>), a valid class name
+	// should be passed here
+	private Map<String, List<String>> interfaceParameters = new HashMap<>();
 
 	// constructor
-	AbstractClassGenerator(String packageName,
-			String name,
-			String classComment,
-			String... interfaces) {
+	AbstractClassGenerator(String packageName, String name, String classComment, String... interfaces) {
 		this.packageName = packageName;
 		this.classComment = classComment;
-		this.name = name;	
-		for (String s:interfaces)
+		this.name = name;
+		for (String s : interfaces)
 			this.interfaces.add(s);
 	}
-	
+
+	/**
+	 * Add a generic parameter to this class
+	 * @param interf The interface name.
+	 * @param param class of the generic parameter. If qualified, an import statement is added to the generator.
+	 */
 	public final void addInterfaceGenericParameter(String interf, String param) {
 		String pImport = null;
 		String pClass = param;
@@ -55,7 +58,7 @@ public abstract class AbstractClassGenerator implements JavaCode {
 			// only keep the last name as param name
 			pImport = param;
 			String[] s = param.split("\\.");
-			pClass = s[s.length-1];
+			pClass = s[s.length - 1];
 		}
 		if (interfaces.contains(interf)) {
 			if (!interfaceParameters.containsKey(interf))
@@ -72,34 +75,40 @@ public abstract class AbstractClassGenerator implements JavaCode {
 //					imports.add(paramImport);
 //				interfaceParameters.get(interf).add(kl.getSimpleName());
 //			}
-			if ((pImport!=null)&&!imports.contains(pImport))
+			if ((pImport != null) && !imports.contains(pImport))
 				imports.add(pImport);
 			interfaceParameters.get(interf).add(pClass);
 		}
 	}
-	
+
 	// helper method for constructor
 	// MUST be called at the end of the constructor
 	void recordAncestorInterfaceMethods() {
 		Set<String> ifs = new HashSet<>(); // caution: concurrentModificationException !
-		for (String s:interfaces) {
-			try { recordAncestorMethods(Class.forName(s)); }
-			catch (ClassNotFoundException e) {}
-			// an interface name with no package is assumed to be in the same package, hence no import
-			if (s.contains(".")) 
+		for (String s : interfaces) {
+			try {
+				recordAncestorMethods(Class.forName(s));
+			} catch (ClassNotFoundException e) {
+			}
+			// an interface name with no package is assumed to be in the same package, hence
+			// no import
+			if (s.contains("."))
 				imports.add(stripTemplate(s));
 			ifs.add(stripPackageFromClassName(s));
 		}
 		interfaces.clear();
 		interfaces.addAll(ifs);
 	}
-	
+
 	String recordSuperClassMethods(String superclass) {
-		if (superclass!=null) {
-			try { recordAncestorMethods(Class.forName(superclass));	}
-			catch (ClassNotFoundException e) {}
-			// a class name with no package is assumed to be in the same package, hence no import
-			if (superclass.contains(".")) 
+		if (superclass != null) {
+			try {
+				recordAncestorMethods(Class.forName(superclass));
+			} catch (ClassNotFoundException e) {
+			}
+			// a class name with no package is assumed to be in the same package, hence no
+			// import
+			if (superclass.contains("."))
 				setImport(stripTemplate(superclass));
 			return stripPackageFromClassName(superclass);
 		}
@@ -109,77 +118,88 @@ public abstract class AbstractClassGenerator implements JavaCode {
 	// helper method for constructor
 	private void recordAncestorMethods(Class<?> c) {
 		Method[] lm = c.getDeclaredMethods();
-		for (Method m:lm) {
+		for (Method m : lm) {
 			if (!methods.containsKey(m.getName()))
-			if (Modifier.isAbstract(m.getModifiers()) ||
-				(methodsToOverride.contains(m.getName()))) {
-				methods.put(m.getName(), new MethodGenerator(m));
-			}
+				if (Modifier.isAbstract(m.getModifiers()) || (methodsToOverride.contains(m.getName()))) {
+					methods.put(m.getName(), new MethodGenerator(m));
+				}
 		}
 	}
 
 	// helper method for constructor
 	private String stripTemplate(String className) {
 		String result = className;
-		if (className.indexOf('<')>-1)
+		if (className.indexOf('<') > -1)
 			result = className.substring(0, className.indexOf('<'));
 		return result;
 	}
-	
+
 	// helper method for constructor
 	/**
 	 * Remove the package from a class name.
+	 * 
 	 * @param fullClassName the fully qualified class name
 	 * @return just the class name (last word of fullClassName)
 	 */
 	private String stripPackageFromClassName(String fullClassName) {
 		String[] sc = fullClassName.split("\\.");
-		return sc[sc.length-1];
+		return sc[sc.length - 1];
 	}
-	
-	// getters and setters
-	
+
+	/**
+	 * @return The class name of the class represented by this generator.
+	 */
 	public final String name() {
 		return name;
 	}
-	
+
 	/**
 	 * The package of the class represented by this generator.
+	 * 
 	 * @return the generated class package name
 	 */
 	public final String packageName() {
 		return packageName;
 	}
-	
+
+	/**
+	 * @return The number of interfaces implemented by the class represented by this
+	 *         generator.
+	 */
 	public final int nInterfaces() {
 		return interfaces.size();
 	}
-	
+
 	/**
 	 * Declares a new import.
-	 * @param imp a fully qualified class name to import or more generally any valid java text 
-	 * that can fit between "import " and ";" in a java import statement.
+	 * 
+	 * @param imp a fully qualified class name to import or more generally any valid
+	 *            java text that can fit between "import " and ";" in a java import
+	 *            statement.
 	 * @return this class for agile programming
 	 */
 	public final AbstractClassGenerator setImport(String imp) {
 		imports.add(imp);
 		return this;
 	}
-	
+
 	/**
-	 * Declare a new method by adding a new {@code MethodGenerator} instance to this class.
-	 * @param mname the method key (usually, its name)
+	 * Declare a new method by adding a new {@code MethodGenerator} instance to this
+	 * class.
+	 * 
+	 * @param mname  the method key (usually, its name)
 	 * @param method the {@code MethodGenerator} instance
 	 * @return this class for agile programming
 	 */
 	public final AbstractClassGenerator setMethod(String mname, MethodGenerator method) {
-		methods.put(mname,method);
+		methods.put(mname, method);
 		return this;
 	}
 
 	/**
-	 * Get a declared method. This enables one to add statements into automatically generated 
-	 * methods (e.g. when building the class from a superclass).
+	 * Get a declared method. This enables one to add statements into automatically
+	 * generated methods (e.g. when building the class from a superclass).
+	 * 
 	 * @param mname the method key
 	 * @return the method generator
 	 */
@@ -189,22 +209,27 @@ public abstract class AbstractClassGenerator implements JavaCode {
 
 	/**
 	 * Get all the methods declared in this class.
+	 * 
 	 * @return a collection of method generators
 	 */
 	public final Collection<MethodGenerator> getMethods() {
 		return methods.values();
 	}
-	
-	public final List<String> getInterfaceParameters(String interf) {		
+
+	/**
+	 * Get a list of all generic interface parameters.
+	 * @param interf The interface name
+	 * @return List of interface parameters.
+	 */
+	public final List<String> getInterfaceParameters(String interf) {
 		return interfaceParameters.get(interf);
 	}
 
-	
 	// code text generation
-	
+
 	/**
-	 * header text for class/interface/enum declaration. Stops just before the list of interfaces,
-	 *  eg:<br/>
+	 * header text for class/interface/enum declaration. Stops just before the list
+	 * of interfaces, eg:<br/>
 	 * 
 	 * <em>{@code public class MyClass extends YourClass [implements] }</em> <br/>
 	 * or <em>{@code public interface MyInterface [extends] }</em> <br/>
@@ -214,15 +239,15 @@ public abstract class AbstractClassGenerator implements JavaCode {
 	 * @return the generated code line
 	 */
 	protected abstract String headerText();
-	
+
 	/**
-	 * field text for class, enum and possibly interface declaration. For enum it also comprises
-	 * enum constants.
+	 * field text for class, enum and possibly interface declaration. For enum it
+	 * also comprises enum constants.
 	 * 
 	 * @return
 	 */
 	protected abstract String fieldText(String indent);
-	
+
 	/**
 	 * method text - different for class, enum and interface.
 	 * 
@@ -230,20 +255,20 @@ public abstract class AbstractClassGenerator implements JavaCode {
 	 * @return
 	 */
 	protected abstract String methodText(String indent);
-	
+
 	@Override
-	public final String asText(String indent) {		
+	public final String asText(String indent) {
 		// prepare interface names with generic parameters
 		String[] ifs = interfaces.toArray(new String[interfaces.size()]);
-		for (int i=0; i<ifs.length; i++) {
+		for (int i = 0; i < ifs.length; i++) {
 			if (interfaceParameters.containsKey(ifs[i])) {
 				List<String> l = interfaceParameters.get(ifs[i]);
 				if (!l.isEmpty()) {
 					ifs[i] += "<";
-					int j=0;
-					for (String s:l) {
-						if (j<l.size()-1)
-							ifs[i] += s+", ";
+					int j = 0;
+					for (String s : l) {
+						if (j < l.size() - 1)
+							ifs[i] += s + ", ";
 						else
 							ifs[i] += s;
 						j++;
@@ -257,30 +282,30 @@ public abstract class AbstractClassGenerator implements JavaCode {
 		// package declaration
 		result.append("package ").append(packageName).append(";\n\n");
 		// imports
-		for (String imp:imports)
+		for (String imp : imports)
 			result.append("import ").append(imp).append(";\n");
-		if (imports.size()>0)
+		if (imports.size() > 0)
 			result.append("\n");
 		// class javadoc comment
-		if (classComment!=null)
+		if (classComment != null)
 			result.append(classComment).append('\n');
 		// header (different for class, interface and enum)
-		result.append(headerText());		
-		for (int i=0; i<ifs.length; i++) {
-			if (i<ifs.length-1) result.append(" ").append(ifs[i]).append(",");
-			else result.append(" ").append(ifs[i]);
+		result.append(headerText());
+		for (int i = 0; i < ifs.length; i++) {
+			if (i < ifs.length - 1)
+				result.append(" ").append(ifs[i]).append(",");
+			else
+				result.append(" ").append(ifs[i]);
 		}
 		// opening class body
 		result.append(" {\n\n");
 		// declaring fields
 		result.append(fieldText(indent));
 		// declaring methods
-		result.append(methodText(indent));		
+		result.append(methodText(indent));
 		// closing class body
 		result.append("}\n");
 		return result.toString();
 	}
-
-	
 
 }

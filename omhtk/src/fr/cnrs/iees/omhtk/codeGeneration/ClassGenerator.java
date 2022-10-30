@@ -78,7 +78,7 @@ public class ClassGenerator extends AbstractClassGenerator {
 	 * @param packageName the package of the class to create
 	 * @param classComment the class file comment
 	 * @param name the class name
-	 * @param isInterface {@code true} if the class to generate is an interface
+	 * @param scope The declared scope of the class constructor.
 	 * @param methodsToOverride the list of methods to override if different from abstract methods
 	 * @param superclass the superclass
 	 * @param interfaces the interfaces
@@ -104,9 +104,9 @@ public class ClassGenerator extends AbstractClassGenerator {
 	/**
 	 * Constructor for a public class with no ancestry
 	 * 
-	 * @param packageName
-	 * @param classComment
-	 * @param name
+	 * @param packageName The package name for the class.
+	 * @param classComment Top-level comments for the generated class file.
+	 * @param name The name of the class represented by this generator.
 	 */
 	public ClassGenerator(String packageName,
 			String classComment,
@@ -117,11 +117,11 @@ public class ClassGenerator extends AbstractClassGenerator {
 	/**
 	 * Constructor for a public class with a superclass but no interfaces
 	 * 
-	 * @param packageName
-	 * @param classComment
-	 * @param name
-	 * @param methodsToOverride
-	 * @param superclass
+	 * @param packageName The package name for the class.
+	 * @param classComment Top-level comments for the generated class file.
+	 * @param name The name of the class represented by this generator.
+	 * @param methodsToOverride Set of method names that are inherited by this class
+	 * @param superclass The name of the super class of this generated class.
 	 */
 	public ClassGenerator(String packageName,
 			String classComment,

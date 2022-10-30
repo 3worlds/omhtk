@@ -45,13 +45,13 @@ public class ListNode<T> {
 	protected ListNode<T> prev;
 
 	/**
-	 * ListNode constructor.
+	 * ListNode within package constructor.
 	 * 
 	 * @param item The item to wrap.
 	 * @param next Its next ListNode.
 	 * @param prev Its previous ListNode.
 	 */
-	public ListNode(T item, ListNode<T> next, ListNode<T> prev) {
+	 ListNode(T item, ListNode<T> next, ListNode<T> prev) {
 		this.item = item;
 		this.next = next;
 		this.prev = prev;

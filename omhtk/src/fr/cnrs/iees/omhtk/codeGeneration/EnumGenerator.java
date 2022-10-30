@@ -15,6 +15,12 @@ public class EnumGenerator extends AbstractClassGenerator {
 
 	private List<String> constants = new LinkedList<String>();
 	
+	/**
+	 * @param packageName The package of the enum to create
+	 * @param classComment The top-level enum file comment
+	 * @param name The class name of the enum to be generated.
+	 * @param interfaces Array of interfaces to be used by the generated enum.
+	 */
 	public EnumGenerator (String packageName,
 		String classComment,
 		String name,
@@ -23,6 +29,10 @@ public class EnumGenerator extends AbstractClassGenerator {
 		recordAncestorInterfaceMethods();
 	}
 	
+	/**
+	 * @param constant A new enum value to list with this enum.
+	 * @return fluid interface.
+	 */
 	public EnumGenerator setConstant(String constant) {
 		constants.add(constant);
 		return this;

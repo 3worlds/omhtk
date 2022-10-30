@@ -104,14 +104,12 @@ public class DynamicList<T> implements List<T>, Deque<T>, Queue<T>, Sizeable, Te
 			add(item);
 	}
 
-	// Sizeable
-
+	
 	@Override
 	public int size() {
 		return size;
 	}
 
-	// List
 
 	@Override
 	public boolean isEmpty() {
