@@ -42,7 +42,7 @@ import java.util.prefs.Preferences;
 import au.edu.anu.omhtk.stringarrays.StringArrayConversion;
 
 /**
- * This implementation of {@link IPreferences} is a wrapper class for
+ * This implementation of {@link Preferences} is a wrapper class for
  * {@link java.util.prefs.Preferences}. This class loads the node from file, if
  * present, and writes to file on flush().
  * <p>
@@ -56,7 +56,7 @@ import au.edu.anu.omhtk.stringarrays.StringArrayConversion;
  * @author Ian Davies - Dec 11, 2018
  */
 
-public class PrefImpl implements IPreferences {
+public class PrefImpl implements ArrayPreferences {
 	private Preferences prefs;
 	private final String sep = ",";
 	private File file;

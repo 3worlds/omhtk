@@ -38,7 +38,7 @@ package au.edu.anu.omhtk.preferences;
  * @author Ian Davies - Dec 11, 2018
  *
  */
-public interface IPreferences {
+public interface ArrayPreferences {
 	/**
 	 * Add a key:int pair to the preferences.
 	 * 
