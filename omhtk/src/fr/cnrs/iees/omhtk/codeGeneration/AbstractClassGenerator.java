@@ -89,6 +89,7 @@ public abstract class AbstractClassGenerator implements JavaCode {
 			try {
 				recordAncestorMethods(Class.forName(s));
 			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
 			}
 			// an interface name with no package is assumed to be in the same package, hence
 			// no import
@@ -105,6 +106,7 @@ public abstract class AbstractClassGenerator implements JavaCode {
 			try {
 				recordAncestorMethods(Class.forName(superclass));
 			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
 			}
 			// a class name with no package is assumed to be in the same package, hence no
 			// import
