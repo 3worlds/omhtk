@@ -83,18 +83,23 @@ public abstract class AbstractClassGenerator implements JavaCode {
 
 	// helper method for constructor
 	// MUST be called at the end of the constructor
+	// tricky here: the interfaces may have been generated just before, in which case
+	// the class loader doesnt know about them.
+	// therefore, we assume that an interface with no package is correct
+	// without loading. Pb then: @Override annotations will be lacking
 	void recordAncestorInterfaceMethods() {
 		Set<String> ifs = new HashSet<>(); // caution: concurrentModificationException !
 		for (String s : interfaces) {
-			try {
-				recordAncestorMethods(Class.forName(s));
-			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
-			}
 			// an interface name with no package is assumed to be in the same package, hence
-			// no import
-			if (s.contains("."))
+			// no import and no attempt to load the class (classloader doesnt know it yet)
+			if (s.contains(".")) {
+				try {
+					recordAncestorMethods(Class.forName(s));
+				} catch (ClassNotFoundException e) {
+					e.printStackTrace();
+				}
 				imports.add(stripTemplate(s));
+			}
 			ifs.add(stripPackageFromClassName(s));
 		}
 		interfaces.clear();
@@ -103,6 +108,8 @@ public abstract class AbstractClassGenerator implements JavaCode {
 
 	String recordSuperClassMethods(String superclass) {
 		if (superclass != null) {
+			// assuming this class is never going to be generated in the same package, ie exists
+			// in the classloader
 			try {
 				recordAncestorMethods(Class.forName(superclass));
 			} catch (ClassNotFoundException e) {
