@@ -1,5 +1,5 @@
 <!--===================================================================================
- ant and ivy scripts for project <generics> version 0.5.1 (Mon Apr 24 15:25:58 CEST 2023)
+ ant and ivy scripts for project <generics> version 0.5.0 (Thu Oct 20 10:53:59 CEST 2022)
  author: Jacques Gignoux <jacques.gignoux@upmc.fr>
 
  CAUTION: this file is generated - DO NOT EDIT!
@@ -13,7 +13,7 @@
 
 	<info	organisation="fr.cnrs.iees.omhtk"
 			module="generics"
-			revision="0.5.1"
+			revision="0.5.0"
 			status="integration">
 		<license name="gpl3" url="https://www.gnu.org/licenses/gpl-3.0.txt"/>
 		<description>This module contains generic, all-purpose, basic utilities for almost any java project.</description>
