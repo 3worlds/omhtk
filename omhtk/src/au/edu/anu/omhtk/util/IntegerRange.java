@@ -31,6 +31,8 @@
  **************************************************************************/
 package au.edu.anu.omhtk.util;
 
+import java.util.Objects;
+
 /**
  * <p>
  * A class to represent ranges of integer numbers. Fully compatible with
@@ -46,6 +48,8 @@ public class IntegerRange {
 
 	private int first = 0;
 	private int last = Integer.MAX_VALUE;
+	// hash code for faster comparison in maps
+	private int hash = 0;
 
 	/**
 	 * Constructor from two numbers. Throws an Exception if first &gt; last.
@@ -107,15 +111,26 @@ public class IntegerRange {
 //		check();
 //	}
 
-	@Override
-	public boolean equals(Object value) {
-		IntegerRange test = (IntegerRange) value;
-		return first == test.first && last == test.last;
-	}
-
 	private void check() {
 		if (first > last)
 			throw new IllegalArgumentException("Invalid integer range: " + first + " must <= " + last);
+	}
+
+	@Override
+	public int hashCode() {
+		if (hash==0)
+			hash = Objects.hash(first, last);
+		return hash;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!(obj instanceof IntegerRange))
+			return false;
+		IntegerRange other = (IntegerRange) obj;
+		return first == other.first && last == other.last;
 	}
 
 	/**

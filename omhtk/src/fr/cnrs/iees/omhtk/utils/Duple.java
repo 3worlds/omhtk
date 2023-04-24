@@ -31,6 +31,8 @@
  **************************************************************************/
 package fr.cnrs.iees.omhtk.utils;
 
+import java.util.Objects;
+
 /**
  * A class holding a pair (in the mathematical sense, ie ordered) of objects of
  * possibly different classes. It's a kind of clone of javafx.util.Pair which is
@@ -46,6 +48,8 @@ public class Duple<F, S> {
 
 	private F first;
 	private S second;
+	// hash code for faster comparison in maps
+	private int hash = 0;
 
 	/**
 	 * 
@@ -83,40 +87,19 @@ public class Duple<F, S> {
 
 	@Override
 	public int hashCode() {
-		return toString().hashCode();
+		if (hash==0)
+			hash = Objects.hash(first,second);
+		return hash;
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
-	public boolean equals(java.lang.Object o) {
-		if (o == null)
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!(obj instanceof Duple))
 			return false;
-		try {
-			Duple<F, S> p = (Duple<F, S>) o;
-			boolean equalFirst = false;
-			if (first == null)
-				if (p.first == null)
-					equalFirst = true;
-				else
-					return false;
-			else if (p.first == null)
-				return false;
-			else
-				equalFirst = first.equals(p.first);
-			boolean equalSecond = false;
-			if (second == null)
-				if (p.second == null)
-					equalSecond = true;
-				else
-					return false;
-			else if (p.second == null)
-				return false;
-			else
-				equalSecond = second.equals(p.second);
-			return equalFirst && equalSecond;
-		} catch (Exception e) {
-			return false;
-		}
+		Duple<?,?> other = (Duple<?,?>) obj;
+		return Objects.equals(first, other.first) && Objects.equals(second, other.second);
 	}
 
 }

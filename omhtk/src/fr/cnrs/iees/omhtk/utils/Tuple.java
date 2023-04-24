@@ -31,6 +31,8 @@
  **************************************************************************/
 package fr.cnrs.iees.omhtk.utils;
 
+import java.util.Objects;
+
 /**
  * A class holding a triplet (in the mathematical sense, ie ordered) of objects
  * of possibly different classes. A three element Tuple based on
@@ -49,6 +51,8 @@ public class Tuple<F, S, T> {
 	private F first;
 	private S second;
 	private T third;
+	// hash code for faster comparison in maps
+	private int hash = 0;
 
 	/**
 	 * 
@@ -61,6 +65,24 @@ public class Tuple<F, S, T> {
 		first = f;
 		second = s;
 		third = t;
+	}
+
+	@Override
+	public int hashCode() {
+		if (hash==0)
+			hash = Objects.hash(first,second,third); 
+		return hash;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!(obj instanceof Tuple))
+			return false;
+		Tuple<?,?,?> other = (Tuple<?,?,?>) obj;
+		return Objects.equals(first,other.first) && Objects.equals(second,other.second)
+				&& Objects.equals(third,other.third);
 	}
 
 	/**
@@ -91,56 +113,5 @@ public class Tuple<F, S, T> {
 		return sb.toString();
 	}
 
-	@Override
-	public int hashCode() {
-		return toString().hashCode();
-	}
-
-	@Override
-	@SuppressWarnings("unchecked")
-	public boolean equals(java.lang.Object o) {
-		if (o == null)
-			return false;
-		try {
-			Tuple<F, S, T> other = (Tuple<F, S, T>) o;
-			boolean equalFirst = false;
-			if (first == null)
-				if (other.first == null)
-					equalFirst = true;
-				else
-					return false;
-			else if (other.first == null)
-				return false;
-			else
-				equalFirst = first.equals(other.first);
-
-			boolean equalSecond = false;
-			if (second == null)
-				if (other.second == null)
-					equalSecond = true;
-				else
-					return false;
-			else if (other.second == null)
-				return false;
-			else
-				equalSecond = second.equals(other.second);
-
-			boolean equalThird = false;
-			if (third == null)
-				if (other.third == null)
-					equalThird = true;
-				else
-					return false;
-			else if (other.third == null)
-				return false;
-			else
-				equalThird = third.equals(other.third);
-
-			return equalFirst && equalSecond && equalThird;
-
-		} catch (Exception e) {
-			return false;
-		}
-	}
 
 }

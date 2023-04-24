@@ -31,6 +31,8 @@
  **************************************************************************/
 package fr.cnrs.iees.omhtk.utils;
 
+import java.util.Objects;
+
 /**
  * A (simple) class for mathematical intervals. Handles closed, open, half-open
  * and half-closed intervals; and infinite values.
@@ -52,6 +54,8 @@ public class Interval {
 	private double inf = Double.NEGATIVE_INFINITY;
 	private boolean openSup = true;
 	private boolean openInf = true;
+	// hash code for faster comparison in maps
+	private int hash = 0;
 
 	private Interval(double inf, double sup, boolean openInf, boolean openSup) {
 		super();
@@ -268,16 +272,7 @@ public class Interval {
 			sup = Double.parseDouble(ss[1].trim());
 		return new Interval(inf, sup, openInf, openSup);
 	}
-
-	@Override
-	public boolean equals(Object o) {
-		if (o instanceof Interval) {
-			Interval i = (Interval) o;
-			return (sup == i.sup) && (inf == i.inf) && (openSup == i.openSup) && (openInf == i.openInf);
-		}
-		return false;
-	}
-
+	
 	/**
 	 * @param i The other Interval
 	 * @return true if the two intervals overlap
@@ -295,6 +290,26 @@ public class Interval {
 				return false;
 		} else
 			return contains(i.inf) || contains(i.sup);
+	}
+
+	@Override
+	public int hashCode() {
+		if (hash==0)
+			hash = Objects.hash(inf,openInf,openSup,sup);
+		return hash;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!(obj instanceof Interval))
+			return false;
+		Interval other = (Interval) obj;
+		return Double.doubleToLongBits(inf) == Double.doubleToLongBits(other.inf) 
+			&& openInf == other.openInf
+			&& openSup == other.openSup 
+			&& Double.doubleToLongBits(sup) == Double.doubleToLongBits(other.sup);
 	}
 
 	/**

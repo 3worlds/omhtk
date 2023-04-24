@@ -45,7 +45,7 @@ class IntervalTest {
 	private Interval i, j, k, l;
 	
 	@BeforeEach
-	private void init() {
+	void init() {
 		i = Interval.newInstance(2.0,5.5);
 		j = Interval.open(Double.NEGATIVE_INFINITY,3.0);
 		k = Interval.halfOpenInf(2.0,5.5);

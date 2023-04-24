@@ -20,7 +20,7 @@ class UidTest {
 	private Uid uid, uid1, uid2;
 	
 	@BeforeEach
-	private void init() {
+	void init() {
 		uid = new Uid();
 		uid1 = new Uid("0687F6B2D88A-0000014DBC0F8B3A-0000");
 		uid2 = new Uid(null);

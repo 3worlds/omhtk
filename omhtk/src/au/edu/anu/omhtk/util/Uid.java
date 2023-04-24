@@ -35,8 +35,10 @@ import java.io.File;
 import java.io.Serializable;
 import java.net.NetworkInterface;
 import java.net.SocketException;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.Objects;
 
 import fr.cnrs.iees.omhtk.Textable;
 
@@ -70,6 +72,8 @@ public class Uid implements Serializable, Comparable<Uid>, Textable {
 	static byte[] macAddress; // this is causing trouble because the bloody java bytes are signed!
 	static short count;
 	static long lastUidTime;
+	// hash code for faster comparison in maps
+	private int hash = 0;
 	//public static int UID_LENGTH = 6 + 2 + 8; // was 16
 
 	/**
@@ -342,21 +346,6 @@ public class Uid implements Serializable, Comparable<Uid>, Textable {
 		return result;
 	}
 
-	@Override
-	public boolean equals(Object otherId) {
-		Uid otherUid = null;
-		if (otherId == null)
-			return false;
-		if (otherId instanceof Uid) {
-			otherUid = (Uid) otherId;
-		} else if (otherId instanceof String)
-			otherUid = new Uid((String) otherId);
-		// fixed by JG 6/10/2015 - for some reason the equals method below didnt work
-		// properly on different instances of MacAddress
-		// return (otherUid.getMacAddress().equals(getMacAddress()))
-		return (otherUid.getMacAddressAsLong() == getMacAddressAsLong()) && (otherUid.getTimeStamp() == getTimeStamp())
-				&& (otherUid.getCount() == getCount());
-	}
 
 	/**
 	 * @return a null UID (000000000000-0000000000000000-0000)
@@ -375,6 +364,27 @@ public class Uid implements Serializable, Comparable<Uid>, Textable {
 			if (mac[i] != 0)
 				return false;
 		return time == 0 && cnt == 0;
+	}
+
+	@Override
+	public int hashCode() {
+		if (hash==0) {
+			final int prime = 31;
+			hash = 1;
+			hash = prime * hash + Arrays.hashCode(mac);
+			hash = prime * hash + Objects.hash(cnt,time);
+		}
+		return hash;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!(obj instanceof Uid))
+			return false;
+		Uid other = (Uid) obj;
+		return cnt == other.cnt && Arrays.equals(mac,other.mac) && time == other.time;
 	}
 
 	@Override
