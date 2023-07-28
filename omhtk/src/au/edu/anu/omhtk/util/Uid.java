@@ -72,9 +72,9 @@ public class Uid implements Serializable, Comparable<Uid>, Textable {
 	static byte[] macAddress; // this is causing trouble because the bloody java bytes are signed!
 	static short count;
 	static long lastUidTime;
-	// hash code for faster comparison in maps
+	/** hash code for faster comparison in maps */
 	private int hash = 0;
-	//public static int UID_LENGTH = 6 + 2 + 8; // was 16
+	// public static int UID_LENGTH = 6 + 2 + 8; // was 16
 
 	/**
 	 * The mac addrees component of this Uid.
@@ -108,7 +108,8 @@ public class Uid implements Serializable, Comparable<Uid>, Textable {
 				macAddress = new byte[6];
 			count = 0;
 		} catch (SocketException e) {
-			e.printStackTrace();;
+			e.printStackTrace();
+			;
 		}
 	}
 
@@ -346,7 +347,6 @@ public class Uid implements Serializable, Comparable<Uid>, Textable {
 		return result;
 	}
 
-
 	/**
 	 * @return a null UID (000000000000-0000000000000000-0000)
 	 */
@@ -368,11 +368,11 @@ public class Uid implements Serializable, Comparable<Uid>, Textable {
 
 	@Override
 	public int hashCode() {
-		if (hash==0) {
+		if (hash == 0) {
 			final int prime = 31;
 			hash = 1;
 			hash = prime * hash + Arrays.hashCode(mac);
-			hash = prime * hash + Objects.hash(cnt,time);
+			hash = prime * hash + Objects.hash(cnt, time);
 		}
 		return hash;
 	}
@@ -384,7 +384,7 @@ public class Uid implements Serializable, Comparable<Uid>, Textable {
 		if (!(obj instanceof Uid))
 			return false;
 		Uid other = (Uid) obj;
-		return cnt == other.cnt && Arrays.equals(mac,other.mac) && time == other.time;
+		return cnt == other.cnt && Arrays.equals(mac, other.mac) && time == other.time;
 	}
 
 	@Override

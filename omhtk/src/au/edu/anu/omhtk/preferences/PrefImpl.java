@@ -259,4 +259,10 @@ public class PrefImpl implements ArrayPreferences {
 		return Enum.valueOf(def.getDeclaringClass(), value);
 	}
 
+	@Override
+	public File getFile() {
+		// TODO Auto-generated method stub
+		return file;
+	}
+
 }

@@ -31,6 +31,8 @@
  **************************************************************************/
 package au.edu.anu.omhtk.preferences;
 
+import java.io.File;
+
 /**
  * Interface for the preferences system. It is intended that implementations of
  * this interface provide a means of saving arrays in text form.
@@ -39,6 +41,13 @@ package au.edu.anu.omhtk.preferences;
  *
  */
 public interface ArrayPreferences {
+	/**
+	 * Return the underlying preferences file.
+	 * 
+	 * @return Current preferences file.
+	 */
+	public File getFile();
+
 	/**
 	 * Add a key:int pair to the preferences.
 	 * 

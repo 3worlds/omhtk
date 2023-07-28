@@ -45,15 +45,12 @@ public class PreferenceService {
 	};
 
 	/**
-	 * Setter for the implementation of this static class. Any implementation
-	 * already existing is flushed.
+	 * Setter for the implementation of this static class. 
 	 * 
 	 * @param implementation The implementation.
 	 */
 	public static void setImplementation(ArrayPreferences implementation) {
 
-		if (PreferenceService.impl != null)
-			PreferenceService.impl.flush();
 		PreferenceService.impl = implementation;
 	}
 
