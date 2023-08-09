@@ -94,7 +94,8 @@ public abstract class AbstractClassGenerator implements JavaCode {
 			// no import and no attempt to load the class (classloader doesnt know it yet)
 			if (s.contains(".")) {
 				try {
-					recordAncestorMethods(Class.forName(s));
+					Class<?> c = Class.forName(s);
+					recordAncestorMethods(c);
 				} catch (ClassNotFoundException e) {
 					e.printStackTrace();
 				}
@@ -111,7 +112,8 @@ public abstract class AbstractClassGenerator implements JavaCode {
 			// assuming this class is never going to be generated in the same package, ie exists
 			// in the classloader
 			try {
-				recordAncestorMethods(Class.forName(superclass));
+				Class<?> c = Class.forName(superclass);
+				recordAncestorMethods(c);
 			} catch (ClassNotFoundException e) {
 				e.printStackTrace();
 			}

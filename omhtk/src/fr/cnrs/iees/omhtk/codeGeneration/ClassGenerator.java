@@ -31,6 +31,9 @@
  **************************************************************************/
 package fr.cnrs.iees.omhtk.codeGeneration;
 
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -69,6 +72,7 @@ public class ClassGenerator extends AbstractClassGenerator {
 	private Map<String,field> fields = new HashMap<String,field>();
 	private Map<String,MethodGenerator> constructors = new HashMap<String,MethodGenerator>();
 	private List<String> rawMethods = null;
+	private List<String> superClassParameters = new ArrayList<>();
 
 	/**
 	 *Constructor. The default behaviour is to generate method bodies only for methods declared
@@ -84,17 +88,43 @@ public class ClassGenerator extends AbstractClassGenerator {
 	 * @param interfaces the interfaces
 	 */
 	public ClassGenerator(String packageName,
-		String classComment,
-		String name,
-		String scope, 
-		Set<String> methodsToOverride,
-		String superclass,
-		String... interfaces) {
+			String classComment,
+			String name,
+			String scope, 
+			Set<String> methodsToOverride,
+			String superclass,
+			List<String> genericTypes,
+			String... interfaces) {
 		super(packageName, name, classComment, interfaces);
+		try {
+			Class<?> c = Class.forName(superclass);
+			// get generic parameters of super class, if any
+			Type t = c.getGenericSuperclass();
+			if (t instanceof ParameterizedType) {
+				ParameterizedType pt = (ParameterizedType) t;
+				Type[] types = pt.getActualTypeArguments();
+				for (Type tt:types)
+					superClassParameters.add(tt.getTypeName());
+			}
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		// replace generic types (eg 'E','T') with real classes (eg 'String', 'EcosystemComponent')
+		if (genericTypes!=null) {
+			if (genericTypes.size()!=superClassParameters.size())
+				throw new IllegalArgumentException("Expecting "+superClassParameters.size()+
+					" generic parameters - "+ genericTypes.size()+ " provided");
+			for (int i=0; i<genericTypes.size(); i++) {
+				superClassParameters.remove(i);
+				superClassParameters.add(i,genericTypes.get(i));
+			}
+		}
+		// class scope
 		if (scope.equals("public") || scope.equals("") || scope.equals("protected"))
 			this.scope = scope;
 		else
 			throw new IllegalArgumentException("The scope argument must be equal to \"public\",  \"protected\", or\"\".");
+		// methods from ancestors (interfaces and superclasses
 		if (methodsToOverride!=null)
 			this.methodsToOverride.addAll(methodsToOverride);
 		recordAncestorInterfaceMethods();
@@ -115,7 +145,7 @@ public class ClassGenerator extends AbstractClassGenerator {
 	}
 
 	/**
-	 * Constructor for a public class with a superclass but no interfaces
+	 * Constructor for a public class with a superclass but no interfaces, and possibly generic parameters
 	 * 
 	 * @param packageName The package name for the class.
 	 * @param classComment Top-level comments for the generated class file.
@@ -127,10 +157,21 @@ public class ClassGenerator extends AbstractClassGenerator {
 			String classComment,
 			String name,
 			Set<String> methodsToOverride,
-			String superclass) {
-			this(packageName, classComment, name, "public", methodsToOverride, superclass);			
-	}
+			String superclass,
+			List<String> genericTypes) {
+		this(packageName, classComment, name, "public", methodsToOverride, superclass, genericTypes);
+	}	
 	
+//	/**
+//	 * replace a generic parameter (eg 'T' or 'E') with a class name (eg 'String')
+//	 * 
+//	 * @param ancestorPar
+//	 * @param par
+//	 */
+//	public final void addSuperClassGenericParameter(String ancestorPar, String par) {
+//		superClassParameters.add(superClassParameters.indexOf(ancestorPar),par);
+//	}
+//
 	/**
 	 * Declares a new constructor with its argument types.
 	 * @param argTypes argument types. Must be valid type names (i.e. java types or your own classes)
@@ -214,6 +255,13 @@ public class ClassGenerator extends AbstractClassGenerator {
 		StringBuilder result = new StringBuilder();
 		result.append(scope).append(" class ").append(name());
 		if (superclass!=null) result.append(" extends ").append(superclass);
+		if (!superClassParameters.isEmpty()) {
+			result.append('<');
+			for (String par:superClassParameters)
+				result.append(par).append(',');
+			result.deleteCharAt(result.length()-1);
+			result.append('>');
+		}
 		if (nInterfaces()>0)
 			result.append(" implements");
 		return result.toString();
